@@ -1,4 +1,7 @@
-export type DataLayerValue = Record<string, unknown> | ((...args: unknown[]) => unknown);
+export type DataLayerValue =
+  | Record<string, unknown>
+  | ((...args: unknown[]) => unknown)
+  | unknown[];
 
 export interface DataLayerState {
   name: string;
@@ -41,6 +44,8 @@ export interface GtmClient {
   readonly dataLayerName: string;
   init(): void;
   push(value: DataLayerValue): void;
+  setConsentDefaults(state: import('./consent').ConsentState, options?: import('./consent').ConsentRegionOptions): void;
+  updateConsent(state: import('./consent').ConsentState, options?: import('./consent').ConsentRegionOptions): void;
   teardown(): void;
   isInitialized(): boolean;
 }

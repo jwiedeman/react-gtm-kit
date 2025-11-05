@@ -73,4 +73,50 @@ describe('createGtmClient', () => {
     const startEvent = dataLayer.find((entry) => (entry as Record<string, unknown>).event === 'gtm.js');
     expect(startEvent).toBeDefined();
   });
+
+  it('queues consent defaults before init and flushes on initialization', () => {
+    const client = createGtmClient({ containers: 'GTM-CONSENT' });
+    client.setConsentDefaults({ ad_storage: 'denied' }, { region: ['EEA'] });
+
+    expect(document.querySelectorAll('script[data-gtm-container-id]')).toHaveLength(0);
+    expect((globalThis as Record<string, unknown>).dataLayer).toBeUndefined();
+
+    client.init();
+
+    const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+    expect(Array.isArray(dataLayer[1])).toBe(true);
+    expect(dataLayer[1]).toEqual([
+      'consent',
+      'default',
+      { ad_storage: 'denied' },
+      { region: ['EEA'] }
+    ]);
+  });
+
+  it('pushes consent updates immediately after init', () => {
+    const client = createGtmClient({ containers: 'GTM-CONSENT-UPDATE' });
+    client.init();
+
+    client.updateConsent({ ad_storage: 'granted', analytics_storage: 'granted' });
+
+    const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+    expect(dataLayer[dataLayer.length - 1]).toEqual([
+      'consent',
+      'update',
+      { ad_storage: 'granted', analytics_storage: 'granted' }
+    ]);
+  });
+
+  it('throws for invalid consent state input', () => {
+    const client = createGtmClient({ containers: 'GTM-CONSENT-INVALID' });
+
+    expect(() =>
+      client.updateConsent(
+        {
+          // @ts-expect-error runtime validation coverage
+          ad_storage: 'invalid'
+        }
+      )
+    ).toThrow(/Invalid consent value/);
+  });
 });
