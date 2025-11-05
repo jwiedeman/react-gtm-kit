@@ -9,10 +9,10 @@ This file maintains the persistent planning board for the React GTM Kit project.
 - **Blocked** – Requires external input or prerequisite completion.
 - **Done** – Finished and documented.
 
-| ID | Task | Status | Notes (last updated: 2025-11-05) |
+| ID | Task | Status | Notes (last updated: 2025-11-06) |
 | --- | --- | --- | --- |
 | TK-001 | Consolidate charter, scope, architecture, and governance into README for single-source documentation. | Done | Captured full project brief, requirements, and governance in README refresh. |
-| TK-002 | Freeze API surface and finalize design sign-off package (M0). | Backlog | Prep: reconfirm scope/non-goals in README with stakeholders;<br>Draft API signatures + lifecycle diagrams in `docs/design/api-signoff.md`;<br>Author governance/ownership matrix in `docs/governance/OWNERS.md`;<br>Record sign-off in `docs/design/DECISIONS.md`. |
+| TK-002 | Freeze API surface and finalize design sign-off package (M0). | Review | 2025-11-06: Drafted API sign-off doc, ownership matrix, and decision log; awaiting architecture + DX approval.<br>Prep: reconfirm scope/non-goals in README with stakeholders;<br>Draft API signatures + lifecycle diagrams in `docs/design/api-signoff.md`;<br>Author governance/ownership matrix in `docs/governance/OWNERS.md`;<br>Record sign-off in `docs/design/DECISIONS.md`. |
 | TK-003 | Implement core package alpha covering init/queue/flush, multi-container, teardown, and unit tests (M1). | Backlog | Tasks: scaffold `packages/core/` with build tooling;<br>Implement data layer manager, loader, queue, teardown utilities, logger;<br>Add Jest unit tests for init idempotency, FIFO queue, multi-container ordering, teardown;<br>Wire lint/test/build scripts in root. |
 | TK-004 | Build Consent Mode v2 API with comprehensive tests (M2). | Backlog | Steps: extend core with type-safe `consent.ts` setters mapping Google keys;<br>Cover updates before/after init and network parameter composition in tests;<br>Document usage in `docs/how-to/consent.md`. |
 | TK-005 | Deliver SSR noscript helper and CSP nonce handling with E2E coverage (M3). | Backlog | Steps: add noscript iframe generator utility;<br>Allow loader CSP nonce option for injected scripts;<br>Create Playwright E2E `e2e/csp-noscript.spec.ts` verifying nonce + noscript;<br>Document SSR/CSP setup in `docs/how-to/ssr.md`. |
