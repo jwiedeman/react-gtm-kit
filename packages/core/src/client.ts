@@ -1,4 +1,6 @@
 import { ensureDataLayer, pushToDataLayer } from './data-layer';
+import { createConsentCommandValue } from './consent';
+import type { ConsentRegionOptions, ConsentState } from './consent';
 import { createLogger } from './logger';
 import { ScriptManager } from './script-manager';
 import type {
@@ -72,14 +74,35 @@ export class GtmClientImpl implements GtmClient {
       return;
     }
 
-    if (this.initialized && this.dataLayerState) {
-      pushToDataLayer(this.dataLayerState, value);
-      this.logger.debug('Pushed value to dataLayer.', { immediate: true });
-      return;
-    }
+    const immediate = this.deliverToDataLayer(value);
 
-    this.queue.push(value);
-    this.logger.debug('Queued dataLayer value (pre-init).', { queueLength: this.queue.length });
+    if (immediate) {
+      this.logger.debug('Pushed value to dataLayer.', { immediate: true });
+    } else {
+      this.logger.debug('Queued dataLayer value (pre-init).', { queueLength: this.queue.length });
+    }
+  }
+
+  setConsentDefaults(state: ConsentState, options?: ConsentRegionOptions): void {
+    const value = createConsentCommandValue({ command: 'default', state, options });
+    const immediate = this.deliverToDataLayer(value);
+
+    this.logger.info('Applied consent defaults.', {
+      immediate,
+      state,
+      options
+    });
+  }
+
+  updateConsent(state: ConsentState, options?: ConsentRegionOptions): void {
+    const value = createConsentCommandValue({ command: 'update', state, options });
+    const immediate = this.deliverToDataLayer(value);
+
+    this.logger.info('Updated consent state.', {
+      immediate,
+      state,
+      options
+    });
   }
 
   teardown(): void {
@@ -112,6 +135,16 @@ export class GtmClientImpl implements GtmClient {
         pushToDataLayer(this.dataLayerState, value);
       }
     }
+  }
+
+  private deliverToDataLayer(value: DataLayerValue): boolean {
+    if (this.initialized && this.dataLayerState) {
+      pushToDataLayer(this.dataLayerState, value);
+      return true;
+    }
+
+    this.queue.push(value);
+    return false;
   }
 
   private pushStartEvent(): void {
