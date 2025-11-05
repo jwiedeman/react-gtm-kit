@@ -121,7 +121,7 @@ export class ScriptManager {
       script.setAttribute(CONTAINER_ATTR, container.id);
       script.setAttribute(INSTANCE_ATTR, this.options.instanceId);
 
-      const attributes = this.scriptAttributes ?? { async: true };
+      const attributes = this.scriptAttributes ?? {};
       if (attributes.async !== undefined) {
         script.async = attributes.async;
       } else {
@@ -129,6 +129,18 @@ export class ScriptManager {
       }
       if (attributes.defer !== undefined) {
         script.defer = attributes.defer;
+      }
+
+      for (const [key, value] of Object.entries(attributes)) {
+        if (key === 'async' || key === 'defer') {
+          continue;
+        }
+
+        if (value === undefined || value === null) {
+          continue;
+        }
+
+        script.setAttribute(key, String(value));
       }
 
       targetParent.appendChild(script);
