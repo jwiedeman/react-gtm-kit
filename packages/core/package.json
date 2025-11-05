@@ -1,0 +1,30 @@
+{
+  "name": "@react-gtm-kit/core",
+  "version": "0.1.0",
+  "description": "Framework-agnostic Google Tag Manager client core for React GTM Kit.",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "clean": "rm -rf dist",
+    "lint": "tsc --noEmit",
+    "test": "jest --config ./jest.config.cjs --runInBand"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "tslib": "^2.6.2"
+  }
+}
