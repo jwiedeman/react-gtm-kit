@@ -52,6 +52,25 @@ describe('createGtmClient', () => {
     expect(scripts[1].src).toContain('gtm_preview=env');
   });
 
+  it('applies custom script attributes including CSP nonce', () => {
+    const client = createGtmClient({
+      containers: 'GTM-NONCE',
+      scriptAttributes: {
+        async: false,
+        nonce: 'nonce-123',
+        'data-custom': 'custom-value'
+      }
+    });
+
+    client.init();
+
+    const script = document.querySelector<HTMLScriptElement>('script[data-gtm-container-id="GTM-NONCE"]');
+    expect(script).not.toBeNull();
+    expect(script?.async).toBe(false);
+    expect(script?.getAttribute('nonce')).toBe('nonce-123');
+    expect(script?.getAttribute('data-custom')).toBe('custom-value');
+  });
+
   it('tears down scripts and restores the data layer', () => {
     (globalThis as Record<string, unknown>).dataLayer = [{ event: 'pre-existing' }];
 

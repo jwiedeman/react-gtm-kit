@@ -44,3 +44,23 @@ const noscript = createNoscriptMarkup('GTM-XXXX', {
 - Add server-side rendering tests that assert the noscript markup is present in the rendered HTML.
 - Include automated smoke tests that render pages with JavaScript disabled to verify the iframe loads and triggers the expected GTM requests.
 - Pair the noscript helper with the CSP nonce support provided by the loader utilities to cover both JavaScript-enabled and disabled scenarios.
+
+## Applying CSP nonces to injected scripts
+
+Strict Content Security Policies typically require that inline scripts include a nonce that matches the one issued for the request. Pass that nonce through the GTM client options so every injected `<script>` tag carries the correct attribute:
+
+```ts
+import { createGtmClient } from '@react-gtm-kit/core';
+
+const client = createGtmClient({
+  containers: 'GTM-XXXX',
+  scriptAttributes: {
+    nonce: cspNonce,
+    async: true
+  }
+});
+
+client.init();
+```
+
+Any additional attributes you provide in `scriptAttributes` will be copied onto the injected script elements, so you can include diagnostics hooks such as `data-*` attributes alongside the nonce.

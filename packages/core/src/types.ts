@@ -19,9 +19,13 @@ export interface Logger {
 
 export type PartialLogger = Partial<Logger>;
 
+export type ScriptAttributeValue = string | boolean | null | undefined;
+
 export interface ScriptAttributes {
   async?: boolean;
   defer?: boolean;
+  nonce?: string;
+  [attribute: string]: ScriptAttributeValue;
 }
 
 export interface ContainerDescriptor {
