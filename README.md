@@ -6,7 +6,7 @@ Planning and delivery tasks now live in [`TASKS.md`](./TASKS.md). Keep that kanb
 ---
 
 ## 1. Project charter
-**Goal:** Ship a dead-simple, production-grade GTM client that works in any React era (legacy to current) and exposes all GTM capabilities (multi-container, Consent Mode v2, noscript fallback, environment params, SSR/Next, etc.).
+**Goal:** Ship a dead-simple, production-grade GTM client that works in any React era (legacy to current) and exposes all GTM capabilities (multi-container, Consent Mode v2, noscript fallback, environment params, SSR/Next, etc.). Complement the core library with reference implementations covering both a server-side integration and a web frontend experience so teams can adopt the kit in full-stack scenarios without guesswork.
 
 **Core principles**
 - Framework-agnostic by default; React is an adapter, not a dependency.
