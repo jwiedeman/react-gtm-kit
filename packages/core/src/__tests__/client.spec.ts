@@ -1,0 +1,76 @@
+import { createGtmClient } from '../../src';
+
+describe('createGtmClient', () => {
+  beforeEach(() => {
+    document.head.innerHTML = '';
+    document.body.innerHTML = '';
+    delete (globalThis as Record<string, unknown>).dataLayer;
+  });
+
+  it('initializes the data layer, injects scripts, and flushes queued events', () => {
+    const client = createGtmClient({ containers: 'GTM-ABC123' });
+    client.push({ event: 'pre-init-event' });
+
+    expect((globalThis as Record<string, unknown>).dataLayer).toBeUndefined();
+
+    client.init();
+
+    const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+    expect(dataLayer).toHaveLength(2);
+    expect(dataLayer[0]).toMatchObject({ event: 'gtm.js' });
+    expect(dataLayer[1]).toMatchObject({ event: 'pre-init-event' });
+
+    const scripts = document.querySelectorAll<HTMLScriptElement>('script[data-gtm-container-id="GTM-ABC123"]');
+    expect(scripts).toHaveLength(1);
+    expect(scripts[0].src).toContain('https://www.googletagmanager.com/gtm.js?id=GTM-ABC123');
+  });
+
+  it('avoids duplicating scripts when init is called multiple times', () => {
+    const client = createGtmClient({ containers: 'GTM-ABC999' });
+    client.init();
+    client.init();
+
+    const scripts = document.querySelectorAll<HTMLScriptElement>('script[data-gtm-container-id="GTM-ABC999"]');
+    expect(scripts).toHaveLength(1);
+  });
+
+  it('supports multiple containers with deterministic ordering', () => {
+    const client = createGtmClient({
+      containers: [
+        { id: 'GTM-FIRST' },
+        { id: 'GTM-SECOND', queryParams: { gtm_auth: 'auth', gtm_preview: 'env' } }
+      ]
+    });
+
+    client.init();
+
+    const scripts = Array.from(document.querySelectorAll<HTMLScriptElement>('script[data-gtm-container-id]'));
+    expect(scripts).toHaveLength(2);
+    expect(scripts[0].getAttribute('data-gtm-container-id')).toBe('GTM-FIRST');
+    expect(scripts[1].getAttribute('data-gtm-container-id')).toBe('GTM-SECOND');
+    expect(scripts[1].src).toContain('gtm_auth=auth');
+    expect(scripts[1].src).toContain('gtm_preview=env');
+  });
+
+  it('tears down scripts and restores the data layer', () => {
+    (globalThis as Record<string, unknown>).dataLayer = [{ event: 'pre-existing' }];
+
+    const client = createGtmClient({ containers: 'GTM-TEARDOWN' });
+    client.push({ event: 'queued-before-init' });
+    client.init();
+    client.push({ event: 'after-init' });
+
+    expect(document.querySelectorAll('script[data-gtm-container-id]')).toHaveLength(1);
+
+    client.teardown();
+
+    expect(document.querySelectorAll('script[data-gtm-container-id]')).toHaveLength(0);
+    expect((globalThis as Record<string, unknown>).dataLayer).toEqual([{ event: 'pre-existing' }]);
+    expect(client.isInitialized()).toBe(false);
+
+    client.init();
+    const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+    const startEvent = dataLayer.find((entry) => (entry as Record<string, unknown>).event === 'gtm.js');
+    expect(startEvent).toBeDefined();
+  });
+});
