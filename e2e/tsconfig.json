@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "types": ["node", "@playwright/test"],
+    "moduleResolution": "Node",
+    "target": "ES2019"
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["./playwright-report", "./dist"]
+}
