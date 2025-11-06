@@ -104,6 +104,34 @@ describe('createGtmClient', () => {
     expect(dataLayer[1]).toEqual(['consent', 'default', { ad_storage: 'denied' }, { region: ['EEA'] }]);
   });
 
+  it('delivers queued consent defaults before other pre-init events', () => {
+    const client = createGtmClient({ containers: 'GTM-CONSENT-ORDER' });
+
+    client.push({ event: 'pre-init-event' });
+    client.setConsentDefaults({ analytics_storage: 'denied' });
+
+    client.init();
+
+    const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+    expect(dataLayer[1]).toEqual(['consent', 'default', { analytics_storage: 'denied' }]);
+    expect(dataLayer[2]).toMatchObject({ event: 'pre-init-event' });
+  });
+
+  it('preserves consent default ordering when queuing multiple defaults', () => {
+    const client = createGtmClient({ containers: 'GTM-CONSENT-ORDER-MULTI' });
+
+    client.push({ event: 'pre-init-event' });
+    client.setConsentDefaults({ ad_storage: 'denied' });
+    client.setConsentDefaults({ analytics_storage: 'denied' });
+
+    client.init();
+
+    const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+    expect(dataLayer[1]).toEqual(['consent', 'default', { ad_storage: 'denied' }]);
+    expect(dataLayer[2]).toEqual(['consent', 'default', { analytics_storage: 'denied' }]);
+    expect(dataLayer[3]).toMatchObject({ event: 'pre-init-event' });
+  });
+
   it('pushes consent updates immediately after init', () => {
     const client = createGtmClient({ containers: 'GTM-CONSENT-UPDATE' });
     client.init();

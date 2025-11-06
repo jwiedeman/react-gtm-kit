@@ -81,6 +81,15 @@ const serializeDataLayerValue = (value: DataLayerValue): string | null => {
   return null;
 };
 
+const isConsentCommandValue = (value: DataLayerValue): value is unknown[] =>
+  Array.isArray(value) &&
+  value.length >= 3 &&
+  value[0] === 'consent' &&
+  (value[1] === 'default' || value[1] === 'update');
+
+const isConsentDefaultCommandValue = (value: DataLayerValue): boolean =>
+  isConsentCommandValue(value) && value[1] === 'default';
+
 const isStartEvent = (value: DataLayerValue): boolean => {
   if (!isPlainObject(value)) {
     return false;
@@ -273,7 +282,19 @@ export class GtmClientImpl implements GtmClient {
       return;
     }
 
-    this.queue.push({ value, signature });
+    const entry: QueuedEntry = { value, signature };
+
+    if (isConsentDefaultCommandValue(value)) {
+      const firstNonConsentIndex = this.queue.findIndex((queued) => !isConsentDefaultCommandValue(queued.value));
+
+      if (firstNonConsentIndex === -1) {
+        this.queue.push(entry);
+      } else {
+        this.queue.splice(firstNonConsentIndex, 0, entry);
+      }
+    } else {
+      this.queue.push(entry);
+    }
 
     if (signature) {
       this.queuedSignatures.add(signature);
