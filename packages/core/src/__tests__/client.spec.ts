@@ -36,10 +36,7 @@ describe('createGtmClient', () => {
 
   it('supports multiple containers with deterministic ordering', () => {
     const client = createGtmClient({
-      containers: [
-        { id: 'GTM-FIRST' },
-        { id: 'GTM-SECOND', queryParams: { gtm_auth: 'auth', gtm_preview: 'env' } }
-      ]
+      containers: [{ id: 'GTM-FIRST' }, { id: 'GTM-SECOND', queryParams: { gtm_auth: 'auth', gtm_preview: 'env' } }]
     });
 
     client.init();
@@ -104,12 +101,7 @@ describe('createGtmClient', () => {
 
     const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
     expect(Array.isArray(dataLayer[1])).toBe(true);
-    expect(dataLayer[1]).toEqual([
-      'consent',
-      'default',
-      { ad_storage: 'denied' },
-      { region: ['EEA'] }
-    ]);
+    expect(dataLayer[1]).toEqual(['consent', 'default', { ad_storage: 'denied' }, { region: ['EEA'] }]);
   });
 
   it('pushes consent updates immediately after init', () => {
@@ -130,12 +122,70 @@ describe('createGtmClient', () => {
     const client = createGtmClient({ containers: 'GTM-CONSENT-INVALID' });
 
     expect(() =>
-      client.updateConsent(
-        {
-          // @ts-expect-error runtime validation coverage
-          ad_storage: 'invalid'
-        }
-      )
+      client.updateConsent({
+        // @ts-expect-error runtime validation coverage
+        ad_storage: 'invalid'
+      })
     ).toThrow(/Invalid consent value/);
+  });
+
+  it('deduplicates snapshot values when hydrating an existing data layer', () => {
+    const existingStart = { event: 'gtm.js', 'gtm.start': 123 }; // server timestamp placeholder
+    const existingConsent: unknown[] = ['consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied' }];
+
+    (globalThis as Record<string, unknown>).dataLayer = [existingStart, existingConsent];
+
+    const client = createGtmClient({ containers: 'GTM-HYDRATE' });
+    client.setConsentDefaults({ analytics_storage: 'denied', ad_storage: 'denied' });
+
+    client.init();
+
+    const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+
+    const startEvents = dataLayer.filter(
+      (entry) =>
+        typeof entry === 'object' &&
+        entry !== null &&
+        !Array.isArray(entry) &&
+        (entry as { event?: string }).event === 'gtm.js'
+    );
+    expect(startEvents).toHaveLength(1);
+
+    const consentCommands = dataLayer.filter(
+      (entry) => Array.isArray(entry) && entry[0] === 'consent' && entry[1] === 'default'
+    );
+    expect(consentCommands).toHaveLength(1);
+  });
+
+  it('deduplicates identical consent defaults queued before init', () => {
+    const client = createGtmClient({ containers: 'GTM-CONSENT-QUEUE-DEDUP' });
+
+    client.setConsentDefaults({ ad_storage: 'denied' });
+    client.setConsentDefaults({ ad_storage: 'denied' });
+
+    client.init();
+
+    const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+    const defaults = dataLayer.filter(
+      (entry) => Array.isArray(entry) && entry[0] === 'consent' && entry[1] === 'default'
+    );
+
+    expect(defaults).toHaveLength(1);
+  });
+
+  it('deduplicates identical consent updates after init', () => {
+    const client = createGtmClient({ containers: 'GTM-CONSENT-UPDATE-DEDUP' });
+
+    client.init();
+
+    client.updateConsent({ ad_storage: 'granted' });
+    client.updateConsent({ ad_storage: 'granted' });
+
+    const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+    const updates = dataLayer.filter(
+      (entry) => Array.isArray(entry) && entry[0] === 'consent' && entry[1] === 'update'
+    );
+
+    expect(updates).toHaveLength(1);
   });
 });
