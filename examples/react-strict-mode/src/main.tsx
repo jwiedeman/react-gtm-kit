@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import { GtmProvider } from '@react-gtm-kit/react-modern';
 import App from './App';
 
@@ -22,7 +23,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         logger: import.meta.env.DEV ? console : undefined
       }}
     >
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </GtmProvider>
   </React.StrictMode>
 );

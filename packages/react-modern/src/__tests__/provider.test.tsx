@@ -1,5 +1,5 @@
-import { act, render, waitFor } from '@testing-library/react';
-import { StrictMode, Suspense, lazy, useEffect } from 'react';
+import { act, fireEvent, render, waitFor } from '@testing-library/react';
+import { StrictMode, Suspense, lazy, useEffect, useRef } from 'react';
 import type { JSX } from 'react';
 import { GtmProvider, useGtm, useGtmConsent, useGtmPush } from '../provider';
 import type {
@@ -10,6 +10,7 @@ import type {
   GtmClient
 } from '@react-gtm-kit/core';
 import { createGtmClient } from '@react-gtm-kit/core';
+import { Link, MemoryRouter, Route as RouterRoute, Routes as RouterRoutes, useLocation } from 'react-router-dom';
 
 jest.mock('@react-gtm-kit/core', () => {
   const actual = jest.requireActual('@react-gtm-kit/core');
@@ -302,5 +303,62 @@ describe('GtmProvider', () => {
     await findByText('lazy-loaded');
 
     expect(client.push).toHaveBeenCalledWith({ event: 'lazy-event' });
+  });
+
+  it('allows React Router instrumentation to push page views on navigation without duplicates', async () => {
+    const client = createMockClient();
+    mockedCreateClient.mockReturnValue(client);
+
+    const PageViewTracker = (): JSX.Element => {
+      const push = useGtmPush();
+      const location = useLocation();
+      const lastPathRef = useRef<string>();
+
+      useEffect(() => {
+        const path = `${location.pathname}${location.search}${location.hash}`;
+        if (lastPathRef.current === path) {
+          return;
+        }
+
+        lastPathRef.current = path;
+        push({ event: 'page_view', page_path: path });
+      }, [location, push]);
+
+      return <></>;
+    };
+
+    const RouterHarness = (): JSX.Element => (
+      <StrictMode>
+        <GtmProvider config={baseConfig}>
+          <MemoryRouter initialEntries={['/']}>
+            <PageViewTracker />
+            <nav>
+              <Link to="/pricing">Pricing</Link>
+            </nav>
+            <RouterRoutes>
+              <RouterRoute path="/" element={<div>home</div>} />
+              <RouterRoute path="/pricing" element={<div>pricing</div>} />
+            </RouterRoutes>
+          </MemoryRouter>
+        </GtmProvider>
+      </StrictMode>
+    );
+
+    const { getByText } = render(<RouterHarness />);
+
+    await waitFor(() => {
+      expect(client.push).toHaveBeenCalledWith({ event: 'page_view', page_path: '/' });
+    });
+
+    fireEvent.click(getByText('Pricing'));
+
+    await waitFor(() => {
+      expect(client.push).toHaveBeenCalledWith({ event: 'page_view', page_path: '/pricing' });
+    });
+
+    const pageViewCalls = client.push.mock.calls.filter(
+      ([payload]) => (payload as DataLayerValue) && (payload as any).event === 'page_view'
+    );
+    expect(pageViewCalls).toHaveLength(2);
   });
 });
