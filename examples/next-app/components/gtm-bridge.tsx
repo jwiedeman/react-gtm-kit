@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useTrackPageViews } from '@react-gtm-kit/next';
 import { pushEvent } from '@react-gtm-kit/core';
 import { useGtmClient, useGtmConsent } from '@react-gtm-kit/react-modern';
 
 import { DEFAULT_CONSENT } from '../lib/gtm';
+import { getInitialConsent } from '../lib/consent-cookie';
 
 const buildPageViewPayload = ({ pagePath, url, title }: { pagePath: string; url: string; title?: string }) => ({
   page_path: pagePath,
@@ -13,13 +14,23 @@ const buildPageViewPayload = ({ pagePath, url, title }: { pagePath: string; url:
   ...(title ? { page_title: title } : {})
 });
 
+const readConsentFromDocument = () => {
+  if (typeof document === 'undefined') {
+    return DEFAULT_CONSENT;
+  }
+
+  return getInitialConsent(document.cookie ?? null);
+};
+
 export const GtmBridge = () => {
   const client = useGtmClient();
   const { setConsentDefaults } = useGtmConsent();
 
+  const initialConsent = useMemo(() => readConsentFromDocument(), []);
+
   useEffect(() => {
-    setConsentDefaults(DEFAULT_CONSENT);
-  }, [setConsentDefaults]);
+    setConsentDefaults(initialConsent);
+  }, [initialConsent, setConsentDefaults]);
 
   useTrackPageViews({
     client,

@@ -1,14 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useGtmConsent } from '@react-gtm-kit/react-modern';
 
 import { DEFAULT_CONSENT, GRANTED_CONSENT } from '../lib/gtm';
+import { persistConsentCookie, getInitialConsent } from '../lib/consent-cookie';
+
+const getInitialVisibility = () => true;
 
 export const ConsentBanner = () => {
   const { updateConsent } = useGtmConsent();
-  const [visible, setVisible] = useState(true);
-  const [hasGranted, setHasGranted] = useState(false);
+  const initialConsent = useMemo(() => getInitialConsent(typeof document === 'undefined' ? null : document.cookie), []);
+  const [visible, setVisible] = useState(getInitialVisibility);
+  const [hasGranted, setHasGranted] = useState(initialConsent.analytics_storage === 'granted');
+
+  const applyConsent = (state: typeof DEFAULT_CONSENT | typeof GRANTED_CONSENT) => {
+    updateConsent(state);
+    persistConsentCookie(state);
+  };
 
   if (!visible) {
     return (
@@ -24,13 +33,13 @@ export const ConsentBanner = () => {
   }
 
   const handleAccept = () => {
-    updateConsent(GRANTED_CONSENT);
+    applyConsent(GRANTED_CONSENT);
     setHasGranted(true);
     setVisible(false);
   };
 
   const handleReject = () => {
-    updateConsent(DEFAULT_CONSENT);
+    applyConsent(DEFAULT_CONSENT);
     setHasGranted(false);
     setVisible(false);
   };
