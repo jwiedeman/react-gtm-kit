@@ -1,0 +1,13 @@
+{
+  "name": "@react-gtm-kit/example-server",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Reference Node server that relays events to a GTM server-side tagging endpoint.",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  }
+}
