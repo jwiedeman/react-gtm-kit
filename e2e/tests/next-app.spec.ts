@@ -44,6 +44,11 @@ test.describe('Next.js App Router example', () => {
         : false;
     });
 
+    const initialCookies = await page.context().cookies();
+    const consentCookie = initialCookies.find((cookie) => cookie.name === 'next-app-consent');
+    expect(consentCookie).toBeDefined();
+    expect(consentCookie?.value).toContain('"analytics_storage":"denied"');
+
     await page.waitForFunction(() => {
       const layer = (window as unknown as { nextAppDataLayer?: unknown[] }).nextAppDataLayer;
       return Array.isArray(layer)
@@ -125,6 +130,10 @@ test.describe('Next.js App Router example', () => {
       );
     });
 
+    const grantedCookies = await page.context().cookies();
+    const grantedConsent = grantedCookies.find((cookie) => cookie.name === 'next-app-consent');
+    expect(grantedConsent?.value).toContain('"analytics_storage":"granted"');
+
     await page.getByRole('button', { name: 'Manage consent' }).click();
     await page.getByRole('button', { name: 'Keep essential only' }).click();
 
@@ -143,5 +152,9 @@ test.describe('Next.js App Router example', () => {
         return state.analytics_storage === 'denied' && state.ad_storage === 'denied';
       });
     });
+
+    const resetCookies = await page.context().cookies();
+    const resetConsent = resetCookies.find((cookie) => cookie.name === 'next-app-consent');
+    expect(resetConsent?.value).toContain('"analytics_storage":"denied"');
   });
 });

@@ -12,6 +12,8 @@ helpers, the React provider, Consent Mode toggles, and the page-view listener so
   and parameterized product routes.
 - **Consent Mode toggles** – The floating banner flips consent signals between denied and granted states using GTM’s Consent Mode
   command array.
+- **Edge/runtime compatibility** – Middleware seeds a consent cookie in the Edge runtime so App Router layouts can safely share
+  CSP nonces and consent defaults across requests.
 
 ## Running the example
 
