@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Link, Route, Routes, useLocation } from 'react-router-dom';
 import { useGtmConsent, useGtmPush } from '@react-gtm-kit/react-modern';
 
 const consentDefaults = {
@@ -17,17 +18,32 @@ const styles: Record<string, string> = {
     'rounded-lg px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400',
   primary: 'bg-amber-400 text-slate-950 hover:bg-amber-300',
   secondary: 'bg-slate-800 text-slate-100 hover:bg-slate-700',
-  pill: 'inline-flex items-center gap-2 rounded-full bg-slate-800 px-3 py-1 text-xs uppercase tracking-wide text-slate-300'
+  pill: 'inline-flex items-center gap-2 rounded-full bg-slate-800 px-3 py-1 text-xs uppercase tracking-wide text-slate-300',
+  nav: 'flex items-center justify-center gap-3 text-sm font-medium',
+  navLink:
+    'rounded-lg px-3 py-1 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 text-slate-300 hover:text-amber-300',
+  navActive:
+    'rounded-lg px-3 py-1 bg-amber-400 text-slate-950 font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400'
 };
 
-const useStrictModeSafePageView = (): void => {
+const useRouteAwarePageView = (): void => {
   const push = useGtmPush();
+  const location = useLocation();
+  const lastPathRef = useRef<string>();
 
   useEffect(() => {
+    const path = `${location.pathname}${location.search}${location.hash}`;
+
+    if (lastPathRef.current === path) {
+      return;
+    }
+
+    lastPathRef.current = path;
+
     const frame = requestAnimationFrame(() => {
       push({
         event: 'page_view',
-        page_path: window.location.pathname,
+        page_path: path,
         page_title: document.title || 'React StrictMode example'
       });
     });
@@ -35,7 +51,7 @@ const useStrictModeSafePageView = (): void => {
     return () => {
       cancelAnimationFrame(frame);
     };
-  }, [push]);
+  }, [location, push]);
 };
 
 const ConsentControls = () => {
@@ -123,8 +139,59 @@ const CustomEventDemo = () => {
   );
 };
 
+const Overview = () => {
+  useEffect(() => {
+    document.title = 'React StrictMode example';
+  }, []);
+
+  return (
+    <>
+      <CustomEventDemo />
+      <ConsentControls />
+    </>
+  );
+};
+
+const Pricing = () => {
+  const push = useGtmPush();
+
+  useEffect(() => {
+    document.title = 'Pricing | React StrictMode example';
+  }, []);
+
+  const trackConversion = useCallback(() => {
+    push({
+      event: 'begin_checkout',
+      page_section: 'pricing',
+      cta_label: 'Start free trial'
+    });
+  }, [push]);
+
+  return (
+    <div className={styles.panel}>
+      <div className={styles.pill}>Pricing</div>
+      <p className="text-sm text-slate-300">
+        Route transitions push page views automatically. Use this secondary CTA to prove custom events still work after
+        navigating.
+      </p>
+      <button type="button" className={`${styles.button} ${styles.primary}`} onClick={trackConversion}>
+        Start free trial
+      </button>
+      <p className="text-xs text-slate-400">
+        Inspect <span className={styles.code}>window.dataLayer</span> to watch navigation and conversion events stream
+        in.
+      </p>
+    </div>
+  );
+};
+
+const PageViewTracker = (): JSX.Element => {
+  useRouteAwarePageView();
+  return <></>;
+};
+
 const App = (): JSX.Element => {
-  useStrictModeSafePageView();
+  const location = useLocation();
 
   const containerList = useMemo(() => {
     const raw = import.meta.env.VITE_GTM_CONTAINERS ?? 'GTM-XXXX';
@@ -137,18 +204,29 @@ const App = (): JSX.Element => {
 
   return (
     <main className={styles.container}>
-      <section className="space-y-2 text-center">
+      <PageViewTracker />
+      <section className="space-y-4 text-center">
         <div className={styles.pill}>React StrictMode</div>
         <h1 className={styles.heading}>GTM Provider demo</h1>
-        <p className="text-sm text-slate-300 max-w-xl">
-          This sandbox mounts the GTM provider inside <span className={styles.code}>{'<React.StrictMode>'}</span>.
-          Development builds remount components to surface side effects; the adapter keeps the GTM client stable so your
-          data pushes stay idempotent.
+        <p className="text-sm text-slate-300 max-w-xl mx-auto">
+          This sandbox mounts the GTM provider inside <span className={styles.code}>{'<React.StrictMode>'}</span>. The
+          router integration pushes a <span className={styles.code}>page_view</span> event on every navigation without
+          duplicating scripts or data layer entries.
         </p>
         <p className="text-xs text-slate-500">Configured containers: {containerList}</p>
+        <nav className={styles.nav} aria-label="Example pages">
+          <Link to="/" className={location.pathname === '/' ? styles.navActive : styles.navLink}>
+            Overview
+          </Link>
+          <Link to="/pricing" className={location.pathname === '/pricing' ? styles.navActive : styles.navLink}>
+            Pricing
+          </Link>
+        </nav>
       </section>
-      <CustomEventDemo />
-      <ConsentControls />
+      <Routes>
+        <Route path="/" element={<Overview />} />
+        <Route path="/pricing" element={<Pricing />} />
+      </Routes>
     </main>
   );
 };

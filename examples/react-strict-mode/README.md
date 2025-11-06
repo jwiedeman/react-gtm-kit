@@ -1,8 +1,9 @@
 # React StrictMode example
 
 This Vite sandbox demonstrates how to wire the `@react-gtm-kit/react-modern` provider inside
-`<React.StrictMode>` without duplicating container scripts or data layer pushes. It also showcases
-consent updates and custom event pushes.
+`<React.StrictMode>` without duplicating container scripts or data layer pushes. It now mounts a
+React Router instance that triggers a `page_view` on each navigation alongside the existing consent
+and custom event demos.
 
 ## Prerequisites
 
