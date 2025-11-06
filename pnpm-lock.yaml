@@ -176,6 +176,22 @@ importers:
 
   examples/server: {}
 
+  examples/vanilla-csr:
+    dependencies:
+      '@react-gtm-kit/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+    devDependencies:
+      '@types/node':
+        specifier: ^20.11.30
+        version: 20.19.24
+      typescript:
+        specifier: ^5.4.5
+        version: 5.4.5
+      vite:
+        specifier: ^5.4.9
+        version: 5.4.21(@types/node@20.19.24)
+
   packages/core:
     devDependencies:
       tsd:

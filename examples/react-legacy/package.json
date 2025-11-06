@@ -8,7 +8,8 @@
     "build": "pnpm typecheck && vite build",
     "preview": "vite preview",
     "lint": "eslint --max-warnings=0 \"src/**/*.{ts,tsx}\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "smoke": "pnpm run build"
   },
   "dependencies": {
     "@react-gtm-kit/react-legacy": "workspace:*",

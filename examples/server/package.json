@@ -5,7 +5,8 @@
   "type": "module",
   "description": "Reference Node server that relays events to a GTM server-side tagging endpoint.",
   "scripts": {
-    "start": "node server.mjs"
+    "start": "node server.mjs",
+    "smoke": "node --check server.mjs"
   },
   "engines": {
     "node": ">=18.18.0"
