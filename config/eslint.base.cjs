@@ -17,15 +17,7 @@ module.exports = {
     'plugin:@typescript-eslint/stylistic',
     'prettier'
   ],
-  ignorePatterns: [
-    '*.d.ts',
-    'dist',
-    'dist/**',
-    'coverage',
-    'coverage/**',
-    'node_modules',
-    'node_modules/**'
-  ],
+  ignorePatterns: ['dist', 'dist/**', 'coverage', 'coverage/**', 'node_modules', 'node_modules/**'],
   rules: {
     '@typescript-eslint/consistent-type-imports': [
       'warn',
