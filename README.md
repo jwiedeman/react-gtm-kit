@@ -93,6 +93,28 @@ Planning and delivery tasks now live in [`TASKS.md`](./TASKS.md). Keep that kanb
   - Server helper to pass CSP nonce down to the client init.
   - Server helper to emit the noscript iframe string.
 
+### Event helper usage
+
+The core package exposes `pushEvent` and `pushEcommerce` wrappers for the `client.push` API. They preserve the
+lightweight surface area while providing typed affordances for common GTM flows.
+
+```ts
+import { createGtmClient, pushEcommerce, pushEvent } from '@react-gtm-kit/core';
+
+const client = createGtmClient({ containers: 'GTM-XXXX' });
+
+pushEvent(client, 'page_view', { page_path: '/pricing', page_title: 'Pricing' });
+
+pushEcommerce(client, 'purchase', {
+  value: 120,
+  currency: 'USD',
+  items: [{ item_id: 'SKU-123', item_name: 'Widget', price: 40, quantity: 3 }]
+});
+```
+
+Runtime guards ensure payloads stay as plain objects and that ecommerce metadata cannot be accidentally
+overwritten by additional event parameters.
+
 ## 5. Non-functional requirements (NFR)
 
 - Size: core ≤ 3 kB (min+gzip).
