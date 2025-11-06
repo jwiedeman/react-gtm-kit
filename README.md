@@ -6,6 +6,20 @@ Planning and delivery tasks now live in [`TASKS.md`](./TASKS.md). Keep that kanb
 
 ---
 
+## Documentation site
+
+The Markdown guides in `docs/` are now bundled with a VitePress-powered site for local previews and
+deployment. Use the workspace scripts to work on documentation:
+
+- `pnpm docs:dev` – run the docs site locally with hot reload.
+- `pnpm docs:build` – produce the static site output in `docs/.vitepress/dist`.
+- `pnpm docs:preview` – preview the production build locally.
+
+Link new documentation to the navigation by editing `docs/.vitepress/config.ts` so the site surfaces
+fresh content immediately.
+
+---
+
 ## 1. Project charter
 
 **Goal:** Ship a dead-simple, production-grade GTM client that works in any React era (legacy to current) and exposes all GTM capabilities (multi-container, Consent Mode v2, noscript fallback, environment params, SSR/Next, etc.). Complement the core library with reference implementations covering both a server-side integration and a web frontend experience so teams can adopt the kit in full-stack scenarios without guesswork.
