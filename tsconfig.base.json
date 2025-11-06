@@ -13,7 +13,7 @@
     "resolveJsonModule": true,
     "jsx": "react-jsx",
     "paths": {
-      "@react-gtm-kit/core": ["packages/core/src/index.ts"]
+      "@react-gtm-kit/core": ["./packages/core/src/index.ts"]
     }
   },
   "include": []

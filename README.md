@@ -1,14 +1,17 @@
 # React GTM Kit
 
 ## Task tracker
+
 Planning and delivery tasks now live in [`TASKS.md`](./TASKS.md). Keep that kanban up to date in-place (no deletions) and record status changes directly in the table so project history remains auditable.
 
 ---
 
 ## 1. Project charter
+
 **Goal:** Ship a dead-simple, production-grade GTM client that works in any React era (legacy to current) and exposes all GTM capabilities (multi-container, Consent Mode v2, noscript fallback, environment params, SSR/Next, etc.). Complement the core library with reference implementations covering both a server-side integration and a web frontend experience so teams can adopt the kit in full-stack scenarios without guesswork.
 
 **Core principles**
+
 - Framework-agnostic by default; React is an adapter, not a dependency.
 - Minimal public API with stable semantics.
 - Zero runtime dependencies in the core.
@@ -18,7 +21,9 @@ Planning and delivery tasks now live in [`TASKS.md`](./TASKS.md). Keep that kanb
 **Why this approach is correct:** GTM’s contract is the data layer and a single container loader. Keep that contract pure and you’re compatible with past, current, and future frameworks. The official GTM model revolves around a shared data layer and a container snippet; our library should formalize those behaviors and get out of the way.[^cite-gtm-contract]
 
 ## 2. Scope & non-goals
+
 **In scope**
+
 - Web GTM containers (client) with SSR-aware helpers.
 - Consent Mode v2 primitives (ad_storage, analytics_storage, ad_user_data, ad_personalization).[^cite-consent]
 - Optional server-side tagging compatibility (env / custom domain handoff).[^cite-sst]
@@ -26,30 +31,38 @@ Planning and delivery tasks now live in [`TASKS.md`](./TASKS.md). Keep that kanb
 - First-party debug hooks (pluggable logger), not opinions.
 
 **Out of scope**
+
 - Authoring GTM tags or triggers (that lives in GTM UI).
 - Analytics opinions (GA4 schemas, naming conventions)—we provide optional scaffolding only.
 - Mobile SDKs (web only), SPA router integrations beyond “examples”.
 
 ## 3. Architecture at a glance
+
 ### Packages
+
 **Core (framework-agnostic)**
+
 - Responsibilities: create/claim the data layer; load one or more GTM containers exactly once; queue and flush pre-init pushes; support Consent Mode v2 updates; teardown/reset for tests; optional noscript string builder.
 - Inputs: container id(s), data layer name, optional environment query (gtm_auth, gtm_preview), CSP nonce, custom host for advanced deployments (documented caveats).
 - Outputs: data-layer push API; consent update API; lifecycle hooks.
 
-**React adapter (optional)**
-- Responsibilities: call core init on mount once (StrictMode-safe), provide trivial helpers to push events (e.g., pageviews on route change).
-- Also provide a legacy wrapper for pre-hooks React.
+**React adapters (optional)**
+
+- Modern package (`@react-gtm-kit/react-modern`): call core init on mount once (StrictMode-safe), provide hooks to push events (e.g., pageviews on route change) and manage consent.
+- Legacy package (`@react-gtm-kit/react-legacy`): wraps class components with a higher-order component that manages init/teardown and exposes the same push/consent surface via props.
 
 **Next.js helpers (optional)**
+
 - Responsibilities: pageview bridge for App Router; server utility for passing a CSP nonce; helper that returns the official noscript iframe markup for server layouts (string only, no client auto-injection).
 
 ### Design constraints
+
 - Single shared data layer by default; support custom names as an advanced option (document risks of multiple layers). The data layer is the canonical contract in GTM.[^cite-gtm-contract]
 - Default to Google’s host for the container script; allow custom host only for advanced setups (e.g., same-origin server-side tagging) and warn that standard GTM web containers expect the Google host.[^cite-sst]
 - Provide a noscript iframe helper for server rendering, since Google recommends including it for users with JavaScript disabled.[^cite-noscript]
 
 ## 4. Functional requirements (FR)
+
 - **FR-1 Initialization**
   - Accept one or more container IDs.
   - Create the data layer if missing; never overwrite an existing array.
@@ -81,6 +94,7 @@ Planning and delivery tasks now live in [`TASKS.md`](./TASKS.md). Keep that kanb
   - Server helper to emit the noscript iframe string.
 
 ## 5. Non-functional requirements (NFR)
+
 - Size: core ≤ 3 kB (min+gzip).
 - Dependencies: none in core; adapters depend only on the relevant framework types.
 - Performance: init must not block main thread; data pushes must be O(1).
@@ -90,6 +104,7 @@ Planning and delivery tasks now live in [`TASKS.md`](./TASKS.md). Keep that kanb
 - Docs: copy-paste, task-based; examples for CSR, SSR, multi-container, consent, and debugging.
 
 ## 6. Acceptance criteria (Definition of Done)
+
 - Init is idempotent across: double mount (StrictMode), hot reload, and multiple consumer calls.
 - Exactly one script per container ID in the DOM after repeated inits.
 - Pre-init pushes appear in data layer in FIFO order after init.
@@ -100,17 +115,20 @@ Planning and delivery tasks now live in [`TASKS.md`](./TASKS.md). Keep that kanb
 - 95%+ coverage in core, 85%+ in adapters; bundle size guard in CI.
 
 ## 7. Compatibility matrix (continuous validation)
+
 - **Browsers:** latest Chrome, Firefox, Safari, Edge (desktop and mobile).
 - **React:** 16.8+ (hooks) and legacy wrapper for 16.0–16.7 if needed; spot-check 17, 18, 19+.[^cite-react]
 - **Frameworks:** non-React CSR apps (vanilla), React CSR apps, Next App Router SSR+CSR.
 - **CSP:** strict policies with nonces applied to all injected scripts.
 
 ## 8. Privacy & compliance requirements
+
 - Provide a neutral consent update API that maps to Google’s Consent Mode v2 parameters; document expected values and their effects with links to Google’s docs.[^cite-consent]
 - Document regional behavior notes (EEA enforcement) and clarify that policy compliance and UI prompts are owned by the integrator, not this library.[^cite-consent]
 - Document the implications of noscript (limited coverage but still valuable).[^cite-noscript]
 
 ## 9. Testing strategy
+
 - **Unit (headless DOM)**
   - State machine: init → queue → flush; re-init dedupe; teardown resets.
   - URL composition for multiple containers and environment params.
@@ -130,18 +148,22 @@ Planning and delivery tasks now live in [`TASKS.md`](./TASKS.md). Keep that kanb
   - Coverage thresholds enforced; size budget enforced; conventional commits + semantic release.
 
 ## 10. Documentation plan (structure and content)
+
 **A. Landing page (5-minute promise)**
+
 - What this is, and why it’s different (framework-agnostic core, tiny adapters).
 - The “three steps” quickstart for CSR, SSR, and Consent Mode (no jargon).
 - “If you only copy one section, copy this” checklist.
 
 **B. Concepts**
+
 - Data layer: what it is, why a single shared array matters; renaming safely.[^cite-gtm-contract]
 - Consent Mode v2: what the four keys mean; when to call update; what it changes.[^cite-consent]
 - Noscript: when and why; limitations; how to place it server-side.[^cite-noscript]
 - Server-side tagging and custom domain overview; benefits and caveats.[^cite-sst]
 
 **C. How-to recipes (task-based, copy-paste)**
+
 - Initialize GTM (single container).
 - Use multiple containers safely.
 - Push pageviews on route changes (React SPA / Next).
@@ -152,19 +174,23 @@ Planning and delivery tasks now live in [`TASKS.md`](./TASKS.md). Keep that kanb
 - Troubleshoot duplicates, CSP blocks, and missing events.
 
 **D. Framework guides**
+
 - Vanilla JS app, React CSR, Next App Router.
 - Legacy React (no hooks) quick steps.
 
 **E. Reference**
+
 - Public API reference with parameter descriptions, defaults, and side-effects.
 - Error messages and resolution checklist.
 
 **F. FAQ**
+
 - “Why only one data layer?”
 - “Why didn’t you autoload pageviews?”
 - “Can I self-host gtm.js?” (Explain standard expectations and server-side tagging alternative).[^cite-sst]
 
 ## 11. Example scenarios (step-by-step, no code)
+
 - **CSR SPA minimum:** add the provider once at app root, initialize with your GTM ID, and record a pageview on each route change using your router’s “after navigation” hook.
 - **Next SSR:** render the noscript iframe string near the start of the body on the server; pass a CSP nonce to the client; initialize once in a client-only provider; on pathname or search change, push a pageview event.
 - **Consent Mode:** listen for your CMP’s “consent changed” event; translate to the four consent keys; call the consent update API; verify requests adopt limited or full behavior per Google’s docs.[^cite-consent]
@@ -172,16 +198,19 @@ Planning and delivery tasks now live in [`TASKS.md`](./TASKS.md). Keep that kanb
 - **Custom domain (advanced):** if using server-side tagging, configure a first-party domain for the tagging server; set the library’s host option to that domain; verify cookie behavior and request paths.[^cite-sst]
 
 ## 12. CI/CD and release management
+
 - **Pipelines:** lint → unit → integration → E2E (Next example, CSP scenario) → bundle size check → publish dry-run.
 - **Versioning:** semantic-release with conventional commits; “core” is the stability anchor—adapters can iterate faster.
 - **Support policy:** keep examples aligned with the latest stable React, while guaranteeing “no-break” for React 16+. Track React release notes via the official blog and run the matrix monthly.[^cite-react]
 
 ## 13. Governance & ownership
+
 - **Maintainers:** one “core” owner, one “docs” owner, and one “examples” owner.
 - **Issue templates:** bug (with repro), feature request (with GTM use case), security (private).
 - **Contribution guide:** how to add a new adapter in under an hour; how to write an E2E that proves behavior instead of mocking.
 
 ## 14. Risks & mitigations
+
 - Duplicate script injection (StrictMode remounts): idempotent init; explicit DOM markers; E2E that double-mounts.
 - CSP failures in prod only: add a mandatory E2E with CSP nonce enforcement that fails the build if blocked.
 - Event loss before init: strict FIFO queue and flush; unit tests validate order.
@@ -190,6 +219,7 @@ Planning and delivery tasks now live in [`TASKS.md`](./TASKS.md). Keep that kanb
 - React changes: keep adapter tiny; rely on browser APIs in core only; monitor React’s official blog for breaking notes.[^cite-react]
 
 ## 15. Milestones & rough LOE (complexity sizing)
+
 - **M0 – Design sign-off:** API, docs outline, acceptance criteria frozen.
 - **M1 – Core alpha:** init/queue/flush, multi-container, teardown; unit tests.
 - **M2 – Consent Mode v2:** consent update API and tests.
@@ -202,6 +232,7 @@ Planning and delivery tasks now live in [`TASKS.md`](./TASKS.md). Keep that kanb
 _(Use internal S/M/L/XL complexity sizing; previous estimates put this at L/XL to first stable.)_
 
 ## 16. Hand-off checklist for Codex
+
 - Final API spec document (the call names, parameters, defaults, side-effects).
 - Completed acceptance criteria list with “how we prove it” notes for each.
 - Test plan doc with required unit, integration, and E2E scenarios (including JS-disabled run and CSP).
@@ -212,7 +243,11 @@ _(Use internal S/M/L/XL complexity sizing; previous estimates put this at L/XL t
 ---
 
 [^cite-gtm-contract]: Google Tag Manager documentation on the data layer contract and container snippet behavior.
+
 [^cite-consent]: Google Consent Mode v2 developer documentation describing consent parameters and effects.
+
 [^cite-sst]: Google Tag Manager server-side tagging documentation covering custom domains and environment parameters.
+
 [^cite-noscript]: Google Tag Manager recommendations for including noscript fallbacks for users with JavaScript disabled.
+
 [^cite-react]: Official React release notes and support guidance covering versions 16.x through 19.
