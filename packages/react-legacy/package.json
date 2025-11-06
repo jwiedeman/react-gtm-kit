@@ -1,0 +1,42 @@
+{
+  "name": "@react-gtm-kit/react-legacy",
+  "version": "0.1.0",
+  "description": "Legacy React adapter HOC for React GTM Kit.",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "clean": "rm -rf dist",
+    "lint": "eslint --max-warnings=0 \"src/**/*.{ts,tsx}\"",
+    "test": "jest --config ./jest.config.cjs --runInBand",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@react-gtm-kit/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.1",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tslib": "^2.6.2"
+  }
+}

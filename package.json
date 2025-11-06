@@ -12,7 +12,7 @@
     "prepare": "husky install",
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck",
-    "test:related": "pnpm exec jest --config packages/core/jest.config.cjs --runInBand --findRelatedTests",
+    "test:related": "pnpm exec jest --config packages/core/jest.config.cjs --runInBand --findRelatedTests --passWithNoTests",
     "e2e:test": "playwright test -c e2e/playwright.config.ts"
   },
   "devDependencies": {
@@ -34,13 +34,13 @@
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "tsup": "^7.2.0",
-    "typescript": "^5.4.5"
+    "typescript": "5.4.5"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
       "eslint --max-warnings=0 --fix",
       "prettier --write",
-      "pnpm test:related --"
+      "pnpm exec jest --config packages/core/jest.config.cjs --runInBand --findRelatedTests --passWithNoTests --"
     ],
     "*.{cjs,mjs,json,md,mdx,yml,yaml}": [
       "prettier --write"
