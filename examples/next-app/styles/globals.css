@@ -1,0 +1,138 @@
+:root {
+  color-scheme: light dark;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.6;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at top left, #1f2937, #111827);
+  color: #f9fafb;
+}
+
+.site-header {
+  padding: 2.5rem 2rem 1.5rem;
+  background: rgba(17, 24, 39, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.site-header h1 {
+  margin: 0;
+  font-size: 2.25rem;
+}
+
+.site-header p {
+  margin-top: 0.75rem;
+  max-width: 48rem;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.site-main {
+  padding: 2rem;
+  max-width: 48rem;
+  margin: 0 auto 6rem;
+}
+
+.site-nav ul {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+}
+
+.site-nav a {
+  color: #a5b4fc;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.site-nav a:hover {
+  text-decoration: underline;
+}
+
+.content h2 {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+}
+
+.content p {
+  margin-bottom: 1rem;
+}
+
+.content ul {
+  margin-top: 1rem;
+  padding-left: 1.5rem;
+}
+
+.consent-banner,
+.consent-toggle {
+  position: fixed;
+  right: 2rem;
+  bottom: 2rem;
+}
+
+.consent-banner {
+  max-width: 28rem;
+  padding: 1.5rem;
+  background: rgba(17, 24, 39, 0.95);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.35);
+}
+
+.consent-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.consent-actions button {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.consent-actions .primary {
+  background: linear-gradient(135deg, #60a5fa, #c084fc);
+  color: #0f172a;
+}
+
+.consent-actions button:not(.primary) {
+  background: rgba(148, 163, 184, 0.2);
+  color: #e2e8f0;
+}
+
+.consent-toggle {
+  padding: 0.75rem 1.25rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(17, 24, 39, 0.9);
+  color: #f9fafb;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.consent-status {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #bbf7d0;
+}
+
+a {
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #c4b5fd;
+}
+
+a:focus-visible {
+  outline: 3px solid #f472b6;
+  outline-offset: 4px;
+}
