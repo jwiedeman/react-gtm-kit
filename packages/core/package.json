@@ -22,10 +22,14 @@
     "clean": "rm -rf dist",
     "lint": "eslint --max-warnings=0 \"src/**/*.{ts,tsx}\"",
     "test": "jest --config ./jest.config.cjs --runInBand",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit && node scripts/run-tsd.mjs"
   },
   "dependencies": {},
   "devDependencies": {
+    "tsd": "^0.31.1",
     "tslib": "^2.6.2"
+  },
+  "tsd": {
+    "directory": "src"
   }
 }
