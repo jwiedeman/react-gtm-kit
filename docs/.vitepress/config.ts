@@ -5,6 +5,10 @@ const sidebar: DefaultTheme.Sidebar = {
     {
       text: 'How-to Guides',
       items: [
+        { text: 'Initialize React GTM Kit', link: '/how-to/setup' },
+        { text: 'Migrate from existing GTM setups', link: '/how-to/migration' },
+        { text: 'Debug GTM integrations', link: '/how-to/debugging' },
+        { text: 'Send analytics events', link: '/how-to/analytics-integration' },
         { text: 'Consent Mode integration', link: '/how-to/consent' },
         { text: 'Enterprise consent patterns', link: '/how-to/enterprise-consent' },
         { text: 'React legacy adapter', link: '/how-to/react-legacy-adapter' },
@@ -12,6 +16,16 @@ const sidebar: DefaultTheme.Sidebar = {
         { text: 'Server-side integration', link: '/how-to/server-integration' },
         { text: 'SSR and CSP setup', link: '/how-to/ssr' },
         { text: 'Examples & smoke tests', link: '/how-to/examples' }
+      ]
+    }
+  ],
+  '/concepts/': [
+    {
+      text: 'Concepts',
+      items: [
+        { text: 'Architecture overview', link: '/concepts/architecture' },
+        { text: 'Consent lifecycle', link: '/concepts/consent-lifecycle' },
+        { text: 'SSR strategy', link: '/concepts/ssr-strategy' }
       ]
     }
   ],
@@ -71,6 +85,7 @@ const config: UserConfig = {
   themeConfig: {
     nav: [
       { text: 'Getting Started', link: '/' },
+      { text: 'Concepts', link: '/concepts/architecture' },
       { text: 'How-to Guides', link: '/how-to/consent' },
       { text: 'Reference', link: '/reference/events' },
       { text: 'Governance', link: '/governance/OWNERS' }
