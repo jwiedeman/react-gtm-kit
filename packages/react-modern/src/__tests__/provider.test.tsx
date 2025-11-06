@@ -1,4 +1,4 @@
-import { render, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import { StrictMode, Suspense, lazy, useEffect } from 'react';
 import type { JSX } from 'react';
 import { GtmProvider, useGtm, useGtmConsent, useGtmPush } from '../provider';
@@ -41,6 +41,36 @@ const createMockClient = (): MockClient => ({
 const baseConfig: CreateGtmClientOptions = { containers: 'GTM-TEST' };
 
 const mockedCreateClient = jest.mocked(createGtmClient);
+
+interface FakeCmpPayload {
+  advertising: boolean;
+  analytics: boolean;
+  personalization: boolean;
+}
+
+type ConsentListener = (payload: FakeCmpPayload) => void;
+
+interface FakeCmp {
+  on(event: 'consent', listener: ConsentListener): void;
+  off(event: 'consent', listener: ConsentListener): void;
+  emit(payload: FakeCmpPayload): void;
+}
+
+const createFakeCmp = (): FakeCmp => {
+  const listeners = new Set<ConsentListener>();
+
+  return {
+    on: (_event, listener) => {
+      listeners.add(listener);
+    },
+    off: (_event, listener) => {
+      listeners.delete(listener);
+    },
+    emit: (payload) => {
+      listeners.forEach((listener) => listener(payload));
+    }
+  };
+};
 
 describe('GtmProvider', () => {
   beforeEach(() => {
@@ -110,9 +140,7 @@ describe('GtmProvider', () => {
     });
 
     first.unmount();
-    expect(clients[firstActiveIndex].teardown.mock.calls.length).toBe(
-      clients[firstActiveIndex].init.mock.calls.length
-    );
+    expect(clients[firstActiveIndex].teardown.mock.calls.length).toBe(clients[firstActiveIndex].init.mock.calls.length);
 
     const second = render(
       <StrictMode>
@@ -193,6 +221,58 @@ describe('GtmProvider', () => {
 
     expect(client.setConsentDefaults).toHaveBeenCalledWith(consentState, consentOptions);
     expect(client.updateConsent).toHaveBeenCalledWith({ ...consentState, ad_storage: 'granted' }, undefined);
+  });
+
+  it('bridges CMP consent events through the consent hook', async () => {
+    const client = createMockClient();
+    mockedCreateClient.mockReturnValue(client);
+
+    const cmp = createFakeCmp();
+
+    const ConsentBridge = ({ bridge }: { bridge: FakeCmp }): JSX.Element => {
+      const { updateConsent } = useGtmConsent();
+
+      useEffect(() => {
+        const handler: ConsentListener = (payload) => {
+          updateConsent({
+            ad_storage: payload.advertising ? 'granted' : 'denied',
+            ad_user_data: payload.advertising ? 'granted' : 'denied',
+            analytics_storage: payload.analytics ? 'granted' : 'denied',
+            ad_personalization: payload.personalization ? 'granted' : 'denied'
+          });
+        };
+
+        bridge.on('consent', handler);
+
+        return () => {
+          bridge.off('consent', handler);
+        };
+      }, [bridge, updateConsent]);
+
+      return <div>cmp-ready</div>;
+    };
+
+    const { findByText } = render(
+      <GtmProvider config={baseConfig}>
+        <ConsentBridge bridge={cmp} />
+      </GtmProvider>
+    );
+
+    await findByText('cmp-ready');
+
+    act(() => {
+      cmp.emit({ advertising: true, analytics: false, personalization: true });
+    });
+
+    expect(client.updateConsent).toHaveBeenCalledWith(
+      {
+        ad_storage: 'granted',
+        ad_user_data: 'granted',
+        analytics_storage: 'denied',
+        ad_personalization: 'granted'
+      },
+      undefined
+    );
   });
 
   it('supports Suspense boundaries without losing access to the context', async () => {
