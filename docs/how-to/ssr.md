@@ -33,6 +33,36 @@ const noscript = createNoscriptMarkup('GTM-XXXX', {
 });
 ```
 
+## Hydrating an existing data layer on the client
+
+When you server-render GTM markup you can prime the `dataLayer` with consent defaults or page context. The core client now
+inspects any existing array before it initializes and deduplicates values so hydration does not emit duplicate commands.
+
+- If the server already pushed the `gtm.js` start event, the client skips injecting a second copy even though the timestamp
+  differs from the server-rendered value.
+- Consent commands (`default` and `update`) are serialized and compared so calling `setConsentDefaults` on both the server and
+  client results in a single data layer entry.
+- Repeated calls with the same payload before initialization are dropped from the queue, preventing noisy duplicates when CMPs
+  or frameworks rerun bootstrap logic.
+
+```ts
+// Example server bootstrapping
+res.locals.dataLayer = [
+  { event: 'gtm.js', 'gtm.start': Date.now() },
+  ['consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied' }]
+];
+
+// Client hydration
+import { createGtmClient } from '@react-gtm-kit/core';
+
+const client = createGtmClient({ containers: 'GTM-XXXX', dataLayerName: 'dataLayer' });
+client.setConsentDefaults({ analytics_storage: 'denied', ad_storage: 'denied' });
+client.init();
+```
+
+After hydration the data layer still contains a single start event and consent command, keeping analytics tools aligned across
+environments.
+
 ## CSP and sanitization considerations
 
 - The helper escapes all attribute values so you can safely inject the generated string into HTML templates without additional escaping.
