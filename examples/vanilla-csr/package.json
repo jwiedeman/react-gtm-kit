@@ -1,0 +1,22 @@
+{
+  "name": "@react-gtm-kit/example-vanilla-csr",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "pnpm typecheck && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint --max-warnings=0 \"src/**/*.ts\"",
+    "smoke": "pnpm run build"
+  },
+  "dependencies": {
+    "@react-gtm-kit/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "typescript": "^5.4.5",
+    "vite": "^5.4.9"
+  }
+}

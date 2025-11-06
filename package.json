@@ -17,6 +17,7 @@
     "verify:runtime-deps": "node scripts/check-runtime-deps.mjs",
     "size": "size-limit --config size-limit.config.cjs",
     "verify:lightweight": "pnpm run verify:runtime-deps && pnpm run size",
+    "examples:smoke": "pnpm --filter @react-gtm-kit/example-* --workspace-concurrency=1 run smoke",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs"

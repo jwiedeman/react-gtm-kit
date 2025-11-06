@@ -1,0 +1,138 @@
+:root {
+  color-scheme: light dark;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+}
+
+body {
+  margin: 0;
+  background: #0b0b0f;
+  color: #f5f5f7;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+main {
+  width: min(960px, 100%);
+  display: grid;
+  gap: 1.5rem;
+}
+
+section.card {
+  background: rgba(15, 15, 20, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+}
+
+.card h2 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+}
+
+.card p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: rgba(245, 245, 247, 0.7);
+}
+
+.card button {
+  appearance: none;
+  border: none;
+  border-radius: 999px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+
+.card button + button {
+  margin-left: 0.75rem;
+}
+
+button[data-variant='primary'] {
+  background: linear-gradient(135deg, #4c6ef5 0%, #7950f2 100%);
+  color: white;
+  box-shadow: 0 12px 30px rgba(121, 80, 242, 0.4);
+}
+
+button[data-variant='primary']:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 40px rgba(121, 80, 242, 0.45);
+}
+
+button[data-variant='ghost'] {
+  background: transparent;
+  color: rgba(245, 245, 247, 0.85);
+  border: 1px solid rgba(245, 245, 247, 0.25);
+}
+
+button[data-variant='ghost']:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+pre {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+header small {
+  color: rgba(245, 245, 247, 0.6);
+}
+
+dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.25rem 0.75rem;
+  margin: 0;
+}
+
+dl dt {
+  font-weight: 600;
+  color: rgba(245, 245, 247, 0.75);
+}
+
+dl dd {
+  margin: 0;
+  word-break: break-all;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 1.5rem;
+  }
+
+  section.card {
+    padding: 1.25rem;
+  }
+
+  .card button {
+    width: 100%;
+    margin: 0.5rem 0 0;
+  }
+
+  .card button + button {
+    margin-left: 0;
+  }
+
+  dl {
+    grid-template-columns: 1fr;
+  }
+}

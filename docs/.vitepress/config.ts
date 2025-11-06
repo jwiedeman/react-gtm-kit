@@ -10,7 +10,8 @@ const sidebar: DefaultTheme.Sidebar = {
         { text: 'React legacy adapter', link: '/how-to/react-legacy-adapter' },
         { text: 'React Router pageviews', link: '/how-to/react-router' },
         { text: 'Server-side integration', link: '/how-to/server-integration' },
-        { text: 'SSR and CSP setup', link: '/how-to/ssr' }
+        { text: 'SSR and CSP setup', link: '/how-to/ssr' },
+        { text: 'Examples & smoke tests', link: '/how-to/examples' }
       ]
     }
   ],
