@@ -13,21 +13,22 @@ the repository into a browsable experience.
 2. Initialize the GTM client once at application startup:
 
    ```ts
-   import { createGtmClient } from '@react-gtm-kit/core';
+   import { initGtm, pushEvent } from '@react-gtm-kit/core';
 
-   const client = createGtmClient({
-     containers: ['GTM-XXXXXXX']
+   initGtm({
+     containerIds: ['GTM-XXXXXXX']
    });
    ```
 
 3. Push events or consent updates wherever they happen:
    ```ts
-   client.push({
+   pushEvent({
      event: 'page_view',
      page_path: window.location.pathname
    });
    ```
-4. Visit the How-to section for framework-specific patterns and consent integration recipes.
+4. Visit the Concepts section to understand the architecture and consent lifecycle, then explore
+   the How-to guides for setup, migration, debugging, and analytics integration recipes.
 
 ## Project charter
 
