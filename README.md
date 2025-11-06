@@ -148,6 +148,7 @@ overwritten by additional event parameters.
 - Provide a neutral consent update API that maps to Google’s Consent Mode v2 parameters; document expected values and their effects with links to Google’s docs.[^cite-consent]
 - Document regional behavior notes (EEA enforcement) and clarify that policy compliance and UI prompts are owned by the integrator, not this library.[^cite-consent]
 - Document the implications of noscript (limited coverage but still valuable).[^cite-noscript]
+- Centralize privacy governance guidance in [`docs/governance/privacy.md`](./docs/governance/privacy.md) and track risks in [`docs/governance/risk-log.md`](./docs/governance/risk-log.md). Security assessments live in [`docs/governance/security-review.md`](./docs/governance/security-review.md).
 
 ## 9. Testing strategy
 
