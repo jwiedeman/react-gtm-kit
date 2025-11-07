@@ -70,6 +70,16 @@ const sidebar: DefaultTheme.Sidebar = {
       items: [{ text: 'Alpha notes', link: '/releases/alpha' }]
     }
   ],
+  '/marketing/': [
+    {
+      text: 'Marketing & DevRel',
+      items: [
+        { text: 'Launch plan', link: '/marketing/launch-plan' },
+        { text: 'Social copy', link: '/marketing/social-copy' },
+        { text: 'Conference abstract', link: '/marketing/conference-abstract' }
+      ]
+    }
+  ],
   '/': [
     {
       text: 'Overview',
@@ -95,7 +105,8 @@ const config: UserConfig = {
       { text: 'Concepts', link: '/concepts/architecture' },
       { text: 'How-to Guides', link: '/how-to/consent' },
       { text: 'Reference', link: '/reference/events' },
-      { text: 'Governance', link: '/governance/OWNERS' }
+      { text: 'Governance', link: '/governance/OWNERS' },
+      { text: 'Marketing', link: '/marketing/launch-plan' }
     ],
     sidebar,
     socialLinks: [{ icon: 'github', link: 'https://github.com/react-gtm-kit/react-gtm-kit' }],
