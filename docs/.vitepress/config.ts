@@ -15,6 +15,7 @@ const sidebar: DefaultTheme.Sidebar = {
         { text: 'React Router pageviews', link: '/how-to/react-router' },
         { text: 'Server-side integration', link: '/how-to/server-integration' },
         { text: 'SSR and CSP setup', link: '/how-to/ssr' },
+        { text: 'Keep bundles lightweight', link: '/how-to/optimization' },
         { text: 'Examples & smoke tests', link: '/how-to/examples' }
       ]
     }
