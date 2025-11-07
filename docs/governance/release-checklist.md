@@ -17,7 +17,7 @@ acknowledged with an owner, date, and follow-up issue.
 - [ ] `pnpm test`
 - [ ] `pnpm typecheck`
 - [ ] `pnpm run verify:lightweight` (runtime deps + size-limit budgets)
-- [ ] `pnpm e2e:test`
+- [ ] `pnpm e2e:install && pnpm e2e:test`
 - [ ] `pnpm examples:smoke`
 - [ ] Verify Jest coverage meets enforced thresholds (see coverage report in CI artifacts).
 - [ ] Confirm bundle artifacts from `pnpm -r build` include ESM and CJS outputs with

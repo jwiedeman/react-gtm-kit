@@ -14,12 +14,13 @@ how the kit keeps SSR flows predictable.
 
 ## Client responsibilities
 
-- Call `initGtm` inside a client-only boundary (e.g., Next.js `useEffect` or a React
-  provider) so the container loads once after hydration.
+- Create the GTM client inside a client-only boundary (e.g., Next.js `useEffect`
+  or a React provider), call `setConsentDefaults` if needed, and then invoke
+  `client.init()` so the container loads once after hydration.
 - Hydrate with the same data layer name used on the server. The core utilities detect
   existing arrays and reuse them.
-- Reconcile consent defaults during hydration by reading persisted consent and passing
-  it into `initGtm`.
+- Reconcile consent defaults during hydration by reading persisted consent and
+  calling `client.setConsentDefaults()` before `client.init()`.
 
 ## CSP considerations
 
