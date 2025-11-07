@@ -5,7 +5,8 @@ GTM Kit.
 
 ## Validate initialization
 
-- Enable the optional logger when calling `initGtm` to emit lifecycle messages.
+- Enable the optional logger when creating the client to emit lifecycle messages
+  (e.g., `createGtmClient({ containers: 'GTM-XXXX', logger: console })`).
 - Confirm only one container script per ID exists in the DOM by inspecting `<script>`
   elements marked with `data-gtm-container`.
 - Verify the `dataLayer` array includes the `gtm.start` event and your queued pushes.

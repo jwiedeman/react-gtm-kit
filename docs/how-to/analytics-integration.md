@@ -1,27 +1,27 @@
 # Send analytics events
 
 Track pageviews and custom events through GTM using the React GTM Kit helpers.
+The examples below assume you have already created and initialized a client via
+`createGtmClient`.
 
 ## Pageviews
 
 ```ts
 import { pushEvent } from '@react-gtm-kit/core';
 
-pushEvent({
-  event: 'page_view',
+pushEvent(client, 'page_view', {
   page_path: window.location.pathname,
   page_title: document.title
 });
 ```
 
-- In React apps, use the `useGtmEvent` hook with your router's navigation listener to
+- In React apps, use the `useGtmPush` hook with your router's navigation listener to
   fire the same payload once per route change.
 
 ## Custom events
 
 ```ts
-pushEvent({
-  event: 'purchase',
+pushEvent(client, 'purchase', {
   ecommerce: {
     transaction_id: '12345',
     value: 42.0,

@@ -29,7 +29,7 @@ The alpha release of **React GTM Kit** delivers a workspace-wide set of packages
 
 ## Known Limitations (Alpha)
 
-- CI-hosted Playwright browsers are pending provisioning; run `pnpm e2e:test` locally until the shared cache is available.
+- CI-hosted Playwright browsers are pending provisioning; run `pnpm e2e:install && pnpm e2e:test` locally until the shared cache is available.
 - Consent regression matrix and SSR hydration hardening tests are planned for the beta milestone (see TK-048 and TK-049).
 - Documentation site and full tracking scenario examples remain in progress (M6 milestone).
 

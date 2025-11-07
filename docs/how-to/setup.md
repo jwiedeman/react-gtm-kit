@@ -14,45 +14,68 @@ pnpm add @react-gtm-kit/react-modern
 ## 2. Configure GTM containers
 
 ```ts
-import { initGtm } from '@react-gtm-kit/core';
+import { createGtmClient } from '@react-gtm-kit/core';
 
-initGtm({
-  containerIds: ['GTM-XXXXXXX'],
-  dataLayerName: 'dataLayer',
-  consentDefaults: {
-    ad_storage: 'denied',
-    analytics_storage: 'denied',
-    ad_user_data: 'denied',
-    ad_personalization: 'denied'
-  }
+const gtmClient = createGtmClient({
+  containers: ['GTM-XXXXXXX'],
+  dataLayerName: 'dataLayer'
 });
+
+gtmClient.setConsentDefaults({
+  ad_storage: 'denied',
+  analytics_storage: 'denied',
+  ad_user_data: 'denied',
+  ad_personalization: 'denied'
+});
+
+gtmClient.init();
 ```
 
-- Provide one or more container IDs in priority order.
-- Set environment parameters (`gtm_auth`, `gtm_preview`) if you deploy GTM to
-  multiple workspaces.
+- Provide one or more container IDs via the `containers` option in priority
+  order.
+- Set environment parameters (`gtm_auth`, `gtm_preview`) through the
+  `defaultQueryParams` option if you deploy GTM to multiple workspaces.
 
 ## 3. React adapter setup (optional)
 
 Wrap your app with the provider to ensure initialization runs once even in StrictMode:
 
 ```tsx
-import { GtmProvider } from '@react-gtm-kit/react-modern';
+import { useEffect } from 'react';
+import { GtmProvider, useGtmConsent, useGtmPush } from '@react-gtm-kit/react-modern';
+
+function ConsentDefaults() {
+  const { setConsentDefaults } = useGtmConsent();
+
+  useEffect(() => {
+    setConsentDefaults({ ad_storage: 'granted', analytics_storage: 'granted' });
+  }, [setConsentDefaults]);
+
+  return null;
+}
+
+function AppContent() {
+  const push = useGtmPush();
+
+  useEffect(() => {
+    push({ event: 'page_view', page_path: window.location.pathname });
+  }, [push]);
+
+  return <>{/* rest of your app */}</>;
+}
 
 export function App() {
   return (
-    <GtmProvider
-      containerIds={['GTM-XXXXXXX']}
-      consentDefaults={{ ad_storage: 'granted', analytics_storage: 'granted' }}
-    >
-      {/* rest of your app */}
+    <GtmProvider config={{ containers: ['GTM-XXXXXXX'] }}>
+      <ConsentDefaults />
+      <AppContent />
     </GtmProvider>
   );
 }
 ```
 
-Inside the provider you can call `useGtmEvent()` or `useGtmConsent()` to push events or
-update consent.
+Inside the provider you can call `useGtmPush()` to interact with the client or
+`useGtmConsent()` to manage consent state.
 
 ## 4. Verify installation
 

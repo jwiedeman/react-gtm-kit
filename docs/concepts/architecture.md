@@ -14,8 +14,8 @@ system confidently.
 
 ### Adapter packages
 
-- React adapters (`react-modern`, `react-legacy`) wrap the core `init`/`push` APIs with
-  idiomatic hooks and higher-order components that are StrictMode-safe.
+- React adapters (`react-modern`, `react-legacy`) wrap the core client factory and
+  push helpers with idiomatic hooks and higher-order components that are StrictMode-safe.
 - The Next.js helper package wires pageview tracking into App Router navigations and
   threads CSP nonces from the server to the client.
 
@@ -28,9 +28,9 @@ system confidently.
 
 ## Data flow lifecycle
 
-1. **Initialization** – `initGtm` configures container IDs, optional environment params,
-   and the data layer name.
-2. **Queueing** – Calls to `pushEvent` before initialization are stored until the
+1. **Initialization** – `createGtmClient` captures container IDs, optional environment
+   params, and the data layer name before calling `client.init()`.
+2. **Queueing** – Calls to `pushEvent(client, ...)` before initialization are stored until the
    loader resolves.
 3. **Flush & observe** – Once GTM loads, queued events flush in FIFO order, and
    additional pushes go directly to the live data layer.
