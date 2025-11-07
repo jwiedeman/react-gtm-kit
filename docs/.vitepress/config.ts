@@ -48,6 +48,8 @@ const sidebar: DefaultTheme.Sidebar = {
         { text: 'Privacy guidance', link: '/governance/privacy' },
         { text: 'Risk log', link: '/governance/risk-log' },
         { text: 'Security review', link: '/governance/security-review' },
+        { text: 'Operability plan', link: '/governance/operability' },
+        { text: 'Support runbook', link: '/governance/support-runbook' },
         { text: 'Contributing guide', link: '/governance/contributing' },
         { text: 'Release process', link: '/governance/release-process' }
       ]
