@@ -14,6 +14,10 @@ can verify builds stay healthy without launching full end-to-end browsers.
 | `@react-gtm-kit/example-next-app`          | Next.js App Router sample with consent banner and CSP nonce propagation. | Server helpers, route analytics, consent persistence.           |
 | `@react-gtm-kit/example-server`            | Node relay for server-side tagging setups.                               | Request normalization, consent forwarding, diagnostics logging. |
 
+Cross-reference the [tracking scenario matrix](/design/tracking-matrix) for a
+full list of required events, consent expectations, and validation coverage per
+example.
+
 ## Running locally
 
 Install workspace dependencies once from the repo root:
