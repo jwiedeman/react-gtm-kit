@@ -16,7 +16,8 @@ const sidebar: DefaultTheme.Sidebar = {
         { text: 'Server-side integration', link: '/how-to/server-integration' },
         { text: 'SSR and CSP setup', link: '/how-to/ssr' },
         { text: 'Keep bundles lightweight', link: '/how-to/optimization' },
-        { text: 'Examples & smoke tests', link: '/how-to/examples' }
+        { text: 'Examples & smoke tests', link: '/how-to/examples' },
+        { text: 'Troubleshooting & FAQ', link: '/how-to/troubleshooting' }
       ]
     }
   ],
@@ -51,7 +52,8 @@ const sidebar: DefaultTheme.Sidebar = {
         { text: 'Operability plan', link: '/governance/operability' },
         { text: 'Support runbook', link: '/governance/support-runbook' },
         { text: 'Contributing guide', link: '/governance/contributing' },
-        { text: 'Release process', link: '/governance/release-process' }
+        { text: 'Release process', link: '/governance/release-process' },
+        { text: 'Release checklist', link: '/governance/release-checklist' }
       ]
     }
   ],
