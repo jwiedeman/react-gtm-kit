@@ -3,7 +3,9 @@
 Server-side tagging lets you load `gtm.js` from a first-party domain, keep Measurement
 Protocol secrets off the client, and enrich events with server-verified context. The React GTM
 Kit ships a reference relay under [`examples/server`](../../examples/server/README.md) that you can
-use as a starting point for forwarding events to a GTM server container.
+use as a starting point for forwarding events to a GTM server container. Pair it with the
+[full-stack web example](../../examples/fullstack-web/README.md) to see how the React adapters wire
+Consent Mode updates, data layer pushes, and relay calls together in a single UI.
 
 ## 1. Point the core client at your tagging server
 
