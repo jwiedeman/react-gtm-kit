@@ -36,6 +36,7 @@ const sidebar: DefaultTheme.Sidebar = {
       text: 'Design Docs',
       items: [
         { text: 'API sign-off', link: '/design/api-signoff' },
+        { text: 'Tracking matrix', link: '/design/tracking-matrix' },
         { text: 'Decisions log', link: '/design/DECISIONS' }
       ]
     }
