@@ -1,0 +1,50 @@
+{
+  "scenario": "fullstack-web",
+  "description": "Full-stack web example wiring consent toggles, ecommerce purchase pushes, and relay forwarding.",
+  "dataLayerName": "dataLayer",
+  "url": "http://127.0.0.1:4302/",
+  "capturedAt": "2025-11-07T18:35:49.934Z",
+  "entries": [
+    {
+      "gtm.start": 1762540548211,
+      "event": "gtm.js"
+    },
+    [
+      "consent",
+      "default",
+      {
+        "ad_storage": "denied",
+        "analytics_storage": "denied",
+        "ad_personalization": "denied",
+        "ad_user_data": "denied"
+      }
+    ],
+    [
+      "consent",
+      "update",
+      {
+        "ad_storage": "granted",
+        "analytics_storage": "granted",
+        "ad_personalization": "granted",
+        "ad_user_data": "granted"
+      }
+    ],
+    {
+      "event": "purchase",
+      "event_source": "fullstack-web-example",
+      "ecommerce": {
+        "currency": "USD",
+        "value": 249,
+        "transaction_id": "ORDER-0001",
+        "items": [
+          {
+            "item_id": "sku-boost-analytics",
+            "item_name": "Analytics Boost Plan",
+            "price": 249,
+            "quantity": 1
+          }
+        ]
+      }
+    }
+  ]
+}

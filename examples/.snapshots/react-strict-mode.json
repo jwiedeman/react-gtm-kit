@@ -1,0 +1,53 @@
+{
+  "scenario": "react-strict-mode",
+  "description": "React StrictMode demo exercising router-driven page views, CTA events, conversion tracking, and consent flips.",
+  "dataLayerName": "dataLayer",
+  "url": "http://127.0.0.1:4301/",
+  "capturedAt": "2025-11-07T18:35:38.045Z",
+  "entries": [
+    {
+      "gtm.start": 1762540536822,
+      "event": "gtm.js"
+    },
+    [
+      "consent",
+      "default",
+      {
+        "ad_storage": "denied",
+        "analytics_storage": "denied",
+        "ad_personalization": "denied",
+        "ad_user_data": "denied"
+      }
+    ],
+    {
+      "event": "page_view",
+      "page_path": "/",
+      "page_title": "React StrictMode example"
+    },
+    [
+      "consent",
+      "update",
+      {
+        "ad_storage": "granted",
+        "analytics_storage": "granted",
+        "ad_personalization": "granted",
+        "ad_user_data": "granted"
+      }
+    ],
+    {
+      "event": "cta_click",
+      "cta_label": "Get started",
+      "click_count": 1
+    },
+    {
+      "event": "page_view",
+      "page_path": "/pricing",
+      "page_title": "Pricing | React StrictMode example"
+    },
+    {
+      "event": "begin_checkout",
+      "page_section": "pricing",
+      "cta_label": "Start free trial"
+    }
+  ]
+}

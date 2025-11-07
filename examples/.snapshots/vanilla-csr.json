@@ -1,0 +1,51 @@
+{
+  "scenario": "vanilla-csr",
+  "description": "Vanilla TypeScript control panel pushing page views, CTA events, and consent updates through the core client.",
+  "dataLayerName": "dataLayer",
+  "url": "http://127.0.0.1:4300/",
+  "capturedAt": "2025-11-07T18:35:26.007Z",
+  "entries": [
+    {
+      "gtm.start": 1762540524655,
+      "event": "gtm.js"
+    },
+    [
+      "consent",
+      "default",
+      {
+        "analytics_storage": "denied",
+        "ad_storage": "denied"
+      }
+    ],
+    {
+      "event": "page_view",
+      "page_title": "Vanilla CSR landing",
+      "page_path": "/"
+    },
+    {
+      "event": "cta_click",
+      "cta_label": "Get started",
+      "timestamp": "2025-11-07T18:35:25.461Z"
+    },
+    [
+      "consent",
+      "update",
+      {
+        "analytics_storage": "granted"
+      }
+    ],
+    {
+      "event": "page_view",
+      "page_title": "Manual page view",
+      "page_path": "/demo/1762540525668"
+    },
+    [
+      "consent",
+      "update",
+      {
+        "analytics_storage": "denied",
+        "ad_storage": "denied"
+      }
+    ]
+  ]
+}
