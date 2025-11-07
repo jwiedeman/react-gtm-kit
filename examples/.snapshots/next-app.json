@@ -1,0 +1,61 @@
+{
+  "scenario": "next-app",
+  "description": "Next.js App Router sample covering server-rendered head scripts, client navigations, and consent banner interactions.",
+  "dataLayerName": "nextAppDataLayer",
+  "url": "http://127.0.0.1:4303/",
+  "capturedAt": "2025-11-07T18:36:19.239Z",
+  "entries": [
+    {
+      "gtm.start": 1762540577754,
+      "event": "gtm.js"
+    },
+    [
+      "consent",
+      "default",
+      {
+        "ad_storage": "denied",
+        "analytics_storage": "denied",
+        "ad_personalization": "denied",
+        "ad_user_data": "denied"
+      }
+    ],
+    {
+      "event": "page_view",
+      "page_path": "/",
+      "page_location": "http://127.0.0.1:4303/",
+      "page_title": "React GTM Kit Next.js example"
+    },
+    [
+      "consent",
+      "update",
+      {
+        "ad_storage": "granted",
+        "analytics_storage": "granted",
+        "ad_personalization": "granted",
+        "ad_user_data": "granted"
+      }
+    ],
+    {
+      "event": "page_view",
+      "page_path": "/pricing",
+      "page_location": "http://127.0.0.1:4303/pricing",
+      "page_title": "Pricing | React GTM Kit Next.js example"
+    },
+    {
+      "event": "page_view",
+      "page_path": "/products/analytics-suite",
+      "page_location": "http://127.0.0.1:4303/products/analytics-suite",
+      "page_title": "Analytics Suite | React GTM Kit Next.js example"
+    },
+    [
+      "consent",
+      "update",
+      {
+        "ad_storage": "denied",
+        "analytics_storage": "denied",
+        "ad_personalization": "denied",
+        "ad_user_data": "denied"
+      }
+    ]
+  ]
+}
