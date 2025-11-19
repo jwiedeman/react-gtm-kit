@@ -40,6 +40,14 @@ const buildHtml = (): string => {
       scriptAttributes: { nonce: '${NONCE}' }
     });
     client.init();
+
+    const containerScript = document.querySelector('script[data-gtm-container-id="${GTM_CONTAINER_ID}"]');
+    if (containerScript instanceof HTMLScriptElement) {
+      const nonceAttr = containerScript.getAttribute('nonce') ?? '';
+      const nonceProp = containerScript.nonce ?? '';
+      document.body.setAttribute('data-gtm-nonce-attr', nonceAttr);
+      document.body.setAttribute('data-gtm-nonce-prop', nonceProp);
+    }
   })();`;
 
   return `<!doctype html>

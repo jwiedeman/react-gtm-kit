@@ -13,6 +13,27 @@ const getDataLayer = async <T>(page: Page): Promise<T[]> => {
   });
 };
 
+const decodeCookieValue = (value?: string | null): string => {
+  if (!value) {
+    return '';
+  }
+
+  let decoded = value;
+  for (let i = 0; i < 3; i += 1) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) {
+        break;
+      }
+      decoded = next;
+    } catch {
+      break;
+    }
+  }
+
+  return decoded;
+};
+
 test.describe('Next.js App Router example', () => {
   let server: NextAppServer;
 
@@ -31,9 +52,11 @@ test.describe('Next.js App Router example', () => {
     await expect(scriptLocator).toHaveCount(1);
     await expect(scriptLocator).toHaveAttribute('nonce', /.+/);
 
-    const noscriptFrame = page.locator('body > noscript iframe');
-    await expect(noscriptFrame).toHaveAttribute(
-      'src',
+    const noscript = page.locator('body > noscript');
+    await expect(noscript).toHaveCount(1);
+    const noscriptHtml = await noscript.evaluate((element) => element.innerHTML || '');
+    const normalizedNoscriptHtml = noscriptHtml.replace(/&amp;/g, '&');
+    expect(normalizedNoscriptHtml).toContain(
       'https://www.googletagmanager.com/ns.html?id=GTM-NEXTAPP&l=nextAppDataLayer'
     );
 
@@ -47,7 +70,8 @@ test.describe('Next.js App Router example', () => {
     const initialCookies = await page.context().cookies();
     const consentCookie = initialCookies.find((cookie) => cookie.name === 'next-app-consent');
     expect(consentCookie).toBeDefined();
-    expect(consentCookie?.value).toContain('"analytics_storage":"denied"');
+    const consentCookieValue = decodeCookieValue(consentCookie?.value);
+    expect(consentCookieValue).toContain('"analytics_storage":"denied"');
 
     await page.waitForFunction(() => {
       const layer = (window as unknown as { nextAppDataLayer?: unknown[] }).nextAppDataLayer;
@@ -66,7 +90,7 @@ test.describe('Next.js App Router example', () => {
     const pageViewEvents = await getDataLayer<{ event?: string; page_path?: string }>(page);
     expect(pageViewEvents.some((entry) => entry.event === 'page_view' && entry.page_path === '/')).toBe(true);
 
-    await page.getByRole('link', { name: 'Pricing' }).click();
+    await page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: 'Pricing' }).click();
     await expect(page).toHaveURL(/\/pricing$/);
 
     await page.waitForFunction(() => {
@@ -87,7 +111,10 @@ test.describe('Next.js App Router example', () => {
       true
     );
 
-    await page.getByRole('link', { name: 'Analytics Suite' }).click();
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('link', { name: 'Analytics Suite' })
+      .click();
     await expect(page).toHaveURL(/\/products\/analytics-suite$/);
 
     await page.waitForFunction(() => {
@@ -132,9 +159,10 @@ test.describe('Next.js App Router example', () => {
 
     const grantedCookies = await page.context().cookies();
     const grantedConsent = grantedCookies.find((cookie) => cookie.name === 'next-app-consent');
-    expect(grantedConsent?.value).toContain('"analytics_storage":"granted"');
+    const grantedValue = decodeCookieValue(grantedConsent?.value);
+    expect(grantedValue).toContain('"analytics_storage":"granted"');
 
-    await page.getByRole('button', { name: 'Manage consent' }).click();
+    await page.getByRole('button', { name: 'Review consent preferences' }).click();
     await page.getByRole('button', { name: 'Keep essential only' }).click();
 
     await page.waitForFunction(() => {
@@ -155,6 +183,7 @@ test.describe('Next.js App Router example', () => {
 
     const resetCookies = await page.context().cookies();
     const resetConsent = resetCookies.find((cookie) => cookie.name === 'next-app-consent');
-    expect(resetConsent?.value).toContain('"analytics_storage":"denied"');
+    const resetValue = decodeCookieValue(resetConsent?.value);
+    expect(resetValue).toContain('"analytics_storage":"denied"');
   });
 });

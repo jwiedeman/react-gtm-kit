@@ -140,7 +140,13 @@ export class ScriptManager {
           continue;
         }
 
-        script.setAttribute(key, String(value));
+        const stringValue = String(value);
+
+        if (key === 'nonce') {
+          script.nonce = stringValue;
+        }
+
+        script.setAttribute(key, stringValue);
       }
 
       targetParent.appendChild(script);
