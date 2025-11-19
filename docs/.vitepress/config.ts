@@ -61,7 +61,10 @@ const sidebar: DefaultTheme.Sidebar = {
   '/reference/': [
     {
       text: 'API Reference',
-      items: [{ text: 'Event helpers', link: '/reference/events' }]
+      items: [
+        { text: 'Public API surface', link: '/reference/api' },
+        { text: 'Event helpers', link: '/reference/events' }
+      ]
     }
   ],
   '/releases/': [
@@ -104,7 +107,7 @@ const config: UserConfig = {
       { text: 'Getting Started', link: '/' },
       { text: 'Concepts', link: '/concepts/architecture' },
       { text: 'How-to Guides', link: '/how-to/consent' },
-      { text: 'Reference', link: '/reference/events' },
+      { text: 'Reference', link: '/reference/api' },
       { text: 'Governance', link: '/governance/OWNERS' },
       { text: 'Marketing', link: '/marketing/launch-plan' }
     ],
