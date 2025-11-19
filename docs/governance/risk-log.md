@@ -9,4 +9,6 @@ This log tracks open privacy, security, and compliance risks along with mitigati
 | R-003 | Compliance | Server-side tagging reference lacks documented DPIA considerations.                            | Medium | Low        | Document data flow and responsibilities in forthcoming `docs/how-to/server-integration.md`; review with legal before release. | Privacy Counsel | Planned |
 | R-004 | Operations | No formal security disclosure channel published for external reporters.                        | Low    | Low        | Draft `SECURITY.md` with contact email and triage expectations before beta launch.                                            | OSS Maintainer  | Planned |
 
+| R-005 | Privacy | Consent evidence retention is inconsistent across apps, risking audit gaps. | Medium | Low | Add release sign-off checklist to ensure consent records (timestamp, version, region) are stored alongside deploys; automate archival in observability backlog. | Privacy Eng | Open |
+| R-006 | Compliance | DPIA refresh for GTM containers not yet scheduled for the next milestone. | Medium | Medium | Book privacy counsel review during M0, include noscript + consent changes, and record decision links in `docs/design/DECISIONS.md`. | Privacy Counsel | Open |
 Use consistent IDs when updating rows so stakeholders can reference them in meetings and release checklists.

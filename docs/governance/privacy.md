@@ -11,6 +11,21 @@ This document summarizes the privacy expectations, regional obligations, and gov
 - **Region awareness** – Detect the visitor’s regulatory context (Geo IP, user selection, or CMP) and supply `ConsentRegionOptions` to scope defaults or updates. The library forwards `region` and `wait_for_update` to GTM but does not derive them automatically.
 - **Audit trail** – Persist proof of consent (timestamp, categories, version of the notice) in application storage to satisfy GDPR and CCPA record-keeping.
 
+## Jurisdiction-specific obligations
+
+- **GDPR/UK GDPR**
+  - Default to deny/hold tracking until the visitor opts in. Honor withdrawal immediately and flush queued GTM pushes that depend on denied signals.
+  - Present purpose-specific toggles that align with the four Consent Mode parameters and avoid bundling unrelated processing into a single switch.
+  - Expose a data export route for GTM-related identifiers (e.g., client IDs) and confirm erasure on request within the statutory window.
+  - Document processors (Google, downstream destinations) in the ROPA and ensure a DPA is executed with each vendor enabled through GTM.
+- **CCPA/CPRA**
+  - Respect “Do Not Sell/Share” (DNS) signals by mapping the user choice to `ad_user_data` and `ad_personalization` = denied before any ad tech tags run.
+  - Provide a self-service opt-out link in the site footer/header and wire it to the consent update API plus downstream suppression lists.
+  - Maintain a dedicated inbox/workflow for access/deletion requests and log response timestamps for the annual audit.
+- **Brazil LGPD and other regions**
+  - Mirror the GDPR defaults for prior consent, and publish locale-specific privacy notices. Track any country overrides in the consent presets you pass to `setConsentDefaults`.
+  - Keep a register of local bases for processing (consent vs. legitimate interest) for each GTM tag configuration.
+
 ## Data minimization and tagging hygiene
 
 - Push only the attributes required for measurement. Avoid sending PII/PHI through the data layer. Configure GTM variables to anonymize or hash identifiers when possible.
@@ -37,3 +52,5 @@ This document summarizes the privacy expectations, regional obligations, and gov
 - Privacy counsel should review any new tracking scenario before it moves to production.
 - Re-run the consent end-to-end tests quarterly and whenever regulations change.
 - Capture approvals and outstanding issues in the project risk log (`docs/governance/risk-log.md`).
+- Maintain a **sign-off checklist** per release: privacy notice copy reviewed, consent presets validated for covered regions, DNS/DSR routing confirmed, and DPIA re-run when new identifiers are introduced.
+- Store evidence of sign-off (counsel email or ticket link) alongside the release tag to support audits.
