@@ -20,6 +20,96 @@ fresh content immediately.
 
 ---
 
+## Quickstart
+
+1. **Install the packages you need**
+
+   ```bash
+   pnpm add @react-gtm-kit/core @react-gtm-kit/react-modern
+   # Next.js helpers (optional)
+   pnpm add @react-gtm-kit/next
+   ```
+
+2. **Create and initialize a client** (framework-agnostic):
+
+   ```ts
+   import { createGtmClient, pushEvent } from '@react-gtm-kit/core';
+
+   const gtm = createGtmClient({ containers: 'GTM-XXXX' });
+   gtm.init();
+
+   pushEvent(gtm, 'page_view', { page_path: '/', page_title: 'Home' });
+   ```
+
+3. **Wrap React apps with the provider** (StrictMode-safe):
+
+   ```tsx
+   import { useEffect } from 'react';
+   import { GtmProvider, useGtmPush } from '@react-gtm-kit/react-modern';
+
+   const TrackLanding = () => {
+     const push = useGtmPush();
+     useEffect(() => {
+       push({ event: 'page_view', page_path: '/' });
+     }, [push]);
+     return <LandingPage />;
+   };
+
+   export default function App() {
+     return (
+       <GtmProvider config={{ containers: 'GTM-XXXX' }}>
+         <TrackLanding />
+       </GtmProvider>
+     );
+   }
+   ```
+
+4. **Bridge Next.js routing** (App Router):
+
+   ```tsx
+   // app/gtm-providers.tsx
+   'use client';
+
+   import { useTrackPageViews } from '@react-gtm-kit/next';
+   import { createGtmClient } from '@react-gtm-kit/core';
+
+   const containers = 'GTM-XXXX';
+   const client = createGtmClient({ containers });
+   client.init();
+
+   export function GtmProviders({ children }: { children: React.ReactNode }) {
+     useTrackPageViews({ client });
+     return <>{children}</>;
+   }
+   ```
+
+   ```tsx
+   // app/layout.tsx
+   import { GtmHeadScript, GtmNoScript } from '@react-gtm-kit/next';
+   import { GtmProviders } from './gtm-providers';
+
+   const containers = 'GTM-XXXX';
+
+   export default function RootLayout({ children }: { children: React.ReactNode }) {
+     return (
+       <html lang="en">
+         <head>
+           <GtmHeadScript containers={containers} />
+         </head>
+         <body>
+           <GtmNoScript containers={containers} />
+           <GtmProviders>{children}</GtmProviders>
+         </body>
+       </html>
+     );
+   }
+   ```
+
+Check the [API reference](./docs/reference/api.md) for full option lists and helper behaviors, and
+the task-based guides under `docs/how-to/` for end-to-end recipes.
+
+---
+
 ## 1. Project charter
 
 **Goal:** Ship a dead-simple, production-grade GTM client that works in any React era (legacy to current) and exposes all GTM capabilities (multi-container, Consent Mode v2, noscript fallback, environment params, SSR/Next, etc.). Complement the core library with reference implementations covering both a server-side integration and a web frontend experience so teams can adopt the kit in full-stack scenarios without guesswork.
