@@ -19,15 +19,21 @@ test.describe('SSR CSP + noscript integration', () => {
     const containerScripts = page.locator('script[data-gtm-container-id="GTM-TEST"]');
     await expect(containerScripts).toHaveCount(1);
 
-    await expect(containerScripts).toHaveAttribute('nonce', 'test-nonce-123');
+    await expect(containerScripts).toHaveAttribute('nonce', '');
+
+    const body = page.locator('body');
+    await expect(body).toHaveAttribute('data-gtm-nonce-attr', '');
+    await expect(body).toHaveAttribute('data-gtm-nonce-prop', 'test-nonce-123');
     await expect(containerScripts).toHaveAttribute(
       'src',
       /https:\/\/www\.googletagmanager\.com\/gtm\.js\?id=GTM-TEST&l=dataLayer/
     );
 
-    const noscriptFrame = page.locator('noscript iframe');
-    await expect(noscriptFrame).toHaveAttribute(
-      'src',
+    const noscript = page.locator('noscript');
+    await expect(noscript).toHaveCount(1);
+    const noscriptHtml = await noscript.evaluate((element) => element.innerHTML || '');
+    const normalizedNoscriptHtml = noscriptHtml.replace(/&amp;/g, '&');
+    expect(normalizedNoscriptHtml).toContain(
       'https://www.googletagmanager.com/ns.html?id=GTM-TEST&l=dataLayer'
     );
   });

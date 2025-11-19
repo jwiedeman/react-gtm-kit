@@ -65,6 +65,7 @@ describe('createGtmClient', () => {
     expect(script).not.toBeNull();
     expect(script?.async).toBe(false);
     expect(script?.getAttribute('nonce')).toBe('nonce-123');
+    expect(script?.nonce).toBe('nonce-123');
     expect(script?.getAttribute('data-custom')).toBe('custom-value');
   });
 
