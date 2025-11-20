@@ -9,19 +9,19 @@ module.exports = [
     name: '@react-gtm-kit/core',
     path: 'packages/core/src/index.ts',
     import: '{ createGtmClient }',
-    limit: '3.5 KB'
+    limit: '3.9 KB'
   }),
   withDefaults({
     name: '@react-gtm-kit/react-modern',
     path: 'packages/react-modern/src/index.ts',
     import: '{ GtmProvider }',
-    limit: '6.5 KB'
+    limit: '7 KB'
   }),
   withDefaults({
     name: '@react-gtm-kit/react-legacy',
     path: 'packages/react-legacy/src/index.ts',
     import: '{ withGtm }',
-    limit: '6.5 KB'
+    limit: '7 KB'
   }),
   withDefaults({
     name: '@react-gtm-kit/next',

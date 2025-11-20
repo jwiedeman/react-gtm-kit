@@ -4,6 +4,14 @@
 
 Planning and delivery tasks now live in [`TASKS.md`](./TASKS.md). Keep that kanban up to date in-place (no deletions) and record status changes directly in the table so project history remains auditable.
 
+### Quality gates
+
+[![CI (lint, typecheck, tests, size limits)](https://github.com/react-gtm-kit/react-gtm-kit/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/react-gtm-kit/react-gtm-kit/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/react-gtm-kit/react-gtm-kit/graph/badge.svg)](https://codecov.io/gh/react-gtm-kit/react-gtm-kit)
+
+- CI runs linting, type-checking, unit tests with enforced coverage thresholds, and size/runtime budget checks via `.github/workflows/ci.yml` on every push and pull request.
+- Coverage artifacts are uploaded to Codecov when tokens are available so PRs can surface gate health visibly.
+
 ---
 
 ## Documentation site
