@@ -68,6 +68,7 @@ environments.
 - The helper escapes all attribute values so you can safely inject the generated string into HTML templates without additional escaping.
 - If you rely on strict Content Security Policies, remember to allow the GTM host (or your custom host) in the `frame-src` directive so the iframe can load.
 - When using non-default hosts, document the change with your team so they align with consent and data residency requirements.
+- Keep the noscript iframe aligned with your data layer name (for example `l=dataLayer`) and preserve the zero-height/width attributes so the fallback stays invisible while still firing.
 
 ## Testing recommendations
 
