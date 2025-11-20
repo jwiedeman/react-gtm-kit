@@ -26,6 +26,12 @@ deployment. Use the workspace scripts to work on documentation:
 Link new documentation to the navigation by editing `docs/.vitepress/config.ts` so the site surfaces
 fresh content immediately.
 
+Highlighted task-based guides:
+
+- [Multi-container custom hosts](./docs/how-to/multi-container-custom-hosts.md) – load multiple containers through a shared or first-party GTM host.
+- [SSR noscript with CSP nonces](./docs/how-to/ssr-noscript-csp.md) – emit the iframe fallback while keeping nonce-bearing scripts compliant with CSP.
+- [Track GA4 ecommerce with `pushEcommerce`](./docs/how-to/ga4-ecommerce.md) – ship GA4-ready payloads without losing metadata when extras are present.
+
 ---
 
 ## Quickstart
