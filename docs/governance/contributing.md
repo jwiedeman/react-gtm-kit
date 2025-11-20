@@ -21,3 +21,16 @@ The React GTM Kit workspace enforces shared linting, formatting, and commit stan
 3. `pnpm lint` & `pnpm typecheck` – address any diagnostics.
 4. `pnpm test` (or targeted package tests) – keep regression coverage healthy.
 5. Stage files, then commit using a Conventional Commit message once the pre-commit hook succeeds.
+
+## Support expectations & triage labels
+
+- **Initial response:** Aim to triage new GitHub issues within two business days.
+- **SLA targets:**
+  - Production-impacting bugs: acknowledged within 48 hours; fix or mitigation within five business days.
+  - Documentation or example gaps: acknowledged within three business days; resolution within two weeks.
+  - Questions/usage help: acknowledged within three business days with pointers to docs or examples.
+- **Labels:**
+  - `type:bug`, `type:question`, `type:docs`, `type:enhancement` to categorize intake.
+  - `priority:urgent`, `priority:normal`, `priority:low` to set expectations.
+  - `needs-repro` when reproduction steps or logs are missing; `blocked` when waiting on upstream releases or decisions.
+- Apply labels during triage so maintenance workflows and dashboards reflect current support load.
