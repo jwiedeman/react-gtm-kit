@@ -1,6 +1,6 @@
 # Security Review Summary
 
-_Last updated: 2025-11-07_
+_Last updated: 2025-12-01_
 
 This document captures the security posture of the React GTM Kit workspace. Update it after each dependency audit, threat modeling session, or major architectural change.
 
@@ -15,7 +15,7 @@ This document captures the security posture of the React GTM Kit workspace. Upda
 
 - **Command:** `pnpm audit --prod`
 - **Result:** No known vulnerabilities found (run locally on 2025-11-07).
-- **Action:** Keep monthly reminders to rerun the audit and capture findings here. Integrate Dependabot or Renovate to surface new advisories automatically.
+- **Action:** Keep monthly reminders to rerun the audit and capture findings here. Dependabot now monitors npm workspaces and GitHub Actions weekly with scoped chore commits.
 
 ## Threat model highlights
 
@@ -37,8 +37,8 @@ This document captures the security posture of the React GTM Kit workspace. Upda
 
 ## Outstanding actions
 
-- [ ] Wire automated Dependabot alerts and document triage SLA.
-- [ ] Add security contact information and disclosure policy to `SECURITY.md` (future task).
+- [x] Wire automated Dependabot alerts and document triage SLA. _(2025-12-01: Added weekly npm + GitHub Actions checks in `.github/dependabot.yml`; SLA captured in `SECURITY.md`.)_
+- [x] Add security contact information and disclosure policy to `SECURITY.md` (future task). _(2025-12-01: Published disclosure guidance with security@react-gtm-kit.dev contact and response targets.)_
 - [ ] Evaluate adding Subresource Integrity (SRI) hashes when custom GTM hosts are in use.
 
 Track progress of the above items in `TASKS.md` or dedicated backlog tickets.
