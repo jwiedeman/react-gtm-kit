@@ -11,6 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    strategy:
+      fail-fast: false
+      matrix:
+        task:
+          - lint
+          - typecheck
+          - test
+          - verify:lightweight
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -20,12 +28,12 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
       - run: pnpm install
-      - run: pnpm lint
-      - run: pnpm test
-      - run: pnpm run verify:lightweight
+      - name: Run ${{ matrix.task }}
+        run: pnpm run ${{ matrix.task }}
       - name: Upload coverage to Codecov
-        if: ${{ env.CODECOV_TOKEN != '' }}
+        if: ${{ matrix.task == 'test' && env.CODECOV_TOKEN != '' }}
         uses: codecov/codecov-action@v4
         with:
           files: |
