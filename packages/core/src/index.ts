@@ -7,7 +7,12 @@ export type {
   ScriptAttributes
 } from './types';
 export type { ConsentCommand, ConsentRegionOptions, ConsentState } from './consent';
-export { buildConsentCommand, consent } from './consent';
+export {
+  buildConsentCommand,
+  consent,
+  createConsentDefaultsCommand,
+  createConsentUpdateCommand
+} from './consent';
 export { consentPresets, getConsentPreset } from './consent/presets';
 export { createGtmClient } from './client';
 export { pushEvent, pushEcommerce } from './events';

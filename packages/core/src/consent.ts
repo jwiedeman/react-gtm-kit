@@ -131,7 +131,19 @@ export const buildConsentCommand = ({
 export const createConsentCommandValue = (input: ConsentCommandInput): DataLayerValue =>
   buildConsentCommand(input) as unknown as DataLayerValue;
 
+export const createConsentDefaultsCommand = (
+  state: ConsentState,
+  options?: ConsentRegionOptions
+): DataLayerValue => createConsentCommandValue({ command: CONSENT_DEFAULT, state, options });
+
+export const createConsentUpdateCommand = (
+  state: ConsentState,
+  options?: ConsentRegionOptions
+): DataLayerValue => createConsentCommandValue({ command: CONSENT_UPDATE, state, options });
+
 export const consent = {
   buildConsentCommand,
+  createConsentDefaultsCommand,
+  createConsentUpdateCommand,
   normalizeConsentState
 };
