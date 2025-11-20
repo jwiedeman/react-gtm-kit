@@ -133,5 +133,14 @@ as the browser.
 - Monitor upstream failures—the relay returns `502` when the server container rejects a request.
 - Consider queuing or retrying failed requests so transient outages do not drop conversions.
 
+## Document DPIA notes and evidence
+
+- Summarize the end-to-end data flow (browser → relay → server container) in your DPIA and
+  attach it to the release PR for counsel review.
+- Archive anonymized consent evidence for each deploy: the consent defaults you set, the first
+  CMP update, timestamp, and region. Keep the records with your release artifacts.
+- Track refresh cadence and owners in `docs/governance/maintenance.md` and log outcomes in
+  `docs/design/DECISIONS.md`. See `docs/governance/dpia.md` for the full workflow.
+
 With these pieces in place you can run GTM end-to-end on a first-party domain while still taking
 advantage of React GTM Kit’s client adapters for browser interactions.

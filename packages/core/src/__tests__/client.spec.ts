@@ -177,6 +177,31 @@ describe('createGtmClient', () => {
     expect(dataLayer[3]).toMatchObject({ event: 'pre-init-event' });
   });
 
+  it('keeps CMP consent defaults and updates ahead of queued events', () => {
+    const client = createGtmClient({ containers: 'GTM-CMP-ORDER' });
+
+    client.push({ event: 'pre-init-event' });
+    client.setConsentDefaults({ ad_storage: 'denied' }, { region: ['EEA'], waitForUpdate: 2000 });
+    client.updateConsent({ ad_storage: 'granted', analytics_storage: 'granted' });
+
+    client.init();
+
+    const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+
+    expect(dataLayer[1]).toEqual([
+      'consent',
+      'default',
+      { ad_storage: 'denied' },
+      { region: ['EEA'], wait_for_update: 2000 }
+    ]);
+    expect(dataLayer[2]).toEqual([
+      'consent',
+      'update',
+      { ad_storage: 'granted', analytics_storage: 'granted' }
+    ]);
+    expect(dataLayer[3]).toMatchObject({ event: 'pre-init-event' });
+  });
+
   it('delivers duplicate queued events in order', () => {
     const client = createGtmClient({ containers: 'GTM-DUPLICATE-QUEUE' });
 
