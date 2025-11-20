@@ -49,6 +49,25 @@ describe('createGtmClient', () => {
     expect(scripts[1].src).toContain('gtm_preview=env');
   });
 
+  it('uses a custom host and default query params when injecting scripts', () => {
+    const client = createGtmClient({
+      containers: { id: 'GTM-HOST', queryParams: { gtm_preview: 'preview' } },
+      host: 'https://tag.example.com/',
+      defaultQueryParams: { gtm_auth: 'auth-token' }
+    });
+
+    client.init();
+
+    const script = document.querySelector<HTMLScriptElement>('script[data-gtm-container-id="GTM-HOST"]');
+    expect(script).not.toBeNull();
+    expect(script?.src.startsWith('https://tag.example.com/gtm.js')).toBe(true);
+
+    const url = new URL(script?.src ?? '');
+    expect(url.searchParams.get('id')).toBe('GTM-HOST');
+    expect(url.searchParams.get('gtm_auth')).toBe('auth-token');
+    expect(url.searchParams.get('gtm_preview')).toBe('preview');
+  });
+
   it('applies custom script attributes including CSP nonce', () => {
     const client = createGtmClient({
       containers: 'GTM-NONCE',
