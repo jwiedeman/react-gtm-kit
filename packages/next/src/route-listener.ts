@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
-import type { GtmClient, PageViewPayload } from '@react-gtm-kit/core';
+import type { GtmClient, PageViewPayload, ScriptLoadState } from '@react-gtm-kit/core';
 import { pushEvent } from '@react-gtm-kit/core';
 
 const DEFAULT_EVENT_NAME = 'page_view';
@@ -23,7 +23,7 @@ export interface RouteChangeEventDetails extends RouteLocationSnapshot {
 export type PageViewPayloadBuilder = (details: RouteChangeEventDetails) => PageViewPayload;
 
 export interface UseTrackPageViewsOptions {
-  client: Pick<GtmClient, 'push'>;
+  client: Pick<GtmClient, 'push' | 'whenReady'>;
   eventName?: string;
   buildPayload?: PageViewPayloadBuilder;
   includeSearchParams?: boolean;
@@ -31,6 +31,8 @@ export interface UseTrackPageViewsOptions {
   trackOnMount?: boolean;
   skipSamePath?: boolean;
   pushEventFn?: typeof pushEvent;
+  waitForReady?: boolean;
+  readyPromise?: Promise<ScriptLoadState[]>;
 }
 
 interface RouteSnapshot extends RouteLocationSnapshot {
@@ -69,7 +71,9 @@ export const useTrackPageViews = ({
   trackHash = false,
   trackOnMount = true,
   skipSamePath = true,
-  pushEventFn = pushEvent
+  pushEventFn = pushEvent,
+  waitForReady = false,
+  readyPromise
 }: UseTrackPageViewsOptions): void => {
   if (!client) {
     throw new Error('A GTM client is required to track page views.');
@@ -88,6 +92,31 @@ export const useTrackPageViews = ({
 
   const previousRef = useRef<RouteSnapshot | null>(null);
   const hasTrackedRef = useRef(false);
+  const pendingKeyRef = useRef<string | null>(null);
+  const readinessRef = useRef<Promise<ScriptLoadState[]> | null>(waitForReady ? readyPromise ?? client.whenReady() : null);
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    readinessRef.current = waitForReady ? readyPromise ?? client.whenReady() : null;
+  }, [client, readyPromise, waitForReady]);
+
+  const logFailures = useCallback((states: ScriptLoadState[]) => {
+    const failed = states.filter((state) => state.status === 'failed');
+    if (!failed.length) {
+      return;
+    }
+
+    const details = failed.map((state) => state.containerId).join(', ');
+    // eslint-disable-next-line no-console
+    console.error(`[react-gtm-kit] Failed to load GTM container script(s): ${details}`, failed);
+  }, []);
 
   const handleRouteChange = useCallback(
     (nextPathname: string | null, searchValue: string, rawHash: string) => {
@@ -138,20 +167,57 @@ export const useTrackPageViews = ({
         previous
       };
 
-      const payload = buildPayload(details);
-      pushEventFn(client, eventName, payload);
+      const pushPayload = (): void => {
+        const payload = buildPayload(details);
+        pushEventFn(client, eventName, payload);
 
-      previousRef.current = {
-        key,
-        pathname: nextPathname,
-        search: searchValue,
-        hash: normalizedHash,
-        pagePath,
-        url
+        previousRef.current = {
+          key,
+          pathname: nextPathname,
+          search: searchValue,
+          hash: normalizedHash,
+          pagePath,
+          url
+        };
+        hasTrackedRef.current = true;
       };
-      hasTrackedRef.current = true;
+
+      if (waitForReady && readinessRef.current) {
+        pendingKeyRef.current = key;
+        readinessRef.current
+          .then((states) => {
+            if (!isMountedRef.current || pendingKeyRef.current !== key) {
+              return;
+            }
+
+            logFailures(states);
+            pushPayload();
+          })
+          .catch((error) => {
+            if (!isMountedRef.current || pendingKeyRef.current !== key) {
+              return;
+            }
+            // eslint-disable-next-line no-console
+            console.error('[react-gtm-kit] Error while waiting for GTM readiness.', error);
+            pushPayload();
+          });
+
+        return;
+      }
+
+      pushPayload();
     },
-    [buildPayload, client, eventName, pushEventFn, skipSamePath, trackHash, trackOnMount]
+    [
+      buildPayload,
+      client,
+      eventName,
+      logFailures,
+      pushEventFn,
+      skipSamePath,
+      trackHash,
+      trackOnMount,
+      waitForReady
+    ]
   );
 
   useEffect(() => {

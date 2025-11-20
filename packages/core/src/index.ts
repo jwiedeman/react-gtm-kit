@@ -4,7 +4,9 @@ export type {
   CreateGtmClientOptions,
   DataLayerValue,
   GtmClient,
-  ScriptAttributes
+  ScriptAttributes,
+  ScriptLoadState,
+  ScriptLoadStatus
 } from './types';
 export type { ConsentCommand, ConsentRegionOptions, ConsentState } from './consent';
 export {

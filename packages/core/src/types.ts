@@ -28,6 +28,16 @@ export interface ScriptAttributes {
   [attribute: string]: ScriptAttributeValue;
 }
 
+export type ScriptLoadStatus = 'loaded' | 'failed' | 'skipped';
+
+export interface ScriptLoadState {
+  containerId: string;
+  src?: string;
+  status: ScriptLoadStatus;
+  fromCache?: boolean;
+  error?: string;
+}
+
 export interface ContainerDescriptor {
   id: string;
   queryParams?: Record<string, string | number | boolean>;
@@ -52,4 +62,6 @@ export interface GtmClient {
   updateConsent(state: import('./consent').ConsentState, options?: import('./consent').ConsentRegionOptions): void;
   teardown(): void;
   isInitialized(): boolean;
+  whenReady(): Promise<ScriptLoadState[]>;
+  onReady(callback: (state: ScriptLoadState[]) => void): () => void;
 }

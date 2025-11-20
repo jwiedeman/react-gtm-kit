@@ -8,7 +8,8 @@ import type {
   ContainerDescriptor,
   CreateGtmClientOptions,
   DataLayerValue,
-  GtmClient
+  GtmClient,
+  ScriptLoadState
 } from './types';
 
 const DEFAULT_DATA_LAYER_NAME = 'dataLayer';
@@ -208,6 +209,14 @@ export class GtmClientImpl implements GtmClient {
 
   isInitialized(): boolean {
     return this.initialized;
+  }
+
+  whenReady(): Promise<ScriptLoadState[]> {
+    return this.scriptManager.whenReady();
+  }
+
+  onReady(callback: (state: ScriptLoadState[]) => void): () => void {
+    return this.scriptManager.onReady(callback);
   }
 
   get dataLayerName(): string {
