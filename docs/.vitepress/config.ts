@@ -52,6 +52,7 @@ const sidebar: DefaultTheme.Sidebar = {
         { text: 'Security review', link: '/governance/security-review' },
         { text: 'Operability plan', link: '/governance/operability' },
         { text: 'Support runbook', link: '/governance/support-runbook' },
+        { text: 'Maintenance cadence', link: '/governance/maintenance' },
         { text: 'Contributing guide', link: '/governance/contributing' },
         { text: 'Release process', link: '/governance/release-process' },
         { text: 'Release checklist', link: '/governance/release-checklist' }
