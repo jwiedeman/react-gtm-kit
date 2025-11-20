@@ -88,9 +88,6 @@ const isConsentCommandValue = (value: DataLayerValue): value is unknown[] =>
   value[0] === 'consent' &&
   (value[1] === 'default' || value[1] === 'update');
 
-const isConsentDefaultCommandValue = (value: DataLayerValue): boolean =>
-  isConsentCommandValue(value) && value[1] === 'default';
-
 const isStartEvent = (value: DataLayerValue): boolean => {
   if (!isPlainObject(value)) {
     return false;
@@ -295,8 +292,8 @@ export class GtmClientImpl implements GtmClient {
 
     const entry: QueuedEntry = { value, signature };
 
-    if (isConsentDefaultCommandValue(value)) {
-      const firstNonConsentIndex = this.queue.findIndex((queued) => !isConsentDefaultCommandValue(queued.value));
+    if (isConsentCommandValue(value)) {
+      const firstNonConsentIndex = this.queue.findIndex((queued) => !isConsentCommandValue(queued.value));
 
       if (firstNonConsentIndex === -1) {
         this.queue.push(entry);

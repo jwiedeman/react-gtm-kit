@@ -28,6 +28,9 @@ acknowledged with an owner, date, and follow-up issue.
 - [ ] Validate consent banner flows in the Next.js example locally (accept/deny/update).
 - [ ] Confirm consent cookies respect default + updated states across page refreshes.
 - [ ] Re-run privacy checklist in `docs/governance/privacy.md` for any regulation updates.
+- [ ] Archive consent evidence (defaults + first user update with timestamps/regions) alongside
+      release artifacts per `docs/governance/dpia.md`.
+- [ ] Confirm DPIA summary and refresh date are recorded with owners.
 
 ## Documentation
 
