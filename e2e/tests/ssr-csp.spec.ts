@@ -33,8 +33,8 @@ test.describe('SSR CSP + noscript integration', () => {
     await expect(noscript).toHaveCount(1);
     const noscriptHtml = await noscript.evaluate((element) => element.innerHTML || '');
     const normalizedNoscriptHtml = noscriptHtml.replace(/&amp;/g, '&');
-    expect(normalizedNoscriptHtml).toContain(
-      'https://www.googletagmanager.com/ns.html?id=GTM-TEST&l=dataLayer'
-    );
+    expect(normalizedNoscriptHtml).toContain('https://www.googletagmanager.com/ns.html?id=GTM-TEST&l=dataLayer');
+    expect(normalizedNoscriptHtml).toContain('height="0"');
+    expect(normalizedNoscriptHtml).toContain('width="0"');
   });
 });
