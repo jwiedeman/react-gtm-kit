@@ -1,13 +1,14 @@
 import React from 'react';
-import { act, render } from '@testing-library/react';
-import type { PageViewPayload } from '@react-gtm-kit/core';
+import { act, render, waitFor } from '@testing-library/react';
+import type { PageViewPayload, ScriptLoadState } from '@react-gtm-kit/core';
 import type { UseTrackPageViewsOptions } from '../route-listener';
 import { useTrackPageViews } from '../route-listener';
 import { __resetMockNavigation, __setMockPathname, __setMockSearchParams } from '../__mocks__/next/navigation';
 
 describe('useTrackPageViews', () => {
   const createClient = () => ({
-    push: jest.fn()
+    push: jest.fn(),
+    whenReady: jest.fn(() => Promise.resolve<ScriptLoadState[]>([]))
   });
 
   interface HarnessProps {
@@ -148,6 +149,31 @@ describe('useTrackPageViews', () => {
       event: 'page_view',
       page_path: '/next',
       page_location: 'http://localhost/next'
+    });
+  });
+
+  it('waits for GTM readiness when enabled', async () => {
+    const client = createClient();
+    __setMockPathname('/delayed');
+
+    let resolveReady: ((value: ScriptLoadState[]) => void) | undefined;
+    const readiness = new Promise<ScriptLoadState[]>((resolve) => {
+      resolveReady = resolve;
+    });
+
+    (client.whenReady as jest.Mock).mockReturnValueOnce(readiness);
+
+    render(<Harness client={client} options={{ waitForReady: true }} />);
+
+    expect(client.whenReady).toHaveBeenCalled();
+    expect(client.push).not.toHaveBeenCalled();
+
+    act(() => {
+      resolveReady?.([{ containerId: 'GTM-DELAYED', status: 'loaded' }]);
+    });
+
+    await waitFor(() => {
+      expect(client.push).toHaveBeenCalledTimes(1);
     });
   });
 

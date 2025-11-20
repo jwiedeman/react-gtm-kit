@@ -4,5 +4,6 @@ export {
   useGtm,
   useGtmClient,
   useGtmConsent,
-  useGtmPush
+  useGtmPush,
+  useGtmReady
 } from './provider';

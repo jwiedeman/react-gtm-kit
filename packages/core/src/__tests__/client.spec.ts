@@ -68,6 +68,31 @@ describe('createGtmClient', () => {
     expect(url.searchParams.get('gtm_preview')).toBe('preview');
   });
 
+  it('exposes readiness promises and callbacks after scripts load', async () => {
+    const client = createGtmClient({ containers: 'GTM-READY-CLIENT' });
+    const callback = jest.fn();
+
+    client.init();
+
+    const readiness = client.whenReady();
+    const unsubscribe = client.onReady(callback);
+    const script = document.querySelector<HTMLScriptElement>('script[data-gtm-container-id="GTM-READY-CLIENT"]');
+
+    expect(script).not.toBeNull();
+    script?.dispatchEvent(new Event('load'));
+
+    const states = await readiness;
+
+    expect(states).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ containerId: 'GTM-READY-CLIENT', status: 'loaded' })
+      ])
+    );
+    expect(callback).toHaveBeenCalledWith(states);
+
+    unsubscribe();
+  });
+
   it('applies custom script attributes including CSP nonce', () => {
     const client = createGtmClient({
       containers: 'GTM-NONCE',

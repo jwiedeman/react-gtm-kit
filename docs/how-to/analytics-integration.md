@@ -18,6 +18,18 @@ pushEvent(client, 'page_view', {
 - In React apps, use the `useGtmPush` hook with your router's navigation listener to
   fire the same payload once per route change.
 
+## Wait for GTM readiness
+
+- The core client exposes a `whenReady()` promise that resolves after GTM scripts load (or rejects with
+  failures) so you can gate business events until the container is available.
+- In React, the `useGtmReady` hook returns the same promise from context; Next's `useTrackPageViews`
+  hook accepts `waitForReady: true` to delay pageview pushes until script readiness settles.
+
+```ts
+await client.whenReady();
+pushEvent(client, 'page_view', { page_path: '/', page_title: 'Home' });
+```
+
 ## Custom events
 
 ```ts

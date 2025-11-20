@@ -1,13 +1,14 @@
 import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import { StrictMode, Suspense, lazy, useEffect, useRef } from 'react';
 import type { JSX } from 'react';
-import { GtmProvider, useGtm, useGtmConsent, useGtmPush } from '../provider';
+import { GtmProvider, useGtm, useGtmConsent, useGtmPush, useGtmReady } from '../provider';
 import type {
   ConsentRegionOptions,
   ConsentState,
   CreateGtmClientOptions,
   DataLayerValue,
-  GtmClient
+  GtmClient,
+  ScriptLoadState
 } from '@react-gtm-kit/core';
 import { createGtmClient } from '@react-gtm-kit/core';
 import { Link, MemoryRouter, Route as RouterRoute, Routes as RouterRoutes, useLocation } from 'react-router-dom';
@@ -27,6 +28,8 @@ type MockClient = GtmClient & {
   setConsentDefaults: jest.Mock<void, [ConsentState, ConsentRegionOptions | undefined]>;
   updateConsent: jest.Mock<void, [ConsentState, ConsentRegionOptions | undefined]>;
   isInitialized: jest.Mock<boolean, []>;
+  whenReady: jest.Mock<Promise<ScriptLoadState[]>, []>;
+  onReady: jest.Mock<() => void, [(state: ScriptLoadState[]) => void]>;
 };
 
 const createMockClient = (): MockClient => ({
@@ -36,7 +39,12 @@ const createMockClient = (): MockClient => ({
   push: jest.fn(),
   setConsentDefaults: jest.fn(),
   updateConsent: jest.fn(),
-  isInitialized: jest.fn(() => true)
+  isInitialized: jest.fn(() => true),
+  whenReady: jest.fn(() => Promise.resolve([])),
+  onReady: jest.fn((callback: (state: ScriptLoadState[]) => void) => {
+    callback([]);
+    return jest.fn();
+  })
 });
 
 const baseConfig: CreateGtmClientOptions = { containers: 'GTM-TEST' };
@@ -194,6 +202,45 @@ describe('GtmProvider', () => {
     await findByText('ready');
 
     expect(client.push).toHaveBeenCalledWith({ event: 'test-event' });
+  });
+
+  it('exposes readiness helpers that proxy to the GTM client', async () => {
+    const client = createMockClient();
+    const readyState: ScriptLoadState[] = [
+      { containerId: 'GTM-READY', status: 'loaded', src: 'https://example.com/gtm.js?id=GTM-READY', fromCache: false }
+    ];
+    const unsubscribe = jest.fn();
+
+    client.whenReady.mockResolvedValue(readyState);
+    client.onReady.mockReturnValue(unsubscribe);
+    mockedCreateClient.mockReturnValue(client);
+
+    const ReadyComponent = (): JSX.Element => {
+      const whenReady = useGtmReady();
+      const { onReady } = useGtm();
+
+      useEffect(() => {
+        const teardown = onReady(() => undefined);
+        void whenReady();
+        return () => {
+          teardown();
+        };
+      }, [onReady, whenReady]);
+
+      return <div>ready-hooks</div>;
+    };
+
+    const { findByText } = render(
+      <GtmProvider config={baseConfig}>
+        <ReadyComponent />
+      </GtmProvider>
+    );
+
+    await findByText('ready-hooks');
+
+    expect(client.whenReady).toHaveBeenCalledTimes(1);
+    expect(client.onReady).toHaveBeenCalledTimes(1);
+    expect(unsubscribe).not.toHaveBeenCalled();
   });
 
   it('exposes consent helpers that proxy to the GTM client', async () => {
