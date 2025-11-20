@@ -152,6 +152,24 @@ describe('createGtmClient', () => {
     expect(dataLayer[3]).toMatchObject({ event: 'pre-init-event' });
   });
 
+  it('delivers duplicate queued events in order', () => {
+    const client = createGtmClient({ containers: 'GTM-DUPLICATE-QUEUE' });
+
+    client.push({ event: 'queued-event', value: 1 });
+    client.push({ event: 'queued-event', value: 1 });
+
+    client.init();
+
+    const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+    const queuedEvents = dataLayer.filter(
+      (entry) => typeof entry === 'object' && entry !== null && (entry as { event?: string }).event === 'queued-event'
+    );
+
+    expect(queuedEvents).toHaveLength(2);
+    expect(queuedEvents[0]).toMatchObject({ event: 'queued-event', value: 1 });
+    expect(queuedEvents[1]).toMatchObject({ event: 'queued-event', value: 1 });
+  });
+
   it('pushes consent updates immediately after init', () => {
     const client = createGtmClient({ containers: 'GTM-CONSENT-UPDATE' });
     client.init();
@@ -235,5 +253,21 @@ describe('createGtmClient', () => {
     );
 
     expect(updates).toHaveLength(1);
+  });
+
+  it('allows repeated non-consent events after initialization', () => {
+    const client = createGtmClient({ containers: 'GTM-DUPLICATE-RUNTIME' });
+
+    client.init();
+
+    client.push({ event: 'runtime-event', value: 2 });
+    client.push({ event: 'runtime-event', value: 2 });
+
+    const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+    const runtimeEvents = dataLayer.filter(
+      (entry) => typeof entry === 'object' && entry !== null && (entry as { event?: string }).event === 'runtime-event'
+    );
+
+    expect(runtimeEvents).toHaveLength(2);
   });
 });
