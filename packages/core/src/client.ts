@@ -112,8 +112,8 @@ export class GtmClientImpl implements GtmClient {
     ? this.options.containers.map(normalizeContainer)
     : [normalizeContainer(this.options.containers)];
   private readonly queue: QueuedEntry[] = [];
-  private readonly queuedSignatures = new Set<string>();
-  private readonly deliveredSignatures = new Set<string>();
+  private readonly queuedConsentSignatures = new Set<string>();
+  private readonly deliveredConsentSignatures = new Set<string>();
   private snapshotSignatures: Set<string> | null = null;
   private readonly scriptManager = new ScriptManager({
     instanceId: this.instanceId,
@@ -199,8 +199,8 @@ export class GtmClientImpl implements GtmClient {
       this.dataLayerState.restore();
     }
     this.queue.length = 0;
-    this.queuedSignatures.clear();
-    this.deliveredSignatures.clear();
+    this.queuedConsentSignatures.clear();
+    this.deliveredConsentSignatures.clear();
     this.snapshotSignatures = null;
     this.initialized = false;
     this.dataLayerState = null;
@@ -228,7 +228,7 @@ export class GtmClientImpl implements GtmClient {
       this.pushValueToDataLayer(entry.value, entry.signature);
 
       if (entry.signature) {
-        this.queuedSignatures.delete(entry.signature);
+        this.queuedConsentSignatures.delete(entry.signature);
       }
     }
   }
@@ -269,15 +269,17 @@ export class GtmClientImpl implements GtmClient {
       const signature = serializeDataLayerValue(value);
       if (signature) {
         this.snapshotSignatures.add(signature);
-        this.deliveredSignatures.add(signature);
+        if (isConsentCommandValue(value)) {
+          this.deliveredConsentSignatures.add(signature);
+        }
       }
     }
   }
 
   private queueValue(value: DataLayerValue): void {
-    const signature = serializeDataLayerValue(value);
+    const signature = isConsentCommandValue(value) ? serializeDataLayerValue(value) : null;
 
-    if (signature && this.queuedSignatures.has(signature)) {
+    if (signature && this.queuedConsentSignatures.has(signature)) {
       this.logger.debug('Skipping duplicate queued dataLayer value.', { value });
       return;
     }
@@ -297,7 +299,7 @@ export class GtmClientImpl implements GtmClient {
     }
 
     if (signature) {
-      this.queuedSignatures.add(signature);
+      this.queuedConsentSignatures.add(signature);
     }
   }
 
@@ -307,19 +309,28 @@ export class GtmClientImpl implements GtmClient {
     }
 
     const signature = existingSignature ?? serializeDataLayerValue(value);
+    const isConsentCommand = isConsentCommandValue(value);
     const seenInSnapshot = signature ? this.snapshotSignatures?.has(signature) : false;
-    const alreadyDelivered = signature ? this.deliveredSignatures.has(signature) : false;
+    const alreadyDeliveredConsent =
+      isConsentCommand && signature ? this.deliveredConsentSignatures.has(signature) : false;
 
-    if (signature && (seenInSnapshot || alreadyDelivered)) {
+    if (signature && seenInSnapshot) {
       this.logger.debug('Skipping duplicate dataLayer value detected during hydration.', { value });
-      this.deliveredSignatures.add(signature);
+      if (isConsentCommand) {
+        this.deliveredConsentSignatures.add(signature);
+      }
+      return;
+    }
+
+    if (isConsentCommand && alreadyDeliveredConsent) {
+      this.logger.debug('Skipping duplicate consent command.', { value });
       return;
     }
 
     pushToDataLayer(this.dataLayerState, value);
 
-    if (signature) {
-      this.deliveredSignatures.add(signature);
+    if (isConsentCommand && signature) {
+      this.deliveredConsentSignatures.add(signature);
     }
   }
 
