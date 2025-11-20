@@ -26,6 +26,24 @@ gtm.updateConsent({
 - Defaults are safe to call before `init()`. The client queues the command and flushes it immediately after the `gtm.js` start event, before any other queued pushes.
 - Updates run instantly after initialization. If you need to scope them to specific regions or delay tag execution, use the `region` and `waitForUpdate` options exposed by the helper API.
 
+When you need to seed consent commands outside the client (for example, serialising defaults during SSR or pushing directly into a shared data layer), use the low-level helpers:
+
+```ts
+import {
+  consentPresets,
+  createConsentDefaultsCommand,
+  createConsentUpdateCommand
+} from '@react-gtm-kit/core';
+
+window.dataLayer.push(
+  createConsentDefaultsCommand(consentPresets.eeaDefault, { region: ['EEA'] })
+);
+
+window.dataLayer.push(
+  createConsentUpdateCommand({ analytics_storage: 'granted' })
+);
+```
+
 ## Data layer ordering guarantees
 
 Consent defaults must reach the data layer before any pre-init events so GTM can block measurement until a user grants access. The client enforces this by prioritising queued default commands.

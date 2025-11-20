@@ -1,4 +1,11 @@
-import { buildConsentCommand, consent, consentPresets, getConsentPreset } from '../../src';
+import {
+  buildConsentCommand,
+  consent,
+  consentPresets,
+  createConsentDefaultsCommand,
+  createConsentUpdateCommand,
+  getConsentPreset
+} from '../../src';
 
 describe('consent helpers', () => {
   it('normalizes and freezes consent state', () => {
@@ -55,6 +62,26 @@ describe('consent helpers', () => {
       'default',
       { ad_storage: 'denied', analytics_storage: 'denied' },
       { region: ['US-CA', 'EEA'], wait_for_update: 5000 }
+    ]);
+  });
+
+  it('creates typed consent helpers for defaults and updates', () => {
+    expect(
+      createConsentDefaultsCommand(
+        { analytics_storage: 'denied' },
+        { region: ['EEA'], waitForUpdate: 1000 }
+      )
+    ).toEqual([
+      'consent',
+      'default',
+      { analytics_storage: 'denied' },
+      { region: ['EEA'], wait_for_update: 1000 }
+    ]);
+
+    expect(createConsentUpdateCommand({ ad_personalization: 'granted' })).toEqual([
+      'consent',
+      'update',
+      { ad_personalization: 'granted' }
     ]);
   });
 
