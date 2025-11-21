@@ -1,4 +1,5 @@
 import type React from 'react';
+import { DEFAULT_DATA_LAYER_NAME } from '@react-gtm-kit/core';
 import type { ContainerConfigInput, ScriptAttributes } from '@react-gtm-kit/core';
 import { buildScriptUrl, DEFAULT_GTM_HOST, normalizeContainers } from './internal/container-helpers';
 
@@ -7,6 +8,7 @@ export interface GtmHeadScriptProps {
   host?: string;
   defaultQueryParams?: Record<string, string | number | boolean>;
   scriptAttributes?: ScriptAttributes;
+  dataLayerName?: string;
 }
 
 const DEFAULT_ASYNC = true;
@@ -15,7 +17,8 @@ export const GtmHeadScript = ({
   containers,
   host = DEFAULT_GTM_HOST,
   defaultQueryParams,
-  scriptAttributes
+  scriptAttributes,
+  dataLayerName = DEFAULT_DATA_LAYER_NAME
 }: GtmHeadScriptProps): React.ReactElement => {
   const normalized = normalizeContainers(containers);
 
@@ -35,7 +38,7 @@ export const GtmHeadScript = ({
           ...container.queryParams
         };
 
-        const src = buildScriptUrl(host, container.id, params);
+        const src = buildScriptUrl(host, container.id, params, dataLayerName);
         const { async: asyncAttr, defer, nonce, ...restAttributes } = scriptAttributes ?? {};
 
         const scriptProps: React.ScriptHTMLAttributes<HTMLScriptElement> = {

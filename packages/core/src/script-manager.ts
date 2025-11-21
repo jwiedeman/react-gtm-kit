@@ -1,3 +1,4 @@
+import { DEFAULT_DATA_LAYER_NAME, DEFAULT_GTM_HOST } from './constants';
 import { createLogger } from './logger';
 import type {
   ContainerDescriptor,
@@ -7,7 +8,6 @@ import type {
   ScriptLoadStatus
 } from './types';
 
-const DEFAULT_HOST = 'https://www.googletagmanager.com';
 const CONTAINER_ATTR = 'data-gtm-container-id';
 const INSTANCE_ATTR = 'data-gtm-kit-instance';
 
@@ -48,6 +48,7 @@ export interface NormalizedContainer extends ContainerDescriptor {
 export interface ScriptManagerOptions {
   instanceId: string;
   host?: string;
+  dataLayerName?: string;
   scriptAttributes?: ScriptAttributes;
   defaultQueryParams?: Record<string, string | number | boolean>;
   logger?: CreateGtmClientOptions['logger'];
@@ -122,7 +123,8 @@ const formatErrorMessage = (event: Event): string => {
 
 export class ScriptManager {
   private readonly logger = createLogger(this.options.logger);
-  private readonly host = this.options.host ?? DEFAULT_HOST;
+  private readonly host = this.options.host ?? DEFAULT_GTM_HOST;
+  private readonly dataLayerName = this.options.dataLayerName ?? DEFAULT_DATA_LAYER_NAME;
   private readonly defaultQueryParams = this.options.defaultQueryParams;
   private readonly scriptAttributes = this.options.scriptAttributes;
   private readonly insertedScripts = new Set<HTMLScriptElement>();
@@ -243,6 +245,10 @@ export class ScriptManager {
         ...this.defaultQueryParams,
         ...container.queryParams
       };
+
+      if (this.dataLayerName !== DEFAULT_DATA_LAYER_NAME && params.l === undefined) {
+        params.l = this.dataLayerName;
+      }
 
       const script = document.createElement('script');
       const url = buildScriptUrl(this.host, container.id, params);

@@ -1,3 +1,4 @@
+import { DEFAULT_DATA_LAYER_NAME } from './constants';
 import { ensureDataLayer, pushToDataLayer } from './data-layer';
 import { createConsentCommandValue } from './consent';
 import type { ConsentRegionOptions, ConsentState } from './consent';
@@ -11,8 +12,6 @@ import type {
   GtmClient,
   ScriptLoadState
 } from './types';
-
-const DEFAULT_DATA_LAYER_NAME = 'dataLayer';
 
 const isString = (value: unknown): value is string => typeof value === 'string';
 
@@ -116,6 +115,7 @@ export class GtmClientImpl implements GtmClient {
   private readonly scriptManager = new ScriptManager({
     instanceId: this.instanceId,
     host: this.options.host,
+    dataLayerName: this.resolvedDataLayerName,
     defaultQueryParams: this.options.defaultQueryParams,
     scriptAttributes: this.options.scriptAttributes,
     logger: this.options.logger

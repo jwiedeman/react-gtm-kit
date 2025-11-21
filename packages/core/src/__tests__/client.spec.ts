@@ -68,6 +68,12 @@ describe('createGtmClient', () => {
     expect(url.searchParams.get('gtm_preview')).toBe('preview');
   });
 
+  it('exposes the resolved data layer name when a custom name is provided', () => {
+    const client = createGtmClient({ containers: 'GTM-DATA-NAME', dataLayerName: 'customLayer' });
+
+    expect(client.dataLayerName).toBe('customLayer');
+  });
+
   it('exposes readiness promises and callbacks after scripts load', async () => {
     const client = createGtmClient({ containers: 'GTM-READY-CLIENT' });
     const callback = jest.fn();

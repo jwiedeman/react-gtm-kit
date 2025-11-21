@@ -50,6 +50,7 @@ test.describe('Next.js App Router example', () => {
 
     const scriptLocator = page.locator('head script[data-gtm-container-id="GTM-NEXTAPP"]');
     await expect(scriptLocator).toHaveCount(1);
+    await expect(scriptLocator).toHaveAttribute('src', /l=nextAppDataLayer/);
     await expect(scriptLocator).toHaveAttribute('nonce', /.+/);
 
     const noscript = page.locator('body > noscript');

@@ -35,6 +35,28 @@ describe('ScriptManager', () => {
     expect(script.async).toBe(false);
   });
 
+  it('avoids appending the dataLayerName when using the default name', () => {
+    const manager = createManager();
+
+    const { inserted } = manager.ensure([{ id: 'GTM-DATA-LAYER-DEFAULT' }]);
+    const url = new URL(inserted[0].src);
+
+    expect(url.searchParams.get('l')).toBeNull();
+  });
+
+  it('adds the dataLayerName query param for non-default names and respects host overrides', () => {
+    const manager = createManager({
+      dataLayerName: 'customLayer',
+      host: 'https://tags.example.com'
+    });
+
+    const { inserted } = manager.ensure([{ id: 'GTM-DATA-LAYER-CUSTOM' }]);
+    const url = new URL(inserted[0].src);
+
+    expect(url.origin).toBe('https://tags.example.com');
+    expect(url.searchParams.get('l')).toBe('customLayer');
+  });
+
   it('records cached scripts and avoids duplicate injection', async () => {
     const existing = document.createElement('script');
     existing.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-CACHED';
