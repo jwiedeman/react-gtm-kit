@@ -27,6 +27,8 @@ const noscript = createNoscriptMarkup(
 
 The helper automatically merges default query params with container-specific params and ensures attributes match Google’s recommended defaults (`height="0"`, `width="0"`, `style="display:none;visibility:hidden"`). Override any of those by passing `iframeAttributes` if your layout requires additional metadata (for example a `class` for CSP tuning).
 
+When you rename the data layer (for example, `dataLayerName: 'serverLayer'` on the client or `<GtmHeadScript dataLayerName="serverLayer" />` for Next.js), the GTM URLs automatically include `l=serverLayer` for both script and noscript markup. This behavior works alongside custom hosts and default query params, so you no longer need to add `l` manually to `queryParams`. Keep the name consistent between server-rendered markup and the client to avoid hydration mismatches.
+
 ```ts
 const noscript = createNoscriptMarkup('GTM-XXXX', {
   iframeAttributes: { class: 'gtm-noscript', title: 'GTM fallback' }

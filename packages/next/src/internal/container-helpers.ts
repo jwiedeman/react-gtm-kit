@@ -1,3 +1,4 @@
+import { DEFAULT_DATA_LAYER_NAME } from '@react-gtm-kit/core';
 import type { ContainerConfigInput, ContainerDescriptor } from '@react-gtm-kit/core';
 
 export const DEFAULT_GTM_HOST = 'https://www.googletagmanager.com';
@@ -39,12 +40,17 @@ const buildUrl = (
   kind: 'gtm' | 'ns',
   host: string,
   containerId: string,
-  queryParams?: Record<string, string | number | boolean>
+  queryParams?: Record<string, string | number | boolean>,
+  dataLayerName: string = DEFAULT_DATA_LAYER_NAME
 ): string => {
   const normalizedHost = normalizeHost(host);
   const searchParams = new URLSearchParams({ id: containerId });
 
   const params = toRecord(queryParams);
+  if (dataLayerName !== DEFAULT_DATA_LAYER_NAME && params.l === undefined) {
+    params.l = dataLayerName;
+  }
+
   for (const [key, value] of Object.entries(params)) {
     if (key === 'id') {
       continue;
@@ -59,11 +65,13 @@ const buildUrl = (
 export const buildScriptUrl = (
   host: string,
   containerId: string,
-  queryParams?: Record<string, string | number | boolean>
-): string => buildUrl('gtm', host, containerId, queryParams);
+  queryParams?: Record<string, string | number | boolean>,
+  dataLayerName: string = DEFAULT_DATA_LAYER_NAME
+): string => buildUrl('gtm', host, containerId, queryParams, dataLayerName);
 
 export const buildNoscriptUrl = (
   host: string,
   containerId: string,
-  queryParams?: Record<string, string | number | boolean>
-): string => buildUrl('ns', host, containerId, queryParams);
+  queryParams?: Record<string, string | number | boolean>,
+  dataLayerName: string = DEFAULT_DATA_LAYER_NAME
+): string => buildUrl('ns', host, containerId, queryParams, dataLayerName);

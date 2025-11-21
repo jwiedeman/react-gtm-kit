@@ -10,7 +10,8 @@ helpers. Use it alongside the how-to guides for task-specific walkthroughs.
 Creates a client instance that owns the data layer and script injection lifecycle.
 
 - `containers` (required) – Single ID or array. Accepts strings (`'GTM-XXXX'`) or `{ id, queryParams }` objects.
-- `dataLayerName` – Custom global name. Defaults to `dataLayer`.
+- `dataLayerName` – Custom global name. Defaults to `dataLayer`. Non-default names automatically append `l=<dataLayerName>` to
+  injected GTM URLs, honoring any custom `host` or `defaultQueryParams` you supply.
 - `host` – Base URL for the loader. Defaults to `https://www.googletagmanager.com`.
 - `defaultQueryParams` – Extra query parameters appended to every container request (e.g., `gtm_auth`).
 - `scriptAttributes` – Additional attributes copied to injected `<script>` tags. `async` defaults to `true` and `defer` is opt-in; `nonce` is supported for CSP.
@@ -83,5 +84,5 @@ export default withGtm({ config: { containers: 'GTM-XXXX' } })(Dashboard);
 ## Next.js helpers (`@react-gtm-kit/next`)
 
 - `useTrackPageViews({ client, eventName = 'page_view', buildPayload, includeSearchParams = true, trackHash = false, trackOnMount = true, skipSamePath = true, pushEventFn })` – Client-side hook for App Router that watches pathname/search (and optionally hash) changes and pushes pageview events via `pushEvent`.
-- `<GtmHeadScript>` – Server component that renders one `<script>` tag per container with optional `host`, `defaultQueryParams`, and `scriptAttributes` (inherits CSP `nonce` and sets `async` true by default).
-- `<GtmNoScript>` – Server component emitting `<noscript><iframe /></noscript>` markup with overridable `iframeAttributes` and merged query params.
+- `<GtmHeadScript>` – Server component that renders one `<script>` tag per container with optional `host`, `defaultQueryParams`, `dataLayerName`, and `scriptAttributes` (inherits CSP `nonce` and sets `async` true by default). When `dataLayerName` is provided, the `l=` query parameter is appended automatically, including under custom hosts.
+- `<GtmNoScript>` – Server component emitting `<noscript><iframe /></noscript>` markup with overridable `iframeAttributes`, merged query params, and optional `dataLayerName` that flows into the iframe URL.

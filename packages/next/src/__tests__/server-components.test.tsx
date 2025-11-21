@@ -35,6 +35,23 @@ describe('Next.js server helpers', () => {
       expect(markup).toContain('nonce="nonce-123"');
       expect(markup).toContain('defer=""');
     });
+
+    it('appends the dataLayerName for non-default layers', () => {
+      const markup = normalizeMarkup(
+        renderToStaticMarkup(
+          <GtmHeadScript
+            containers={[{ id: 'GTM-ONE' }, { id: 'GTM-TWO', queryParams: { env: 'prod' } }]}
+            dataLayerName="customLayer"
+            host="https://tags.example.com/"
+          />
+        )
+      );
+
+      expect(markup).toContain('src="https://tags.example.com/gtm.js?id=GTM-ONE&amp;l=customLayer"');
+      expect(markup).toContain(
+        'src="https://tags.example.com/gtm.js?id=GTM-TWO&amp;env=prod&amp;l=customLayer"'
+      );
+    });
   });
 
   describe('GtmNoScript', () => {
@@ -62,6 +79,23 @@ describe('Next.js server helpers', () => {
       expect(markup).toContain('src="https://tags.example.com/ns.html?id=GTM-B&amp;env=prod"');
       expect(markup).toContain('loading="lazy"');
       expect(markup).toContain('title="Custom Title"');
+    });
+
+    it('includes the dataLayerName for non-default noscript URLs', () => {
+      const markup = normalizeMarkup(
+        renderToStaticMarkup(
+          <GtmNoScript
+            containers={[{ id: 'GTM-A' }, { id: 'GTM-B', queryParams: { env: 'staging' } }]}
+            host="https://tags.example.com"
+            dataLayerName="customLayer"
+          />
+        )
+      );
+
+      expect(markup).toContain('src="https://tags.example.com/ns.html?id=GTM-A&amp;l=customLayer"');
+      expect(markup).toContain(
+        'src="https://tags.example.com/ns.html?id=GTM-B&amp;env=staging&amp;l=customLayer"'
+      );
     });
   });
 });

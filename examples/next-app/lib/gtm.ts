@@ -1,10 +1,7 @@
 import type { ContainerConfigInput } from '@react-gtm-kit/core';
 
 export const GTM_CONTAINERS: ContainerConfigInput[] = [
-  {
-    id: 'GTM-NEXTAPP',
-    queryParams: { l: 'nextAppDataLayer' }
-  }
+  { id: 'GTM-NEXTAPP' }
 ];
 
 export const DEFAULT_CONSENT = {

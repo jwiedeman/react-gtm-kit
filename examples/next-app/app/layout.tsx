@@ -21,10 +21,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
-        <GtmHeadScript containers={GTM_CONTAINERS} scriptAttributes={{ nonce }} />
+        <GtmHeadScript
+          containers={GTM_CONTAINERS}
+          dataLayerName="nextAppDataLayer"
+          scriptAttributes={{ nonce }}
+        />
       </head>
       <body>
-        <GtmNoScript containers={GTM_CONTAINERS} />
+        <GtmNoScript containers={GTM_CONTAINERS} dataLayerName="nextAppDataLayer" />
         <AppProviders nonce={nonce}>
           <header className="site-header">
             <h1>React GTM Kit × Next.js</h1>

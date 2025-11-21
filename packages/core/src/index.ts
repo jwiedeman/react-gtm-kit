@@ -8,6 +8,7 @@ export type {
   ScriptLoadState,
   ScriptLoadStatus
 } from './types';
+export { DEFAULT_DATA_LAYER_NAME, DEFAULT_GTM_HOST } from './constants';
 export type { ConsentCommand, ConsentRegionOptions, ConsentState } from './consent';
 export {
   buildConsentCommand,

@@ -1,4 +1,5 @@
 import type React from 'react';
+import { DEFAULT_DATA_LAYER_NAME } from '@react-gtm-kit/core';
 import type { ContainerConfigInput } from '@react-gtm-kit/core';
 import { DEFAULT_NOSCRIPT_IFRAME_ATTRIBUTES } from '@react-gtm-kit/core';
 import { buildNoscriptUrl, DEFAULT_GTM_HOST, normalizeContainers } from './internal/container-helpers';
@@ -8,6 +9,7 @@ export interface GtmNoScriptProps {
   host?: string;
   defaultQueryParams?: Record<string, string | number | boolean>;
   iframeAttributes?: Record<string, string | number | boolean>;
+  dataLayerName?: string;
 }
 
 const toStringValue = (value: string | number | boolean): string => String(value);
@@ -38,7 +40,8 @@ export const GtmNoScript = ({
   containers,
   host = DEFAULT_GTM_HOST,
   defaultQueryParams,
-  iframeAttributes
+  iframeAttributes,
+  dataLayerName = DEFAULT_DATA_LAYER_NAME
 }: GtmNoScriptProps): React.ReactElement => {
   const normalized = normalizeContainers(containers);
 
@@ -58,7 +61,7 @@ export const GtmNoScript = ({
           ...container.queryParams
         };
 
-        const src = buildNoscriptUrl(host, container.id, params);
+        const src = buildNoscriptUrl(host, container.id, params, dataLayerName);
         const attributes = {
           ...DEFAULT_NOSCRIPT_IFRAME_ATTRIBUTES,
           ...iframeAttributes
