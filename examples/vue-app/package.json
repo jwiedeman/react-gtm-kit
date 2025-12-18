@@ -1,0 +1,26 @@
+{
+  "name": "@react-gtm-kit/example-vue-app",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "lint": "eslint --max-warnings=0 \"src/**/*.{ts,vue}\"",
+    "typecheck": "vue-tsc --noEmit",
+    "smoke": "pnpm run build"
+  },
+  "dependencies": {
+    "@react-gtm-kit/vue": "workspace:*",
+    "@react-gtm-kit/core": "workspace:*",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "typescript": "^5.4.5",
+    "vite": "^5.4.9",
+    "vue-tsc": "^2.0.6"
+  }
+}
