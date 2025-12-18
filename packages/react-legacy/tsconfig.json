@@ -1,10 +1,8 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": "..",
-    "composite": true
+    "outDir": "dist"
   },
-  "include": ["src", "../core/src/**/*.ts"],
-  "files": ["src/index.ts", "src/with-gtm.tsx"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["src/__tests__/**"]
 }
