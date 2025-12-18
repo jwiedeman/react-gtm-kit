@@ -17,7 +17,9 @@
       "@react-gtm-kit/core": ["./packages/core/src/index.ts"],
       "@react-gtm-kit/react-modern": ["./packages/react-modern/src/index.ts"],
       "@react-gtm-kit/react-legacy": ["./packages/react-legacy/src/index.ts"],
-      "@react-gtm-kit/next": ["./packages/next/src/index.ts"]
+      "@react-gtm-kit/next": ["./packages/next/src/index.ts"],
+      "@react-gtm-kit/vue": ["./packages/vue/src/index.ts"],
+      "@react-gtm-kit/nuxt": ["./packages/nuxt/src/index.ts"]
     }
   }
 }

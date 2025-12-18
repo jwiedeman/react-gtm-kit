@@ -1,6 +1,8 @@
 # Common Issues & Gotchas
 
-A guide to common problems when integrating React GTM Kit, and how to solve them.
+A guide to common problems when integrating GTM Kit, and how to solve them.
+
+**Works with:** React, Vue, Next.js, Nuxt, and vanilla JavaScript.
 
 ---
 
@@ -9,7 +11,10 @@ A guide to common problems when integrating React GTM Kit, and how to solve them
 - [Events Not Appearing](#events-not-appearing)
 - [Duplicate Events](#duplicate-events)
 - [Consent Mode Issues](#consent-mode-issues)
+- [React Specific](#react-specific)
+- [Vue Specific](#vue-specific)
 - [Next.js Specific](#nextjs-specific)
+- [Nuxt Specific](#nuxt-specific)
 - [StrictMode & Development](#strictmode--development)
 - [CSP & Security](#csp--security)
 - [Testing](#testing)
@@ -23,6 +28,7 @@ A guide to common problems when integrating React GTM Kit, and how to solve them
 **Cause:** GTM client not initialized.
 
 **Solution:**
+
 ```ts
 const client = createGtmClient({ containers: 'GTM-XXXXXX' });
 client.init(); // Don't forget this!
@@ -54,9 +60,10 @@ gtm.push({ event: 'test' }); // Same instance, works correctly
 ### Problem: GTM container ID is wrong
 
 **Check:**
+
 ```js
 // In browser console
-document.querySelector('script[data-gtm-container-id]')?.getAttribute('data-gtm-container-id')
+document.querySelector('script[data-gtm-container-id]')?.getAttribute('data-gtm-container-id');
 ```
 
 Should return your container ID (e.g., `GTM-XXXXXX`).
@@ -106,16 +113,100 @@ Should return your container ID (e.g., `GTM-XXXXXX`).
 ### Problem: Duplicate scripts in DOM
 
 **Check:**
+
 ```js
-document.querySelectorAll('script[data-gtm-container-id]').length
+document.querySelectorAll('script[data-gtm-container-id]').length;
 ```
 
 Should return `1` per container. If more, you're calling `init()` multiple times or have conflicting GTM implementations.
 
 **Solution:** The library is idempotent—calling `init()` twice won't inject duplicate scripts. If you see duplicates, check for:
+
 - Manual GTM snippets in your HTML
 - Other GTM libraries
 - Multiple `GtmProvider` components
+
+---
+
+## React Specific
+
+### Problem: "useGtm hook must be used within a GtmProvider"
+
+**Cause:** Component is not wrapped in `GtmProvider`.
+
+```tsx
+// WRONG - hook used outside provider
+function App() {
+  const push = useGtmPush(); // Error!
+  return <div>...</div>;
+}
+
+// CORRECT - provider wraps the component
+function App() {
+  return (
+    <GtmProvider config={{ containers: 'GTM-XXXXXX' }}>
+      <MyComponent /> {/* useGtmPush works here */}
+    </GtmProvider>
+  );
+}
+```
+
+---
+
+## Vue Specific
+
+### Problem: "useGtm() was called outside of a Vue app with GtmPlugin installed"
+
+**Cause:** Plugin not installed or composable used too early.
+
+```ts
+// main.ts - CORRECT
+import { GtmPlugin } from '@react-gtm-kit/vue';
+
+createApp(App)
+  .use(GtmPlugin, { containers: 'GTM-XXXXXX' }) // Must install before mount
+  .mount('#app');
+```
+
+### Problem: Composables not working in Options API
+
+**Solution:** Use `$gtm` global property:
+
+```vue
+<script>
+export default {
+  methods: {
+    trackClick() {
+      this.$gtm.push({ event: 'click' });
+    }
+  }
+};
+</script>
+```
+
+### Problem: Page views not tracking with Vue Router
+
+**Cause:** Not watching route changes.
+
+```vue
+<script setup>
+import { watch } from 'vue';
+import { useRoute } from 'vue-router';
+import { useGtmPush } from '@react-gtm-kit/vue';
+
+const route = useRoute();
+const push = useGtmPush();
+
+// Watch for route changes
+watch(
+  () => route.fullPath,
+  (path) => {
+    push({ event: 'page_view', page_path: path });
+  },
+  { immediate: true } // Track initial page
+);
+</script>
+```
 
 ---
 
@@ -138,11 +229,13 @@ client.init();
 ### Problem: Consent updates not reflecting in GTM
 
 **Check the dataLayer:**
+
 ```js
-window.dataLayer.filter(e => Array.isArray(e) && e[0] === 'consent')
+window.dataLayer.filter((e) => Array.isArray(e) && e[0] === 'consent');
 ```
 
 Should show:
+
 ```js
 [
   ['consent', 'default', { ad_storage: 'denied', ... }],
@@ -151,6 +244,7 @@ Should show:
 ```
 
 **Common issues:**
+
 1. Using wrong consent keys (must be exact: `ad_storage`, `analytics_storage`, `ad_user_data`, `ad_personalization`)
 2. Using wrong values (must be `'granted'` or `'denied'`, not `true`/`false`)
 
@@ -167,6 +261,7 @@ updateConsent({ ad_storage: 'granted' }); // string literal
 **Cause:** GTM tags not configured for Consent Mode.
 
 **Solution:** In GTM, ensure your tags have the correct consent settings:
+
 1. Go to tag settings
 2. Under "Consent Settings", add required consents
 3. Publish the container
@@ -190,7 +285,7 @@ export default function Layout({ children }) {
 
 // CORRECT - separate client component
 // app/gtm-provider.tsx
-'use client';
+('use client');
 import { useTrackPageViews } from '@react-gtm-kit/next';
 
 export function GtmProvider({ children }) {
@@ -204,13 +299,14 @@ export function GtmProvider({ children }) {
 **Cause:** Client not initialized or `useTrackPageViews` not called.
 
 **Checklist:**
+
 1. Is the client created and `init()` called?
 2. Is `useTrackPageViews` in a client component?
 3. Is the client component mounted in the layout?
 
 ```tsx
 // Verify in browser console
-window.dataLayer.filter(e => e.event === 'page_view')
+window.dataLayer.filter((e) => e.event === 'page_view');
 ```
 
 ### Problem: Hydration mismatch warnings
@@ -224,6 +320,75 @@ The `GtmHeadScript` and `GtmNoScript` components are designed to be server-safe.
 
 ---
 
+## Nuxt Specific
+
+### Problem: GTM not initializing in Nuxt
+
+**Cause:** Plugin not using `.client.ts` suffix.
+
+```ts
+// WRONG - runs on server (will fail)
+// plugins/gtm.ts
+
+// CORRECT - runs only on client
+// plugins/gtm.client.ts
+import { GtmPlugin } from '@react-gtm-kit/vue';
+
+export default defineNuxtPlugin((nuxtApp) => {
+  nuxtApp.vueApp.use(GtmPlugin, { containers: 'GTM-XXXXXX' });
+});
+```
+
+### Problem: Hydration errors with GTM
+
+**Cause:** Rendering GTM-dependent content on server.
+
+**Solution:** Use `<ClientOnly>` for client-only content:
+
+```vue
+<template>
+  <ClientOnly>
+    <CookieBanner />
+  </ClientOnly>
+</template>
+```
+
+### Problem: Page views tracked on server
+
+**Cause:** Page tracking code running during SSR.
+
+**Solution:** Check for client-side:
+
+```vue
+<script setup>
+import { onMounted, watch } from 'vue';
+
+const route = useRoute();
+const { push } = useGtm();
+
+// Only track on client
+onMounted(() => {
+  watch(
+    () => route.fullPath,
+    (path) => push({ event: 'page_view', page_path: path }),
+    { immediate: true }
+  );
+});
+</script>
+```
+
+### Problem: useGtm returns undefined in Nuxt
+
+**Cause:** Plugin not registered or called before plugin initializes.
+
+**Checklist:**
+
+1. Plugin file ends with `.client.ts`
+2. Plugin is in `plugins/` directory
+3. Component using composable is mounted after plugin runs
+
+---
+
 ## StrictMode & Development
 
 ### Problem: Events fire twice in development
@@ -231,6 +396,7 @@ The `GtmHeadScript` and `GtmNoScript` components are designed to be server-safe.
 **Expected behavior.** React StrictMode intentionally double-invokes effects to help find bugs. The library handles cleanup correctly.
 
 **To verify production behavior:**
+
 ```bash
 npm run build && npm run start
 ```
@@ -270,6 +436,7 @@ function App() {
 ### Problem: Script blocked by Content Security Policy
 
 **Error:**
+
 ```
 Refused to load the script 'https://www.googletagmanager.com/gtm.js'
 because it violates the Content-Security-Policy directive
@@ -300,6 +467,7 @@ script-src 'nonce-${nonce}';
 ### Problem: Noscript iframe blocked
 
 Add to CSP:
+
 ```
 frame-src https://www.googletagmanager.com;
 ```
@@ -323,7 +491,7 @@ jest.mock('@react-gtm-kit/core', () => ({
   createGtmClient: jest.fn(() => ({
     init: jest.fn(),
     push: jest.fn(),
-    teardown: jest.fn(),
+    teardown: jest.fn()
     // ... other methods
   }))
 }));
@@ -360,7 +528,7 @@ test('tracks purchase', () => {
   pushEvent(client, 'purchase', { value: 100 });
 
   const dataLayer = window.dataLayer;
-  const purchaseEvent = dataLayer.find(e => e.event === 'purchase');
+  const purchaseEvent = dataLayer.find((e) => e.event === 'purchase');
 
   expect(purchaseEvent).toEqual({
     event: 'purchase',

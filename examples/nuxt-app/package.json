@@ -1,0 +1,26 @@
+{
+  "name": "@react-gtm-kit/example-nuxt-app",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint --max-warnings=0 \"**/*.{ts,vue}\"",
+    "typecheck": "nuxt typecheck",
+    "smoke": "pnpm run build"
+  },
+  "dependencies": {
+    "@react-gtm-kit/nuxt": "workspace:*",
+    "@react-gtm-kit/vue": "workspace:*",
+    "@react-gtm-kit/core": "workspace:*"
+  },
+  "devDependencies": {
+    "nuxt": "^3.11.0",
+    "typescript": "^5.4.5",
+    "vue": "^3.4.21"
+  }
+}
