@@ -1,5 +1,15 @@
 <script setup lang="ts">
-// Main app component - layout is handled in pages
+import { useTrackPageViews } from '@react-gtm-kit/nuxt';
+
+// Enable automatic page view tracking
+const route = useRoute();
+
+useTrackPageViews({
+  route,
+  eventName: 'page_view',
+  includeQueryParams: true,
+  trackInitialPageView: true
+});
 </script>
 
 <template>

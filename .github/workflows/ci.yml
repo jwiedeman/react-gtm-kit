@@ -41,5 +41,8 @@ jobs:
             packages/react-modern/coverage/unit/lcov.info
             packages/react-legacy/coverage/unit/lcov.info
             packages/next/coverage/unit/lcov.info
+            packages/vue/coverage/unit/lcov.info
+            packages/nuxt/coverage/unit/lcov.info
+            packages/cli/coverage/unit/lcov.info
           flags: unittests
           fail_ci_if_error: false

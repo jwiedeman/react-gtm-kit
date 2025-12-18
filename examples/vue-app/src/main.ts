@@ -23,7 +23,8 @@ const app = createApp(App);
 // Configure GTM
 // Replace 'GTM-XXXXXX' with your actual GTM container ID
 const gtmOptions: GtmPluginOptions = {
-  containers: 'GTM-XXXXXX',
+  containers: 'GTM-VUEAPP',
+  dataLayerName: 'vueAppDataLayer',
   onBeforeInit: (client) => {
     // Set GDPR-compliant consent defaults for EU users
     client.setConsentDefaults(consentPresets.eeaDefault, { region: ['EEA'] });
