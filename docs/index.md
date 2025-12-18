@@ -1,56 +1,139 @@
-# React GTM Kit Documentation
+# React GTM Kit
 
-Welcome to the official documentation site for React GTM Kit. This site bundles the charter,
-architecture decisions, implementation guides, and governance playbooks that appear throughout
-the repository into a browsable experience.
+A lightweight, production-ready Google Tag Manager integration for React applications.
 
-## Quickstart
+## Quick Links
 
-1. Install the packages you need:
-   ```bash
-   pnpm add @react-gtm-kit/core
-   ```
-2. Initialize the GTM client once at application startup:
+| I want to... | Go to |
+|--------------|-------|
+| Get started quickly | [Quickstart Guide](/QUICKSTART.md) |
+| Understand the architecture | [Architecture Concepts](./concepts/architecture.md) |
+| Set up consent mode | [Consent Guide](./how-to/consent.md) |
+| Track ecommerce events | [GA4 Ecommerce](./how-to/ga4-ecommerce.md) |
+| Debug issues | [Troubleshooting](./how-to/troubleshooting.md) |
+| See the full API | [API Reference](./reference/api.md) |
 
-   ```ts
-   import { createGtmClient, pushEvent } from '@react-gtm-kit/core';
+## Installation
 
-   const client = createGtmClient({ containers: ['GTM-XXXXXXX'] });
-   client.setConsentDefaults({
-     ad_storage: 'denied',
-     analytics_storage: 'denied'
-   });
-   client.init();
-   ```
+```bash
+# React (hooks) - most common
+npm install @react-gtm-kit/core @react-gtm-kit/react-modern
 
-3. Push events or consent updates wherever they happen:
-   ```ts
-   pushEvent(client, 'page_view', {
-     page_path: window.location.pathname,
-     page_title: document.title
-   });
-   ```
-4. Visit the Concepts section to understand the architecture and consent lifecycle, then explore
-   the How-to guides for setup, migration, debugging, and analytics integration recipes.
+# Next.js App Router
+npm install @react-gtm-kit/core @react-gtm-kit/next
 
-## Project charter
+# Vanilla JavaScript
+npm install @react-gtm-kit/core
+```
 
-Review the [project charter](https://github.com/react-gtm-kit/react-gtm-kit/blob/main/README.md#1-project-charter)
-for the guiding principles that drive implementation decisions across the kit.
+## Basic Setup
 
-## Scope & non-goals
+### React
 
-We stay tightly scoped to the browser GTM contract. Read the
-[scope definition](https://github.com/react-gtm-kit/react-gtm-kit/blob/main/README.md#2-scope--non-goals)
-to understand what we commit to shipping and what is intentionally left out.
+```tsx
+import { GtmProvider, useGtmPush } from '@react-gtm-kit/react-modern';
 
-## Functional requirements
+function App() {
+  return (
+    <GtmProvider config={{ containers: 'GTM-XXXXXX' }}>
+      <YourApp />
+    </GtmProvider>
+  );
+}
 
-Every package is built to satisfy the
-[functional requirements](https://github.com/react-gtm-kit/react-gtm-kit/blob/main/README.md#4-functional-requirements)
-defined in the main README. Acceptance criteria, tests, and documentation align to these requirements.
+function TrackableButton() {
+  const push = useGtmPush();
+  return (
+    <button onClick={() => push({ event: 'button_click' })}>
+      Click me
+    </button>
+  );
+}
+```
 
-## Milestones
+### Next.js
 
-Our delivery roadmap spans design sign-off through 1.0 hardening. Track milestone progress and task
-assignments in [`TASKS.md`](https://github.com/react-gtm-kit/react-gtm-kit/blob/main/TASKS.md).
+```tsx
+// app/layout.tsx
+import { GtmHeadScript, GtmNoScript } from '@react-gtm-kit/next';
+
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <head>
+        <GtmHeadScript containers="GTM-XXXXXX" />
+      </head>
+      <body>
+        <GtmNoScript containers="GTM-XXXXXX" />
+        {children}
+      </body>
+    </html>
+  );
+}
+```
+
+### Vanilla JavaScript
+
+```ts
+import { createGtmClient, pushEvent } from '@react-gtm-kit/core';
+
+const gtm = createGtmClient({ containers: 'GTM-XXXXXX' });
+gtm.init();
+
+pushEvent(gtm, 'page_view', { page_path: '/' });
+```
+
+## Key Features
+
+- **Zero dependencies** in core (3.7KB gzipped)
+- **Consent Mode v2** with presets for GDPR compliance
+- **Multi-container** support for complex setups
+- **StrictMode-safe** - no duplicate events in development
+- **SSR-ready** with noscript fallback for SEO
+
+## Documentation Sections
+
+### Concepts
+
+Understand how React GTM Kit works under the hood:
+
+- [Architecture](./concepts/architecture.md) - Package structure and data flow
+- [Consent Lifecycle](./concepts/consent-lifecycle.md) - How consent mode works
+- [SSR Strategy](./concepts/ssr-strategy.md) - Server-side rendering approach
+
+### How-To Guides
+
+Task-focused guides for common scenarios:
+
+- [Initial Setup](./how-to/setup.md)
+- [Consent Mode](./how-to/consent.md)
+- [GA4 Ecommerce](./how-to/ga4-ecommerce.md)
+- [React Router Integration](./how-to/react-router.md)
+- [Multi-Container Setup](./how-to/multi-container-custom-hosts.md)
+- [CMP Integration](./how-to/cmp-integration.md)
+- [Debugging](./how-to/debugging.md)
+- [Troubleshooting](./how-to/troubleshooting.md)
+
+### Reference
+
+Technical specifications:
+
+- [API Reference](./reference/api.md) - Complete API documentation
+- [Event Types](./reference/events.md) - Event helper types
+
+### Examples
+
+Working example applications in the [examples/](https://github.com/react-gtm-kit/react-gtm-kit/tree/main/examples) directory:
+
+| Example | Description |
+|---------|-------------|
+| `next-app` | Next.js 14 App Router with page tracking |
+| `react-strict-mode` | React + React Router with StrictMode |
+| `react-legacy` | Class components with HOC adapter |
+| `vanilla-csr` | Plain TypeScript, no framework |
+| `fullstack-web` | Full-stack app with Vite |
+
+## Support
+
+- [GitHub Issues](https://github.com/react-gtm-kit/react-gtm-kit/issues) - Bug reports and feature requests
+- [Common Issues](../GOTCHAS.md) - Solutions to frequent problems
