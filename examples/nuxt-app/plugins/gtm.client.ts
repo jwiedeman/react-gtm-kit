@@ -11,7 +11,8 @@ export default defineNuxtPlugin((nuxtApp) => {
   // Configure GTM options
   // Replace 'GTM-XXXXXX' with your actual GTM container ID
   const gtmOptions: GtmPluginOptions = {
-    containers: 'GTM-XXXXXX',
+    containers: 'GTM-NUXTAPP',
+    dataLayerName: 'nuxtAppDataLayer',
     onBeforeInit: (client) => {
       // Set GDPR-compliant consent defaults for EU users
       client.setConsentDefaults(consentPresets.eeaDefault, { region: ['EEA'] });
