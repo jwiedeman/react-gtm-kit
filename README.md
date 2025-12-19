@@ -26,6 +26,11 @@ Works with React, Vue, Next.js, Nuxt, Svelte, SolidJS, Remix, or vanilla JavaScr
 ![solid](https://img.shields.io/badge/solid-7.6KB-2C4F7C?logo=solid&logoColor=white)
 ![remix](https://img.shields.io/badge/remix-7KB-000000?logo=remix&logoColor=white)
 
+<!-- Badges: npm -->
+
+[![npm version](https://img.shields.io/npm/v/@jwiedeman/gtm-kit.svg)](https://www.npmjs.com/package/@jwiedeman/gtm-kit)
+[![npm downloads](https://img.shields.io/npm/dm/@jwiedeman/gtm-kit.svg)](https://www.npmjs.com/package/@jwiedeman/gtm-kit)
+
 <!-- Badges: Meta -->
 
 ![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen.svg)
