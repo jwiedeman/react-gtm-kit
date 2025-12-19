@@ -2,6 +2,23 @@ import React from 'react';
 import { createNoscriptMarkup, type ContainerConfigInput, type ContainerDescriptor } from '@jwiedeman/gtm-kit';
 
 /**
+ * Escape a string for safe use in JavaScript string literals.
+ * Prevents XSS when interpolating user-provided values into inline scripts.
+ */
+function escapeJsString(value: string): string {
+  return value
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\r')
+    .replace(/</g, '\\x3c')
+    .replace(/>/g, '\\x3e')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
+}
+
+/**
  * Props for the GtmScripts component.
  */
 export interface GtmScriptsProps {
@@ -108,18 +125,23 @@ export function GtmScripts({
 }: GtmScriptsProps): React.ReactElement {
   const containerConfigs = normalizeContainers(containers);
 
+  // Escape values for safe use in JavaScript string literals
+  const safeDataLayerName = escapeJsString(dataLayerName);
+  const safeNonce = scriptAttributes.nonce ? escapeJsString(scriptAttributes.nonce) : '';
+
   // Generate inline script for dataLayer initialization and GTM loading
   const inlineScript = `
-    window['${dataLayerName}'] = window['${dataLayerName}'] || [];
+    window['${safeDataLayerName}'] = window['${safeDataLayerName}'] || [];
     ${containerConfigs
       .map((config) => {
-        const scriptSrc = buildGtmScriptUrl(config.id, host, dataLayerName, config.queryParams);
+        const safeContainerId = escapeJsString(config.id);
+        const scriptSrc = escapeJsString(buildGtmScriptUrl(config.id, host, dataLayerName, config.queryParams));
         return `
       (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
       new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
       j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-      '${scriptSrc}';${scriptAttributes.nonce ? `j.nonce='${scriptAttributes.nonce}';` : ''}f.parentNode.insertBefore(j,f);
-      })(window,document,'script','${dataLayerName}','${config.id}');
+      '${scriptSrc}';${safeNonce ? `j.nonce='${safeNonce}';` : ''}f.parentNode.insertBefore(j,f);
+      })(window,document,'script','${safeDataLayerName}','${safeContainerId}');
       `;
       })
       .join('\n')}
