@@ -4,10 +4,10 @@ module.exports = {
   ...baseConfig,
   coverageThreshold: {
     global: {
-      statements: 80,
-      branches: 75,
-      functions: 89,
-      lines: 80
+      statements: 95,
+      branches: 90,
+      functions: 95,
+      lines: 95
     }
   },
   rootDir: __dirname,
