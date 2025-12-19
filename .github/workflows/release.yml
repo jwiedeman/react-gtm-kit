@@ -54,6 +54,7 @@ jobs:
     if: github.event_name != 'pull_request'
     name: semantic-release (publish)
     runs-on: ubuntu-latest
+    environment: Prod
     steps:
       - name: Check NPM_TOKEN availability
         id: check-npm-token
