@@ -1,6 +1,6 @@
-# Launch Guide: Publishing react-gtm-kit to NPM
+# Launch Guide: Publishing GTM Kit to NPM
 
-This guide walks you through launching `@react-gtm-kit/*` packages on NPM and building initial traction organically without marketing spend.
+This guide walks you through launching `@jwiedeman/gtm-kit*` packages on NPM and building initial traction organically without marketing spend.
 
 ---
 
@@ -8,17 +8,18 @@ This guide walks you through launching `@react-gtm-kit/*` packages on NPM and bu
 
 ### 1. NPM Organization Setup
 
-```bash
-# Create the npm organization (one-time)
-npm login
-npm org create react-gtm-kit
-```
+Packages are published under the `@jwiedeman` scope:
 
-You'll publish packages under the `@react-gtm-kit` scope:
-- `@react-gtm-kit/core`
-- `@react-gtm-kit/react-modern`
-- `@react-gtm-kit/react-legacy`
-- `@react-gtm-kit/next`
+- `@jwiedeman/gtm-kit` (core)
+- `@jwiedeman/gtm-kit-react`
+- `@jwiedeman/gtm-kit-react-legacy`
+- `@jwiedeman/gtm-kit-vue`
+- `@jwiedeman/gtm-kit-next`
+- `@jwiedeman/gtm-kit-nuxt`
+- `@jwiedeman/gtm-kit-svelte`
+- `@jwiedeman/gtm-kit-solid`
+- `@jwiedeman/gtm-kit-remix`
+- `@jwiedeman/gtm-kit-cli`
 
 ### 2. Repository Configuration
 
@@ -27,7 +28,7 @@ Ensure your GitHub repo has:
 - [ ] **Public visibility** - Required for organic discovery
 - [ ] **Good README** - Already done ✅
 - [ ] **MIT License** - Already done ✅
-- [ ] **Issue templates** - Set up in `.github/ISSUE_TEMPLATE/`
+- [x] **Issue templates** - Set up in `.github/ISSUE_TEMPLATE/`
 - [ ] **Contributing guide** - Reference `docs/governance/`
 
 ### 3. NPM Token Setup
@@ -96,12 +97,14 @@ pnpm release
 #### 1. GitHub Discoverability
 
 **Topics** - Add these to your repo:
+
 ```
 google-tag-manager, gtm, react, nextjs, analytics,
 consent-mode, ga4, typescript, hooks
 ```
 
 **Good First Issues** - Label easy issues to attract contributors:
+
 - Documentation improvements
 - Example additions
 - Type improvements
@@ -109,6 +112,7 @@ consent-mode, ga4, typescript, hooks
 #### 2. Answer Questions (Don't Spam)
 
 Monitor and genuinely help on:
+
 - **Stack Overflow**: Tags `google-tag-manager`, `react`, `next.js`, `google-analytics-4`
 - **Reddit**: r/reactjs, r/nextjs, r/webdev, r/analytics
 - **Discord**: Reactiflux, Next.js Discord
@@ -128,6 +132,7 @@ When users report issues:
 ```
 
 **Labels to create:**
+
 - `bug` - Something isn't working
 - `enhancement` - New feature request
 - `question` - Usage questions
@@ -139,11 +144,13 @@ When users report issues:
 #### 4. Documentation as Marketing
 
 Your docs site (`pnpm docs:dev`) should be:
+
 - **Indexed by Google** - Deploy to GitHub Pages or Vercel
 - **Copy-paste friendly** - Every code block should work
 - **Task-focused** - "How to do X" not "API reference for Y"
 
 Deploy docs:
+
 ```bash
 pnpm docs:build
 # Deploy docs/.vitepress/dist to your hosting
@@ -152,6 +159,7 @@ pnpm docs:build
 #### 5. Changelog as Content
 
 Each release is a mini blog post. Write changelogs that:
+
 - Explain **why** changes matter
 - Link to issues/discussions that drove the change
 - Thank contributors by GitHub username
@@ -161,14 +169,17 @@ Each release is a mini blog post. Write changelogs that:
 ## Monitoring Traction
 
 ### NPM Stats
-- https://npm-stat.com/charts.html?package=@react-gtm-kit/core
-- https://npmtrends.com/@react-gtm-kit/core
+
+- https://npm-stat.com/charts.html?package=@jwiedeman/gtm-kit
+- https://npmtrends.com/@jwiedeman/gtm-kit
 
 ### GitHub Insights
+
 - Stars, forks, traffic in repo Insights tab
 - Issue/PR velocity
 
 ### Search Rankings
+
 - Google: "react google tag manager"
 - NPM search: "react gtm"
 
@@ -192,6 +203,7 @@ A clear description of what the bug is.
 
 **To Reproduce**
 Steps to reproduce:
+
 1. Install '...'
 2. Configure '...'
 3. See error
@@ -200,8 +212,9 @@ Steps to reproduce:
 What you expected to happen.
 
 **Environment**
-- @react-gtm-kit/core version:
-- @react-gtm-kit/react-modern version:
+
+- @jwiedeman/gtm-kit version:
+- @jwiedeman/gtm-kit-react version:
 - React version:
 - Next.js version (if applicable):
 - Browser:
@@ -255,9 +268,11 @@ Thanks for reporting this! I can reproduce it.
 Interesting idea! Let me think through the implications:
 
 **Pros**:
+
 - [benefit]
 
 **Concerns**:
+
 - [tradeoff]
 
 Would you be interested in contributing a PR for this? Happy to provide guidance.
@@ -265,15 +280,17 @@ Would you be interested in contributing a PR for this? Happy to provide guidance
 
 ### Questions
 
-```markdown
+````markdown
 Good question! Here's how to do that:
 
 ```typescript
 // example code
 ```
+````
 
 I've also added this to the docs: [link]
-```
+
+````
 
 ---
 
@@ -319,7 +336,7 @@ pnpm release          # Publish release
 
 # Verify before release
 pnpm clean && pnpm install && pnpm build && pnpm test && pnpm lint && pnpm typecheck && pnpm size
-```
+````
 
 ---
 
@@ -338,6 +355,7 @@ The goal is **genuine helpfulness**. If the library solves real problems well, u
 ## Support Channels
 
 Set up (in order of priority):
+
 1. **GitHub Issues** - Primary support channel
 2. **GitHub Discussions** - Q&A and ideas
 3. **Discord** (optional) - Community chat if traction grows

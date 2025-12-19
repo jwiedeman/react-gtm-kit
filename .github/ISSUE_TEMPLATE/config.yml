@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/jwiedeman/GTM-Kit#readme
+    about: Check the README and docs before opening an issue
+  - name: Stack Overflow
+    url: https://stackoverflow.com/questions/tagged/google-tag-manager
+    about: Ask general GTM questions on Stack Overflow

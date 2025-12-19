@@ -161,7 +161,7 @@ function App() {
 
 ```ts
 // main.ts - CORRECT
-import { GtmPlugin } from '@react-gtm-kit/vue';
+import { GtmPlugin } from '@jwiedeman/gtm-kit-vue';
 
 createApp(App)
   .use(GtmPlugin, { containers: 'GTM-XXXXXX' }) // Must install before mount
@@ -192,7 +192,7 @@ export default {
 <script setup>
 import { watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { useGtmPush } from '@react-gtm-kit/vue';
+import { useGtmPush } from '@jwiedeman/gtm-kit-vue';
 
 const route = useRoute();
 const push = useGtmPush();
@@ -277,7 +277,7 @@ updateConsent({ ad_storage: 'granted' }); // string literal
 ```tsx
 // WRONG - useTrackPageViews in server component
 // app/layout.tsx (server component by default)
-import { useTrackPageViews } from '@react-gtm-kit/next';
+import { useTrackPageViews } from '@jwiedeman/gtm-kit-next';
 
 export default function Layout({ children }) {
   useTrackPageViews({ client }); // Error! Hooks can't run on server
@@ -286,7 +286,7 @@ export default function Layout({ children }) {
 // CORRECT - separate client component
 // app/gtm-provider.tsx
 ('use client');
-import { useTrackPageViews } from '@react-gtm-kit/next';
+import { useTrackPageViews } from '@jwiedeman/gtm-kit-next';
 
 export function GtmProvider({ children }) {
   useTrackPageViews({ client });
@@ -332,7 +332,7 @@ The `GtmHeadScript` and `GtmNoScript` components are designed to be server-safe.
 
 // CORRECT - runs only on client
 // plugins/gtm.client.ts
-import { GtmPlugin } from '@react-gtm-kit/vue';
+import { GtmPlugin } from '@jwiedeman/gtm-kit-vue';
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(GtmPlugin, { containers: 'GTM-XXXXXX' });
@@ -487,7 +487,7 @@ frame-src https://www.googletagmanager.com;
 import '@testing-library/jest-dom';
 
 // Mock for unit tests
-jest.mock('@react-gtm-kit/core', () => ({
+jest.mock('@jwiedeman/gtm-kit', () => ({
   createGtmClient: jest.fn(() => ({
     init: jest.fn(),
     push: jest.fn(),
