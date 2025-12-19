@@ -15,7 +15,9 @@ jest.mock('@react-gtm-kit/core', () => ({
     whenReady: jest.fn().mockResolvedValue([{ status: 'loaded' }]),
     onReady: jest.fn((cb) => {
       cb([{ status: 'loaded' }]);
-      return () => { /* cleanup */ };
+      return () => {
+        /* cleanup */
+      };
     }),
     teardown: jest.fn(),
     isInitialized: jest.fn().mockReturnValue(true),
@@ -298,6 +300,144 @@ describe('@react-gtm-kit/solid', () => {
 
       expect(result.client).toBeDefined();
       expect(result.initialized).toBe(true);
+    });
+  });
+
+  describe('edge cases', () => {
+    it('handles multiple push calls in sequence', () => {
+      let push: any;
+      let client: any;
+
+      createRoot((_dispose) => {
+        const TestComponent = () => {
+          push = useGtmPush();
+          client = useGtmClient();
+          return null;
+        };
+
+        return (
+          <GtmProvider containers="GTM-TEST123">
+            <TestComponent />
+          </GtmProvider>
+        );
+      });
+
+      push({ event: 'event1' });
+      push({ event: 'event2' });
+      push({ event: 'event3' });
+
+      expect(client.push).toHaveBeenCalledTimes(3);
+      expect(client.push).toHaveBeenNthCalledWith(1, { event: 'event1' });
+      expect(client.push).toHaveBeenNthCalledWith(2, { event: 'event2' });
+      expect(client.push).toHaveBeenNthCalledWith(3, { event: 'event3' });
+    });
+
+    it('setConsentDefaults works via onBeforeInit', () => {
+      let client: any;
+
+      createRoot((_dispose) => {
+        const TestComponent = () => {
+          client = useGtmClient();
+          return null;
+        };
+
+        return (
+          <GtmProvider
+            containers="GTM-TEST123"
+            onBeforeInit={(c) => {
+              c.setConsentDefaults({ analytics_storage: 'denied', ad_storage: 'denied' });
+            }}
+          >
+            <TestComponent />
+          </GtmProvider>
+        );
+      });
+
+      expect(client.setConsentDefaults).toHaveBeenCalledWith({
+        analytics_storage: 'denied',
+        ad_storage: 'denied'
+      });
+    });
+
+    it('handles complex event data with nested objects', () => {
+      let push: any;
+      let client: any;
+
+      createRoot((_dispose) => {
+        const TestComponent = () => {
+          push = useGtmPush();
+          client = useGtmClient();
+          return null;
+        };
+
+        return (
+          <GtmProvider containers="GTM-TEST123">
+            <TestComponent />
+          </GtmProvider>
+        );
+      });
+
+      const complexEvent = {
+        event: 'purchase',
+        ecommerce: {
+          transaction_id: 'T-12345',
+          value: 99.99,
+          currency: 'USD',
+          items: [{ item_id: 'SKU-001', item_name: 'Product', price: 99.99, quantity: 1 }]
+        },
+        user: { id: 'user-123', membership: 'premium' }
+      };
+
+      push(complexEvent);
+      expect(client.push).toHaveBeenCalledWith(complexEvent);
+    });
+
+    it('onReady callback receives script load states', () => {
+      let gtm: any;
+      const callback = jest.fn();
+
+      createRoot((_dispose) => {
+        const TestComponent = () => {
+          gtm = useGtm();
+          return null;
+        };
+
+        return (
+          <GtmProvider containers="GTM-TEST123">
+            <TestComponent />
+          </GtmProvider>
+        );
+      });
+
+      gtm.onReady(callback);
+      expect(callback).toHaveBeenCalledWith([{ status: 'loaded' }]);
+    });
+
+    it('throws error when useGtmConsent is called outside provider', () => {
+      expect(() => {
+        createRoot((_dispose) => {
+          useGtmConsent();
+          return null;
+        });
+      }).toThrow('[gtm-kit] useGtm() was called outside of a GtmProvider');
+    });
+
+    it('throws error when useGtmClient is called outside provider', () => {
+      expect(() => {
+        createRoot((_dispose) => {
+          useGtmClient();
+          return null;
+        });
+      }).toThrow('[gtm-kit] useGtm() was called outside of a GtmProvider');
+    });
+
+    it('throws error when useGtmReady is called outside provider', () => {
+      expect(() => {
+        createRoot((_dispose) => {
+          useGtmReady();
+          return null;
+        });
+      }).toThrow('[gtm-kit] useGtm() was called outside of a GtmProvider');
     });
   });
 });

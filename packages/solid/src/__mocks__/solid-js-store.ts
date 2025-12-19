@@ -12,15 +12,16 @@ export interface SetStoreFunction<T> {
  * Creates a store
  */
 export function createStore<T extends object>(value: T): [Store<T>, SetStoreFunction<T>] {
-  const store = { ...value };
+  const store = { ...value } as T;
 
-  const setStore: SetStoreFunction<T> = (keyOrValue: keyof T | Partial<T>, value?: T[keyof T]) => {
+  const setStore = ((keyOrValue: keyof T | Partial<T>, newValue?: unknown) => {
     if (typeof keyOrValue === 'string' || typeof keyOrValue === 'symbol') {
-      (store as T)[keyOrValue] = value as T[keyof T];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (store as any)[keyOrValue] = newValue;
     } else {
       Object.assign(store, keyOrValue);
     }
-  };
+  }) as SetStoreFunction<T>;
 
   return [store as Store<T>, setStore];
 }

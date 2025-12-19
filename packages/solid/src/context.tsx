@@ -85,13 +85,19 @@ export const GtmContext = createContext<GtmContextValue>();
  * ```
  */
 export function GtmProvider(props: GtmProviderProps): JSX.Element {
-  const {
-    children,
-    autoInit = true,
-    onBeforeInit,
-    onAfterInit,
-    ...clientOptions
-  } = props;
+  // Note: Don't destructure children - in Solid.js, children is a getter that
+  // should only be accessed inside the returned JSX to maintain proper reactivity
+  const autoInit = props.autoInit ?? true;
+  const onBeforeInit = props.onBeforeInit;
+  const onAfterInit = props.onAfterInit;
+
+  // Extract client options (everything except children and lifecycle hooks)
+  const clientOptions: CreateGtmClientOptions = {
+    containers: props.containers,
+    ...(props.dataLayerName && { dataLayerName: props.dataLayerName }),
+    ...(props.host && { host: props.host }),
+    ...(props.scriptAttributes && { scriptAttributes: props.scriptAttributes })
+  };
 
   const client = createGtmClient(clientOptions);
 
@@ -134,11 +140,7 @@ export function GtmProvider(props: GtmProviderProps): JSX.Element {
     client.teardown();
   });
 
-  return (
-    <GtmContext.Provider value={contextValue}>
-      {children}
-    </GtmContext.Provider>
-  );
+  return <GtmContext.Provider value={contextValue}>{props.children}</GtmContext.Provider>;
 }
 
 /**
