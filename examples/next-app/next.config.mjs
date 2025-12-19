@@ -10,11 +10,11 @@ const nextConfig = {
     typedRoutes: true,
     externalDir: true
   },
-  transpilePackages: ['@react-gtm-kit/core', '@react-gtm-kit/react-modern', '@react-gtm-kit/next'],
+  transpilePackages: ['@jwiedeman/gtm-kit', '@jwiedeman/gtm-kit-react', '@jwiedeman/gtm-kit-next'],
   webpack: (config) => {
-    config.resolve.alias['@react-gtm-kit/core'] = path.resolve(__dirname, '../../packages/core/src');
-    config.resolve.alias['@react-gtm-kit/react-modern'] = path.resolve(__dirname, '../../packages/react-modern/src');
-    config.resolve.alias['@react-gtm-kit/next'] = path.resolve(__dirname, '../../packages/next/src');
+    config.resolve.alias['@jwiedeman/gtm-kit'] = path.resolve(__dirname, '../../packages/core/src');
+    config.resolve.alias['@jwiedeman/gtm-kit-react'] = path.resolve(__dirname, '../../packages/react-modern/src');
+    config.resolve.alias['@jwiedeman/gtm-kit-next'] = path.resolve(__dirname, '../../packages/next/src');
     return config;
   }
 };

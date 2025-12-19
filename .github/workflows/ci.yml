@@ -27,10 +27,14 @@ jobs:
           node-version: 20
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
-      - run: pnpm install
+      - name: Install dependencies
+        run: pnpm install --ignore-scripts
       - name: Build packages
         if: ${{ matrix.task == 'test' || matrix.task == 'typecheck' || matrix.task == 'verify:lightweight' }}
         run: pnpm run build
+      - name: Run postinstall scripts
+        if: ${{ matrix.task == 'test' || matrix.task == 'typecheck' || matrix.task == 'verify:lightweight' }}
+        run: pnpm -r run --if-present postinstall || true
       - name: Run ${{ matrix.task }}
         run: pnpm run ${{ matrix.task }}
       - name: Upload coverage to Codecov

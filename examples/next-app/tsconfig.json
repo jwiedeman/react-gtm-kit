@@ -15,9 +15,9 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "@react-gtm-kit/core": ["../../packages/core/src"],
-      "@react-gtm-kit/react-modern": ["../../packages/react-modern/src"],
-      "@react-gtm-kit/next": ["../../packages/next/src"]
+      "@jwiedeman/gtm-kit": ["../../packages/core/src"],
+      "@jwiedeman/gtm-kit-react": ["../../packages/react-modern/src"],
+      "@jwiedeman/gtm-kit-next": ["../../packages/next/src"]
     },
     "plugins": [
       {
