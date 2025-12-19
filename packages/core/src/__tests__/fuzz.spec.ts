@@ -26,7 +26,7 @@ function randomGtmId(): string {
 /**
  * Generate random nested objects
  */
-function randomObject(depth: number = 0, maxDepth: number = 5): Record<string, unknown> {
+function randomObject(depth = 0, maxDepth = 5): Record<string, unknown> {
   if (depth >= maxDepth) {
     return { value: randomString(10) };
   }

@@ -6,22 +6,23 @@ module.exports = {
   rootDir: __dirname,
   displayName: '@react-gtm-kit/svelte',
   testEnvironment: 'jsdom',
-  // Skip tests for now - Svelte ESM modules require proper Jest ESM configuration
-  // Tests will be enabled once proper configuration is added
-  testPathIgnorePatterns: ['/node_modules/', 'setup\\.ts$', '\\.spec\\.ts$'],
+  testPathIgnorePatterns: ['/node_modules/', 'setup\\.ts$'],
   moduleNameMapper: {
     ...(baseConfig.moduleNameMapper ?? {}),
-    '^@react-gtm-kit/core$': path.join(__dirname, '../core/src')
+    '^@react-gtm-kit/core$': path.join(__dirname, '../core/src'),
+    // Mock svelte/store since tests use mocks anyway
+    '^svelte/store$': '<rootDir>/src/__mocks__/svelte-store.ts',
+    '^svelte$': '<rootDir>/src/__mocks__/svelte.ts'
   },
   transform: {
     '^.+\\.tsx?$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.json' }]
   },
   coverageThreshold: {
     global: {
-      statements: 0,
-      branches: 0,
-      functions: 0,
-      lines: 0
+      statements: 75,
+      branches: 75,
+      functions: 40,
+      lines: 75
     }
   }
 };

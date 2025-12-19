@@ -28,7 +28,7 @@ const GTM_ID_PATTERN = /^GTM-[A-Z0-9]{6,8}$/;
 /**
  * Common mistakes in GTM IDs
  */
-const COMMON_MISTAKES: Array<{ pattern: RegExp; message: string; suggestion: string }> = [
+const COMMON_MISTAKES: { pattern: RegExp; message: string; suggestion: string }[] = [
   {
     pattern: /^gtm-[A-Za-z0-9]/,
     message: 'GTM ID should use uppercase "GTM-" prefix',
