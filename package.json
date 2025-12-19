@@ -43,7 +43,8 @@
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
     "release": "semantic-release",
-    "release:dry-run": "semantic-release --dry-run"
+    "release:dry-run": "semantic-release --dry-run",
+    "release:github-only": "semantic-release --extends ./.releaserc.github-only.cjs"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",

@@ -46,12 +46,27 @@ jobs:
         run: pnpm run release:dry-run
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Use a placeholder for dry-run to skip npm auth verification
+          # The dry-run won't actually publish, so this is safe
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN || 'dry-run-placeholder' }}
 
   release:
     if: github.event_name != 'pull_request'
     name: semantic-release (publish)
     runs-on: ubuntu-latest
     steps:
+      - name: Check NPM_TOKEN availability
+        id: check-npm-token
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -n "$NPM_TOKEN" ]; then
+            echo "has_npm_token=true" >> $GITHUB_OUTPUT
+            echo "NPM_TOKEN is configured"
+          else
+            echo "has_npm_token=false" >> $GITHUB_OUTPUT
+            echo "::warning::NPM_TOKEN is not configured. npm publishing will be skipped."
+          fi
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -69,8 +84,14 @@ jobs:
         run: pnpm install --frozen-lockfile || pnpm install --frozen-lockfile --ignore-scripts
       - name: Build packages (excluding nuxt-app due to oxc-parser native binding issues)
         run: pnpm -r --filter '!@react-gtm-kit/example-nuxt-app' build
-      - name: semantic-release
+      - name: semantic-release (with npm publishing)
+        if: steps.check-npm-token.outputs.has_npm_token == 'true'
         run: pnpm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: semantic-release (GitHub release only, no npm)
+        if: steps.check-npm-token.outputs.has_npm_token == 'false'
+        run: pnpm run release:github-only
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
