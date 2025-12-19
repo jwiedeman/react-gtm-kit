@@ -82,7 +82,7 @@ Each asset should lead with the primary pillar and reinforce the other two with 
 
 ## Launch Deck Outline
 
-The placeholder deck at `launch-deck.pptx` mirrors this outline. Each bullet represents a slide.
+The deck should follow this outline. Each bullet represents a slide.
 
 1. Title: "React GTM Kit 1.0 – Production-ready tagging for React."
 2. Problem framing – instrumentation chaos across React eras.
@@ -101,7 +101,7 @@ The placeholder deck at `launch-deck.pptx` mirrors this outline. Each bullet rep
 - **Cadence**: Review metrics in weekly stand-up; share summary in monthly stakeholder update.
 - **Attribution**: Use UTM-tagged URLs across blog and social; align with CRM for demo requests.
 - **Feedback loop**: Capture qualitative feedback (GitHub issues, community chat) and fold into
-  docs/examples backlog via `TASKS.md` follow-up entries.
+  docs/examples backlog via GitHub issues.
 
 ## Risks & Mitigations
 
@@ -113,7 +113,7 @@ The placeholder deck at `launch-deck.pptx` mirrors this outline. Each bullet rep
 
 ## Next Steps
 
-1. Confirm launch date and align `T` timeline in the task tracker.
-2. Assign asset owners in `TASKS.md` as sub-tasks if additional help is required.
+1. Confirm launch date and align `T` timeline with the team.
+2. Assign asset owners via GitHub issues if additional help is required.
 3. Populate KPI dashboard and share preview in the week-before sync.
 4. Kick off outreach for conference CFPs using the prepared abstract.
