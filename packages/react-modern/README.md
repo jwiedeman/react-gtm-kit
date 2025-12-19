@@ -69,14 +69,14 @@ function BuyButton() {
 
 ## Features
 
-| Feature | Description |
-|---------|-------------|
+| Feature             | Description                               |
+| ------------------- | ----------------------------------------- |
 | **StrictMode-Safe** | No double-fires in React development mode |
-| **Hooks-Based** | Modern React patterns with Context API |
-| **React 16.8+** | Works with any modern React version |
-| **TypeScript** | Full type definitions included |
-| **Consent Mode v2** | Built-in GDPR compliance hooks |
-| **SSR Compatible** | Safe for Next.js, Remix, etc. |
+| **Hooks-Based**     | Modern React patterns with Context API    |
+| **React 16.8+**     | Works with any modern React version       |
+| **TypeScript**      | Full type definitions included            |
+| **Consent Mode v2** | Built-in GDPR compliance hooks            |
+| **SSR Compatible**  | Safe for Next.js, Remix, etc.             |
 
 ---
 
@@ -152,23 +152,46 @@ import { consentPresets } from '@react-gtm-kit/core';
   }}
 >
   <App />
-</GtmProvider>
+</GtmProvider>;
 
 // In your cookie banner
 function CookieBanner() {
   const { updateConsent } = useGtmConsent();
 
-  const acceptAll = () => {
-    updateConsent({
-      ad_storage: 'granted',
-      analytics_storage: 'granted',
-      ad_user_data: 'granted',
-      ad_personalization: 'granted'
-    });
-  };
+  // Accept all tracking
+  const acceptAll = () => updateConsent(consentPresets.allGranted);
 
-  return <button onClick={acceptAll}>Accept All</button>;
+  // Reject all tracking
+  const rejectAll = () => updateConsent(consentPresets.eeaDefault);
+
+  // Analytics only (mixed consent)
+  const analyticsOnly = () => updateConsent(consentPresets.analyticsOnly);
+
+  // Granular: update specific categories
+  const customChoice = () =>
+    updateConsent({
+      analytics_storage: 'granted',
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied'
+    });
+
+  return (
+    <div>
+      <button onClick={acceptAll}>Accept All</button>
+      <button onClick={rejectAll}>Reject All</button>
+      <button onClick={analyticsOnly}>Analytics Only</button>
+    </div>
+  );
 }
+```
+
+**Partial Updates** - Only update what changed:
+
+```tsx
+// User later opts into ads from preference center
+updateConsent({ ad_storage: 'granted', ad_user_data: 'granted' });
+// Other categories (analytics_storage, ad_personalization) unchanged
 ```
 
 ---
@@ -178,9 +201,9 @@ function CookieBanner() {
 ```tsx
 <GtmProvider
   config={{
-    containers: 'GTM-XXXXXX',        // Required
-    dataLayerName: 'dataLayer',       // Optional
-    host: 'https://custom.host.com',  // Optional
+    containers: 'GTM-XXXXXX', // Required
+    dataLayerName: 'dataLayer', // Optional
+    host: 'https://custom.host.com', // Optional
     scriptAttributes: { nonce: '...' } // Optional: CSP
   }}
   onBeforeInit={(client) => {

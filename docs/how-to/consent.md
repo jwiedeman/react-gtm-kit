@@ -23,25 +23,93 @@ gtm.updateConsent({
 });
 ```
 
+## Consent scenarios
+
+GTM Kit supports **all consent patterns** - from all-or-nothing to fully granular per-category updates.
+
+### All granted
+
+User accepts all tracking:
+
+```ts
+gtm.updateConsent({
+  ad_storage: 'granted',
+  analytics_storage: 'granted',
+  ad_user_data: 'granted',
+  ad_personalization: 'granted'
+});
+// Or use the preset:
+gtm.updateConsent(consentPresets.allGranted);
+```
+
+### All denied
+
+User rejects all tracking:
+
+```ts
+gtm.updateConsent({
+  ad_storage: 'denied',
+  analytics_storage: 'denied',
+  ad_user_data: 'denied',
+  ad_personalization: 'denied'
+});
+// Or use the preset:
+gtm.updateConsent(consentPresets.eeaDefault);
+```
+
+### Mixed consent (granular)
+
+User makes selective choices - this is where granular consent shines:
+
+```ts
+// Analytics only - user allows measurement but not ads
+gtm.updateConsent({
+  ad_storage: 'denied',
+  analytics_storage: 'granted',
+  ad_user_data: 'denied',
+  ad_personalization: 'denied'
+});
+// Or use the preset:
+gtm.updateConsent(consentPresets.analyticsOnly);
+
+// Ads without personalization
+gtm.updateConsent({
+  ad_storage: 'granted',
+  analytics_storage: 'granted',
+  ad_user_data: 'granted',
+  ad_personalization: 'denied' // No personalized ads
+});
+```
+
+### Partial updates
+
+Only update specific categories - unchanged categories keep their previous state:
+
+```ts
+// User initially accepts only analytics
+gtm.updateConsent({ analytics_storage: 'granted' });
+
+// Later, user opts into advertising too
+gtm.updateConsent({
+  ad_storage: 'granted',
+  ad_user_data: 'granted'
+});
+// Note: analytics_storage stays 'granted' from the previous update
+```
+
+This is critical for CMPs with preference centers where users update individual choices over time.
+
 - Defaults are safe to call before `init()`. The client queues the command and flushes it immediately after the `gtm.js` start event, before any other queued pushes.
 - Updates run instantly after initialization. If you need to scope them to specific regions or delay tag execution, use the `region` and `waitForUpdate` options exposed by the helper API.
 
 When you need to seed consent commands outside the client (for example, serialising defaults during SSR or pushing directly into a shared data layer), use the low-level helpers:
 
 ```ts
-import {
-  consentPresets,
-  createConsentDefaultsCommand,
-  createConsentUpdateCommand
-} from '@react-gtm-kit/core';
+import { consentPresets, createConsentDefaultsCommand, createConsentUpdateCommand } from '@react-gtm-kit/core';
 
-window.dataLayer.push(
-  createConsentDefaultsCommand(consentPresets.eeaDefault, { region: ['EEA'] })
-);
+window.dataLayer.push(createConsentDefaultsCommand(consentPresets.eeaDefault, { region: ['EEA'] }));
 
-window.dataLayer.push(
-  createConsentUpdateCommand({ analytics_storage: 'granted' })
-);
+window.dataLayer.push(createConsentUpdateCommand({ analytics_storage: 'granted' }));
 ```
 
 ## Data layer ordering guarantees
@@ -65,6 +133,7 @@ The React adapter exposes a `useGtmConsent` hook that proxies to the core client
 import { GtmProvider, useGtmConsent } from '@react-gtm-kit/react-modern';
 import { consentPresets } from '@react-gtm-kit/core';
 
+// Example CMP payload - yours may differ
 interface CmpPayload {
   advertising: boolean;
   analytics: boolean;
@@ -83,6 +152,8 @@ function ConsentBridge({ cmp }: { cmp: Cmp }): JSX.Element {
     setConsentDefaults(consentPresets.eeaDefault);
 
     const handler = (payload: CmpPayload) => {
+      // Map each CMP category to its Consent Mode equivalent
+      // This supports all combinations: all granted, all denied, or mixed
       updateConsent({
         ad_storage: payload.advertising ? 'granted' : 'denied',
         ad_user_data: payload.advertising ? 'granted' : 'denied',
@@ -93,6 +164,30 @@ function ConsentBridge({ cmp }: { cmp: Cmp }): JSX.Element {
 
     cmp.on('consent', handler);
     return () => cmp.off('consent', handler);
+  }, [cmp, setConsentDefaults, updateConsent]);
+
+  return null;
+}
+
+// Example: CMP with individual category updates
+function GranularConsentBridge({ cmp }: { cmp: GranularCmp }): JSX.Element {
+  const { setConsentDefaults, updateConsent } = useGtmConsent();
+
+  useEffect(() => {
+    setConsentDefaults(consentPresets.eeaDefault);
+
+    // Some CMPs fire events per category change
+    cmp.on('analytics_changed', (granted: boolean) => {
+      updateConsent({ analytics_storage: granted ? 'granted' : 'denied' });
+    });
+
+    cmp.on('advertising_changed', (granted: boolean) => {
+      updateConsent({
+        ad_storage: granted ? 'granted' : 'denied',
+        ad_user_data: granted ? 'granted' : 'denied',
+        ad_personalization: granted ? 'granted' : 'denied'
+      });
+    });
   }, [cmp, setConsentDefaults, updateConsent]);
 
   return null;
@@ -119,5 +214,17 @@ function App({ cmp }: { cmp: Cmp }): JSX.Element {
 | Updates fire repeatedly with the same payload               | Cache the last consent state and skip redundant `updateConsent` calls. The React hook accepts stable functions, so memoise your handler or compare payloads before updating.                         |
 | Tags ignore CMP choices in specific regions                 | Pass the correct ISO 3166-2 region codes via the `region` option. Invalid codes throw during development so you can catch typos early.                                                               |
 | CMP promises resolve slowly causing premature tag execution | Provide a `waitForUpdate` value in milliseconds when calling `setConsentDefaults` to hold tags until explicit consent arrives.                                                                       |
+| Partial updates don't seem to work                          | Ensure you're calling `updateConsent()` after `init()`. Partial updates only affect specified categories; check that your CMP is sending the categories you expect.                                  |
+| Mixed consent state not reflected in GTM                    | Verify you're passing a valid `ConsentState` object. Each key must be exactly `'granted'` or `'denied'` (strings, not booleans).                                                                     |
+
+## Quick reference
+
+| Scenario          | Code                                                                |
+| ----------------- | ------------------------------------------------------------------- |
+| All granted       | `updateConsent(consentPresets.allGranted)`                          |
+| All denied        | `updateConsent(consentPresets.eeaDefault)`                          |
+| Analytics only    | `updateConsent(consentPresets.analyticsOnly)`                       |
+| Single category   | `updateConsent({ analytics_storage: 'granted' })`                   |
+| Multiple specific | `updateConsent({ ad_storage: 'granted', ad_user_data: 'granted' })` |
 
 With these patterns, Consent Mode commands stay deterministic from hydration through user interaction, and downstream tags honour user preferences consistently across frameworks.

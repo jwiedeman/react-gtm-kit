@@ -40,9 +40,7 @@ import { createApp } from 'vue';
 import { GtmPlugin } from '@react-gtm-kit/vue';
 import App from './App.vue';
 
-createApp(App)
-  .use(GtmPlugin, { containers: 'GTM-XXXXXX' })
-  .mount('#app');
+createApp(App).use(GtmPlugin, { containers: 'GTM-XXXXXX' }).mount('#app');
 ```
 
 ### Step 2: Push Events
@@ -69,14 +67,14 @@ function handleClick() {
 
 ## Features
 
-| Feature | Description |
-|---------|-------------|
-| **Vue 3 Native** | Built for Composition API |
-| **Composables** | Clean, reactive Vue patterns |
-| **TypeScript** | Full type definitions included |
-| **Consent Mode v2** | Built-in GDPR compliance |
-| **SSR Compatible** | Safe for Nuxt and Vite SSR |
-| **Lightweight** | ~4KB gzipped |
+| Feature             | Description                    |
+| ------------------- | ------------------------------ |
+| **Vue 3 Native**    | Built for Composition API      |
+| **Composables**     | Clean, reactive Vue patterns   |
+| **TypeScript**      | Full type definitions included |
+| **Consent Mode v2** | Built-in GDPR compliance       |
+| **SSR Compatible**  | Safe for Nuxt and Vite SSR     |
+| **Lightweight**     | ~4KB gzipped                   |
 
 ---
 
@@ -171,9 +169,9 @@ onMounted(async () => {
 
 ```ts
 app.use(GtmPlugin, {
-  containers: 'GTM-XXXXXX',          // Required
-  dataLayerName: 'dataLayer',         // Optional
-  host: 'https://custom.host.com',    // Optional
+  containers: 'GTM-XXXXXX', // Required
+  dataLayerName: 'dataLayer', // Optional
+  host: 'https://custom.host.com', // Optional
   scriptAttributes: { nonce: '...' }, // Optional: CSP
   onBeforeInit: (client) => {
     // Called before GTM initializes
@@ -261,26 +259,27 @@ createApp(App)
 <!-- CookieBanner.vue -->
 <script setup>
 import { useGtmConsent } from '@react-gtm-kit/vue';
+import { consentPresets } from '@react-gtm-kit/core';
 
 const { updateConsent } = useGtmConsent();
 
-function acceptAll() {
-  updateConsent({
-    ad_storage: 'granted',
-    analytics_storage: 'granted',
-    ad_user_data: 'granted',
-    ad_personalization: 'granted'
-  });
-}
+// Accept all tracking
+const acceptAll = () => updateConsent(consentPresets.allGranted);
 
-function rejectAll() {
+// Reject all tracking
+const rejectAll = () => updateConsent(consentPresets.eeaDefault);
+
+// Analytics only (mixed consent)
+const analyticsOnly = () => updateConsent(consentPresets.analyticsOnly);
+
+// Granular: custom selection
+const customChoice = () =>
   updateConsent({
+    analytics_storage: 'granted',
     ad_storage: 'denied',
-    analytics_storage: 'denied',
     ad_user_data: 'denied',
     ad_personalization: 'denied'
   });
-}
 </script>
 
 <template>
@@ -288,8 +287,27 @@ function rejectAll() {
     <p>We use cookies to improve your experience.</p>
     <button @click="acceptAll">Accept All</button>
     <button @click="rejectAll">Reject All</button>
+    <button @click="analyticsOnly">Analytics Only</button>
   </div>
 </template>
+```
+
+**Partial Updates** - Only update changed categories:
+
+```vue
+<script setup>
+import { useGtmConsent } from '@react-gtm-kit/vue';
+
+const { updateConsent } = useGtmConsent();
+
+// User later opts into ads from preference center
+const enableAds = () =>
+  updateConsent({
+    ad_storage: 'granted',
+    ad_user_data: 'granted'
+  });
+// Other categories (analytics_storage, ad_personalization) remain unchanged
+</script>
 ```
 
 ---
