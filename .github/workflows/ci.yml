@@ -43,6 +43,9 @@ jobs:
             packages/next/coverage/unit/lcov.info
             packages/vue/coverage/unit/lcov.info
             packages/nuxt/coverage/unit/lcov.info
+            packages/svelte/coverage/unit/lcov.info
+            packages/solid/coverage/unit/lcov.info
+            packages/remix/coverage/unit/lcov.info
             packages/cli/coverage/unit/lcov.info
           flags: unittests
           fail_ci_if_error: false

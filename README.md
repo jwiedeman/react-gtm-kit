@@ -2,10 +2,25 @@
 
 **The simplest way to add Google Tag Manager to any JavaScript app.**
 
-Works with React, Vue, Next.js, Nuxt, or vanilla JavaScript. Pick what you need, ignore the rest.
+Works with React, Vue, Next.js, Nuxt, Svelte, SolidJS, Remix, or vanilla JavaScript. Pick what you need, ignore the rest.
 
+<!-- Badges: Build & Quality -->
 [![CI](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml)
+[![E2E Tests](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/e2e.yml/badge.svg)](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/e2e.yml)
 [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg)](https://codecov.io/gh/jwiedeman/react-gtm-kit)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+
+<!-- Badges: Packages -->
+[![npm @react-gtm-kit/core](https://img.shields.io/npm/v/@react-gtm-kit/core?label=core&color=brightgreen)](https://www.npmjs.com/package/@react-gtm-kit/core)
+[![npm @react-gtm-kit/react-modern](https://img.shields.io/npm/v/@react-gtm-kit/react-modern?label=react&color=61DAFB)](https://www.npmjs.com/package/@react-gtm-kit/react-modern)
+[![npm @react-gtm-kit/vue](https://img.shields.io/npm/v/@react-gtm-kit/vue?label=vue&color=4FC08D)](https://www.npmjs.com/package/@react-gtm-kit/vue)
+[![npm @react-gtm-kit/next](https://img.shields.io/npm/v/@react-gtm-kit/next?label=next&color=000000)](https://www.npmjs.com/package/@react-gtm-kit/next)
+[![npm @react-gtm-kit/nuxt](https://img.shields.io/npm/v/@react-gtm-kit/nuxt?label=nuxt&color=00DC82)](https://www.npmjs.com/package/@react-gtm-kit/nuxt)
+
+<!-- Badges: Meta -->
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@react-gtm-kit/core?label=core%20size)](https://bundlephobia.com/package/@react-gtm-kit/core)
+[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](https://www.npmjs.com/package/@react-gtm-kit/core)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
 
@@ -23,43 +38,49 @@ Works with React, Vue, Next.js, Nuxt, or vanilla JavaScript. Pick what you need,
 
 ## Installation
 
-Copy-paste the command for your framework:
+### The Lazy Way (Recommended)
 
-### React (hooks)
-
-```bash
-npm install @react-gtm-kit/core @react-gtm-kit/react-modern
-```
-
-### Vue 3
+Just run this command. It auto-detects your framework and sets everything up:
 
 ```bash
-npm install @react-gtm-kit/core @react-gtm-kit/vue
+npx @react-gtm-kit/cli init
 ```
 
-### Next.js (App Router)
+Done. Seriously, that's it.
+
+---
+
+### Manual Installation
+
+If you prefer to install manually, copy-paste the command for your framework:
+
+| Framework | Command |
+|-----------|---------|
+| **React** | `npm install @react-gtm-kit/core @react-gtm-kit/react-modern` |
+| **Vue 3** | `npm install @react-gtm-kit/core @react-gtm-kit/vue` |
+| **Next.js** | `npm install @react-gtm-kit/core @react-gtm-kit/next` |
+| **Nuxt 3** | `npm install @react-gtm-kit/core @react-gtm-kit/nuxt` |
+| **Svelte** | `npm install @react-gtm-kit/core @react-gtm-kit/svelte` |
+| **SolidJS** | `npm install @react-gtm-kit/core @react-gtm-kit/solid` |
+| **Remix** | `npm install @react-gtm-kit/core @react-gtm-kit/remix` |
+| **Vanilla** | `npm install @react-gtm-kit/core` |
+| **React (class)** | `npm install @react-gtm-kit/core @react-gtm-kit/react-legacy` |
+
+<details>
+<summary><strong>Using yarn, pnpm, or bun?</strong></summary>
 
 ```bash
-npm install @react-gtm-kit/core @react-gtm-kit/next
+# Yarn
+yarn add @react-gtm-kit/core @react-gtm-kit/react-modern
+
+# pnpm
+pnpm add @react-gtm-kit/core @react-gtm-kit/react-modern
+
+# Bun
+bun add @react-gtm-kit/core @react-gtm-kit/react-modern
 ```
 
-### Nuxt 3
-
-```bash
-npm install @react-gtm-kit/core @react-gtm-kit/nuxt
-```
-
-### Vanilla JavaScript / Any Framework
-
-```bash
-npm install @react-gtm-kit/core
-```
-
-### React (class components / pre-hooks)
-
-```bash
-npm install @react-gtm-kit/core @react-gtm-kit/react-legacy
-```
+</details>
 
 ---
 
@@ -434,27 +455,85 @@ import {
 | `@react-gtm-kit/vue`          | ~4 KB       | Vue 3                  |
 | `@react-gtm-kit/next`         | 14.2 KB     | Next.js 13+            |
 | `@react-gtm-kit/nuxt`         | ~5 KB       | Nuxt 3                 |
+| `@react-gtm-kit/svelte`       | ~4 KB       | Svelte 4+              |
+| `@react-gtm-kit/solid`        | ~5 KB       | SolidJS 1+             |
+| `@react-gtm-kit/remix`        | ~8 KB       | Remix 2+               |
 
 ---
 
 ## Troubleshooting
 
-### "GTM fires twice"
+### Quick Diagnostic
+
+**Is GTM loading at all?** Open your browser console and type `dataLayer`. You should see an array.
+
+- **Empty or undefined?** Check your container ID and ensure the provider is wrapping your app
+- **Has events?** GTM is working! Check your container configuration in GTM
+
+---
+
+### Troubleshooting Decision Tree
+
+```
+Something's not working...
+│
+├─ "Module not found" error
+│   └─ Run: rm -rf node_modules package-lock.json && npm install
+│
+├─ GTM fires twice (React)
+│   └─ This is normal in StrictMode. GTM Kit handles it.
+│      Still seeing issues? Ensure only ONE provider at the root.
+│
+├─ Events not showing in GTM debugger
+│   ├─ 1. Type `dataLayer` in console - are events there?
+│   │   ├─ Yes → Problem is in GTM, not the library
+│   │   └─ No → Check container ID format (GTM-XXXXXX)
+│   ├─ 2. Is your container published?
+│   │   └─ Preview mode events won't show in analytics
+│   └─ 3. Check for ad blockers
+│
+├─ Consent Mode not working
+│   └─ Consent MUST be set BEFORE init:
+│      onBeforeInit={(client) => client.setConsentDefaults(...)}
+│
+├─ TypeScript errors
+│   └─ Run: npm i -D @types/react @types/react-dom
+│
+├─ SSR hydration mismatch
+│   └─ Use the framework-specific adapter (Next, Nuxt, Remix)
+│
+└─ Still stuck?
+    └─ Open an issue: github.com/jwiedeman/react-gtm-kit/issues
+```
+
+---
+
+### Common Issues & Fixes
+
+<details>
+<summary><strong>GTM fires twice</strong></summary>
 
 This usually means StrictMode is enabled (React dev mode). **GTM Kit handles this automatically.** If you're still seeing issues:
 
 ```tsx
 // Verify you're using the provider correctly
-<GtmProvider config={{ containers: 'GTM-XXXXXX' }}>{/* Your app - only ONE provider at the root */}</GtmProvider>
+<GtmProvider config={{ containers: 'GTM-XXXXXX' }}>
+  {/* Your app - only ONE provider at the root */}
+</GtmProvider>
 ```
+</details>
 
-### "Events not showing in GTM debugger"
+<details>
+<summary><strong>Events not showing in GTM debugger</strong></summary>
 
 1. Check your container ID (GTM-XXXXXX format)
 2. Open browser console, type `dataLayer` - you should see your events
 3. Make sure GTM container is published (not just in preview)
+4. Disable ad blockers (they often block GTM)
+</details>
 
-### "Consent Mode isn't working"
+<details>
+<summary><strong>Consent Mode isn't working</strong></summary>
 
 Consent defaults **MUST** be set before `init()`:
 
@@ -472,35 +551,55 @@ useEffect(() => {
   client.setConsentDefaults(...); // This won't work
 }, []);
 ```
+</details>
 
-### "Type errors with TypeScript"
+<details>
+<summary><strong>Type errors with TypeScript</strong></summary>
 
 Make sure you have the correct types:
 
 ```bash
 npm install --save-dev @types/react @types/react-dom
 ```
+</details>
 
-### "Module not found"
+<details>
+<summary><strong>Module not found</strong></summary>
 
 ```bash
 # Clear your node_modules and reinstall
 rm -rf node_modules package-lock.json
 npm install
 ```
+</details>
+
+<details>
+<summary><strong>SSR/Hydration issues</strong></summary>
+
+Use the correct adapter for your framework:
+
+- **Next.js**: Use `@react-gtm-kit/next` with `GtmHeadScript` and `GtmNoScript`
+- **Nuxt**: Use `@react-gtm-kit/nuxt` with `.client.ts` plugin
+- **Remix**: Use `@react-gtm-kit/remix` with `GtmScripts`
+- **SvelteKit**: Wrap GTM in `browser` check
+
+</details>
 
 ---
 
 ## Framework Support Matrix
 
-| Framework     | Package                       | Status    | Min Version |
-| ------------- | ----------------------------- | --------- | ----------- |
-| Vanilla JS    | `@react-gtm-kit/core`         | ✅ Stable | ES2018+     |
-| React (hooks) | `@react-gtm-kit/react-modern` | ✅ Stable | 16.8+       |
-| React (class) | `@react-gtm-kit/react-legacy` | ✅ Stable | 16.0+       |
-| Next.js       | `@react-gtm-kit/next`         | ✅ Stable | 13+         |
-| Vue 3         | `@react-gtm-kit/vue`          | ✅ Stable | 3.0+        |
-| Nuxt 3        | `@react-gtm-kit/nuxt`         | ✅ Stable | 3.0+        |
+| Framework     | Package                       | Status     | Min Version | Coverage |
+| ------------- | ----------------------------- | ---------- | ----------- | -------- |
+| Vanilla JS    | `@react-gtm-kit/core`         | ✅ Stable  | ES2018+     | [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=core)](https://codecov.io/gh/jwiedeman/react-gtm-kit) |
+| React (hooks) | `@react-gtm-kit/react-modern` | ✅ Stable  | 16.8+       | [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=react-modern)](https://codecov.io/gh/jwiedeman/react-gtm-kit) |
+| React (class) | `@react-gtm-kit/react-legacy` | ✅ Stable  | 16.0+       | [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=react-legacy)](https://codecov.io/gh/jwiedeman/react-gtm-kit) |
+| Next.js       | `@react-gtm-kit/next`         | ✅ Stable  | 13+         | [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=next)](https://codecov.io/gh/jwiedeman/react-gtm-kit) |
+| Vue 3         | `@react-gtm-kit/vue`          | ✅ Stable  | 3.0+        | [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=vue)](https://codecov.io/gh/jwiedeman/react-gtm-kit) |
+| Nuxt 3        | `@react-gtm-kit/nuxt`         | ✅ Stable  | 3.0+        | [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=nuxt)](https://codecov.io/gh/jwiedeman/react-gtm-kit) |
+| Svelte        | `@react-gtm-kit/svelte`       | ✅ Stable  | 4.0+        | [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=svelte)](https://codecov.io/gh/jwiedeman/react-gtm-kit) |
+| SolidJS       | `@react-gtm-kit/solid`        | ✅ Stable  | 1.0+        | [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=solid)](https://codecov.io/gh/jwiedeman/react-gtm-kit) |
+| Remix         | `@react-gtm-kit/remix`        | ✅ Stable  | 2.0+        | [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=remix)](https://codecov.io/gh/jwiedeman/react-gtm-kit) |
 
 ---
 

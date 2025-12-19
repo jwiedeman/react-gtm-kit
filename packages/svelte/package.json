@@ -1,0 +1,41 @@
+{
+  "name": "@react-gtm-kit/svelte",
+  "version": "0.1.0",
+  "description": "Svelte stores and actions for GTM Kit - Google Tag Manager integration.",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "svelte": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "clean": "rm -rf dist",
+    "lint": "eslint --max-warnings=0 \"src/**/*.{ts,tsx}\"",
+    "test": "jest --config ./jest.config.cjs --runInBand --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@react-gtm-kit/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "svelte": "^4.0.0 || ^5.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/svelte": "^5.2.0",
+    "svelte": "^4.2.18",
+    "svelte-jester": "^5.0.0",
+    "tslib": "^2.6.2"
+  }
+}
