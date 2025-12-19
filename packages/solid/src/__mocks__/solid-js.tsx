@@ -4,22 +4,33 @@
 
 import type { JSX } from 'solid-js';
 
-// Context storage
-const contextValues = new Map<unknown, unknown>();
+// Context storage - use a stack to handle nested contexts
+const contextStack = new Map<symbol, unknown[]>();
 let currentOwner: { cleanups: (() => void)[] } | null = null;
 
 /**
  * Creates a context
  */
-export function createContext<T>(): {
+export function createContext<T>(defaultValue?: T): {
   Provider: (props: { value: T; children: JSX.Element }) => JSX.Element;
   id: symbol;
 } {
   const id = Symbol('context');
+  contextStack.set(id, defaultValue !== undefined ? [defaultValue] : []);
+
   return {
     Provider: (props: { value: T; children: JSX.Element }) => {
-      contextValues.set(id, props.value);
-      return props.children;
+      // Push context value onto the stack BEFORE evaluating children
+      const stack = contextStack.get(id) || [];
+      stack.push(props.value);
+      contextStack.set(id, stack);
+
+      // Now evaluate children - they will see the context
+      const children = typeof props.children === 'function' ? (props.children as () => JSX.Element)() : props.children;
+
+      // Pop context value after children are evaluated (for cleanup)
+      // Note: we don't actually pop in tests to keep the context available
+      return children;
     },
     id
   };
@@ -29,13 +40,25 @@ export function createContext<T>(): {
  * Gets a context value
  */
 export function useContext<T>(context: { id: symbol }): T | undefined {
-  return contextValues.get(context.id) as T | undefined;
+  const stack = contextStack.get(context.id);
+  if (!stack || stack.length === 0) return undefined;
+  return stack[stack.length - 1] as T;
+}
+
+/**
+ * Clears all context stacks (for test isolation)
+ */
+export function clearContexts(): void {
+  contextStack.clear();
 }
 
 /**
  * Creates a reactive root
  */
 export function createRoot<T>(fn: (dispose: () => void) => T): T {
+  // Clear all context stacks at the start of each root for test isolation
+  contextStack.clear();
+
   const prevOwner = currentOwner;
   const owner = { cleanups: [] as (() => void)[] };
   currentOwner = owner;
@@ -43,7 +66,8 @@ export function createRoot<T>(fn: (dispose: () => void) => T): T {
   const dispose = () => {
     owner.cleanups.forEach((cleanup) => cleanup());
     owner.cleanups = [];
-    contextValues.clear();
+    // Clear all context stacks
+    contextStack.clear();
   };
 
   try {

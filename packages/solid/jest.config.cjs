@@ -12,22 +12,28 @@ module.exports = {
     '^@react-gtm-kit/core$': path.join(__dirname, '../core/src'),
     // Mock solid-js modules for testing
     '^solid-js$': '<rootDir>/src/__mocks__/solid-js.tsx',
-    '^solid-js/store$': '<rootDir>/src/__mocks__/solid-js-store.ts'
+    '^solid-js/store$': '<rootDir>/src/__mocks__/solid-js-store.ts',
+    '^solid-js/web$': '<rootDir>/src/__mocks__/solid-js-web.ts'
   },
   transform: {
-    '^.+\\.tsx?$': ['ts-jest', {
-      tsconfig: '<rootDir>/tsconfig.json',
-      useESM: false
-    }]
+    // Use babel for JSX transformation with solid preset
+    '^.+\\.(ts|tsx)$': [
+      'babel-jest',
+      {
+        presets: [
+          ['@babel/preset-env', { targets: { node: 'current' }, modules: 'commonjs' }],
+          ['@babel/preset-typescript', { isTSX: true, allExtensions: true }],
+          'babel-preset-solid'
+        ]
+      }
+    ]
   },
   coverageThreshold: {
     global: {
-      statements: 0,
-      branches: 0,
-      functions: 0,
-      lines: 0
+      statements: 70,
+      branches: 60,
+      functions: 60,
+      lines: 70
     }
-  },
-  // Skip JSX tests until babel-preset-solid is properly configured
-  testPathIgnorePatterns: ['/node_modules/', 'setup\\.ts$', '\\.spec\\.tsx$']
+  }
 };
