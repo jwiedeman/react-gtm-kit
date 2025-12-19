@@ -33,6 +33,69 @@ Works with React, Vue, Next.js, Nuxt, Svelte, SolidJS, Remix, or vanilla JavaScr
 
 ---
 
+## Features at a Glance
+
+Everything you need for production GTM implementations, out of the box:
+
+### Core Capabilities
+
+| Feature                 | Description                                                                         |
+| ----------------------- | ----------------------------------------------------------------------------------- |
+| **Auto-Queue**          | Buffers events fired before GTM loads, replays them in order. Zero race conditions. |
+| **Consent Mode v2**     | Granular GDPR compliance with presets for all-granted, all-denied, or mixed states. |
+| **StrictMode-Safe**     | No double-fires in React development mode. Handled automatically.                   |
+| **SSR/SSG Ready**       | Works with Next.js, Nuxt, Remix, SvelteKit - no hydration mismatches.               |
+| **Multiple Containers** | Load multiple GTM containers with independent configs.                              |
+| **CSP Nonce Support**   | Content Security Policy compatible with nonce injection.                            |
+| **Zero Dependencies**   | Core is 3.7KB gzipped. No bloat.                                                    |
+
+### Consent Mode v2 (GDPR)
+
+| Feature              | Description                                                            |
+| -------------------- | ---------------------------------------------------------------------- |
+| **Granular Updates** | Update individual consent categories without affecting others.         |
+| **Partial Updates**  | Only send what changed - `{ analytics_storage: 'granted' }` works.     |
+| **Built-in Presets** | `eeaDefault` (all denied), `allGranted`, `analyticsOnly` ready to use. |
+| **Region Scoping**   | Apply different defaults per region (EEA, US-CA, etc.).                |
+| **waitForUpdate**    | Hold tags until explicit consent arrives.                              |
+| **CMP Integration**  | Bridge any consent platform with typed helpers.                        |
+
+### Auto-Queue (Race Condition Elimination)
+
+| Feature                 | Description                                            |
+| ----------------------- | ------------------------------------------------------ |
+| **Automatic Buffering** | Captures dataLayer pushes before GTM loads.            |
+| **Order Preservation**  | Events replay in exact order they were pushed.         |
+| **GTM Detection**       | Auto-detects when GTM.js loads via `gtm.js` event.     |
+| **Inline Script**       | Minimal `<head>` script for earliest possible capture. |
+| **Configurable**        | Poll interval, timeout, max buffer size, callbacks.    |
+| **Self-Cleaning**       | Removes interceptor after replay - zero overhead.      |
+
+### Developer Experience
+
+| Feature                | Description                                                    |
+| ---------------------- | -------------------------------------------------------------- |
+| **TypeScript Native**  | Full type definitions, autocomplete, compile-time safety.      |
+| **Framework Adapters** | React hooks, Vue composables, Next.js components, Nuxt module. |
+| **CLI Scaffolding**    | `npx @jwiedeman/gtm-kit-cli init` auto-detects framework.      |
+| **Ecommerce Helpers**  | Typed GA4 ecommerce events (purchase, add_to_cart, etc.).      |
+| **Custom DataLayer**   | Use any dataLayer name, not just `window.dataLayer`.           |
+| **Debug Logging**      | Optional verbose logging for development.                      |
+
+### Framework-Specific Features
+
+| Framework   | Unique Features                                         |
+| ----------- | ------------------------------------------------------- |
+| **React**   | Hooks API, StrictMode handling, Context-based state     |
+| **Vue**     | Composables, Plugin system, Vue Router integration      |
+| **Next.js** | Server Components, App Router, `useTrackPageViews` hook |
+| **Nuxt**    | Native module, auto page tracking, runtime config       |
+| **Svelte**  | Stores, SvelteKit SSR support                           |
+| **SolidJS** | Primitives, signals integration                         |
+| **Remix**   | Loader integration, streaming SSR                       |
+
+---
+
 ## Why GTM Kit?
 
 | Problem                               | GTM Kit Solution                  |
