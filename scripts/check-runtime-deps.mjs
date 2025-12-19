@@ -6,24 +6,54 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 
 const checks = [
   {
-    name: '@react-gtm-kit/core',
+    name: '@jwiedeman/gtm-kit',
     manifest: 'packages/core/package.json',
     allow: []
   },
   {
-    name: '@react-gtm-kit/react-modern',
+    name: '@jwiedeman/gtm-kit-react',
     manifest: 'packages/react-modern/package.json',
-    allow: ['@react-gtm-kit/core']
+    allow: ['@jwiedeman/gtm-kit']
   },
   {
-    name: '@react-gtm-kit/react-legacy',
+    name: '@jwiedeman/gtm-kit-react-legacy',
     manifest: 'packages/react-legacy/package.json',
-    allow: ['@react-gtm-kit/core']
+    allow: ['@jwiedeman/gtm-kit']
   },
   {
-    name: '@react-gtm-kit/next',
+    name: '@jwiedeman/gtm-kit-next',
     manifest: 'packages/next/package.json',
-    allow: ['@react-gtm-kit/core']
+    allow: ['@jwiedeman/gtm-kit']
+  },
+  {
+    name: '@jwiedeman/gtm-kit-remix',
+    manifest: 'packages/remix/package.json',
+    allow: ['@jwiedeman/gtm-kit']
+  },
+  {
+    name: '@jwiedeman/gtm-kit-vue',
+    manifest: 'packages/vue/package.json',
+    allow: ['@jwiedeman/gtm-kit']
+  },
+  {
+    name: '@jwiedeman/gtm-kit-nuxt',
+    manifest: 'packages/nuxt/package.json',
+    allow: ['@jwiedeman/gtm-kit', '@jwiedeman/gtm-kit-vue']
+  },
+  {
+    name: '@jwiedeman/gtm-kit-svelte',
+    manifest: 'packages/svelte/package.json',
+    allow: ['@jwiedeman/gtm-kit']
+  },
+  {
+    name: '@jwiedeman/gtm-kit-solid',
+    manifest: 'packages/solid/package.json',
+    allow: ['@jwiedeman/gtm-kit']
+  },
+  {
+    name: '@jwiedeman/gtm-kit-cli',
+    manifest: 'packages/cli/package.json',
+    allow: []
   }
 ];
 
