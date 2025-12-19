@@ -123,5 +123,29 @@ describe('event helpers', () => {
         ecommerce
       });
     });
+
+    it('pushes ecommerce event without options', () => {
+      const { client, pushes } = createClient();
+      const ecommerce = { items: [], value: 100, currency: 'EUR' };
+
+      pushEcommerce(client, 'view_item_list', ecommerce);
+
+      expect(pushes[0]).toEqual({
+        event: 'view_item_list',
+        ecommerce
+      });
+    });
+
+    it('pushes ecommerce event with undefined extras', () => {
+      const { client, pushes } = createClient();
+      const ecommerce = { items: [], value: 50 };
+
+      pushEcommerce(client, 'begin_checkout', ecommerce, { extras: undefined });
+
+      expect(pushes[0]).toEqual({
+        event: 'begin_checkout',
+        ecommerce
+      });
+    });
   });
 });

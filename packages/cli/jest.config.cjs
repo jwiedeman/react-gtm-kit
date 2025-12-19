@@ -9,10 +9,10 @@ module.exports = {
   testMatch: ['<rootDir>/src/**/__tests__/**/*.spec.{ts,tsx}'],
   coverageThreshold: {
     global: {
-      statements: 70,
-      branches: 70,
-      functions: 85,
-      lines: 70
+      statements: 90,
+      branches: 80,
+      functions: 95,
+      lines: 90
     }
   }
 };

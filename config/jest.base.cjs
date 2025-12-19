@@ -3,17 +3,17 @@ const config = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   clearMocks: true,
-  collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/**/*.d.ts'],
+  collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/**/*.d.ts', '!src/**/types.ts'],
   collectCoverage: true,
   coverageDirectory: '<rootDir>/coverage/unit',
   coverageProvider: 'v8',
   coverageReporters: ['lcov', 'text-summary'],
   coverageThreshold: {
     global: {
-      statements: 75,
-      branches: 65,
-      functions: 70,
-      lines: 75
+      statements: 90,
+      branches: 80,
+      functions: 90,
+      lines: 90
     }
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
