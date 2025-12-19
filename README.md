@@ -91,6 +91,26 @@ bun add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-react
 
 </details>
 
+<details>
+<summary><strong>Installing from GitHub (for pre-release or bleeding edge)</strong></summary>
+
+If you want to test unreleased features or use a specific branch/commit:
+
+```bash
+# Latest from main branch
+npm install github:jwiedeman/GTM-Kit
+
+# Specific version tag
+npm install github:jwiedeman/GTM-Kit#v0.1.0
+
+# Specific commit
+npm install github:jwiedeman/GTM-Kit#abc1234
+```
+
+**Note:** Framework packages (react, vue, etc.) are bundled in the monorepo. For GitHub installs, import from the packages directory or use the npm-published packages for the best experience.
+
+</details>
+
 ---
 
 ## Quick Start (5 minutes)
