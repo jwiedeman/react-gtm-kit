@@ -33,7 +33,9 @@ jobs:
           node-version: 18
           cache: 'pnpm'
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Build packages
+        run: pnpm run build
       - name: semantic-release dry run
         run: pnpm run release:dry-run
         env:
@@ -58,7 +60,7 @@ jobs:
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Build packages
         run: pnpm run build
       - name: semantic-release

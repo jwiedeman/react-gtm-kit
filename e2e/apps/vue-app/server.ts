@@ -3,9 +3,35 @@ import type { AddressInfo } from 'net';
 import { spawnSync } from 'child_process';
 import path from 'path';
 import { createReadStream, existsSync, statSync } from 'fs';
-import { lookup } from 'mimetypes';
 
 const workspaceRoot = path.resolve(__dirname, '../../..');
+
+/**
+ * Simple MIME type lookup for static file serving
+ */
+const mimeTypes: Record<string, string> = {
+  '.html': 'text/html',
+  '.js': 'application/javascript',
+  '.mjs': 'application/javascript',
+  '.css': 'text/css',
+  '.json': 'application/json',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.gif': 'image/gif',
+  '.svg': 'image/svg+xml',
+  '.ico': 'image/x-icon',
+  '.woff': 'font/woff',
+  '.woff2': 'font/woff2',
+  '.ttf': 'font/ttf',
+  '.eot': 'application/vnd.ms-fontobject',
+  '.map': 'application/json'
+};
+
+const getMimeType = (filePath: string): string => {
+  const ext = path.extname(filePath).toLowerCase();
+  return mimeTypes[ext] || 'application/octet-stream';
+};
 const exampleDir = path.resolve(workspaceRoot, 'examples/vue-app');
 const distDir = path.resolve(exampleDir, 'dist');
 
@@ -46,7 +72,7 @@ const serveStatic = (req: IncomingMessage, res: ServerResponse) => {
     return;
   }
 
-  const mimeType = lookup(filePath) || 'application/octet-stream';
+  const mimeType = getMimeType(filePath);
   res.setHeader('Content-Type', mimeType);
 
   const stream = createReadStream(filePath);

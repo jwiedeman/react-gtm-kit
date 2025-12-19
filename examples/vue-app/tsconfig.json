@@ -17,8 +17,8 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
-      "@react-gtm-kit/vue": ["../../packages/vue/src"],
-      "@react-gtm-kit/core": ["../../packages/core/src"]
+      "@jwiedeman/gtm-kit-vue": ["../../packages/vue/src"],
+      "@jwiedeman/gtm-kit": ["../../packages/core/src"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
