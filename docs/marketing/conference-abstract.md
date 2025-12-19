@@ -34,10 +34,10 @@ GitHub issues or community chat.
 
 ## CFP Tracker
 
-| Event                       | Submission deadline | Status              | Notes                               |
-| --------------------------- | ------------------- | ------------------- | ----------------------------------- |
-| React Summit                | 2025-12-01          | Drafting submission | Confirm timezone for deadline.      |
-| React Miami                 | 2025-12-15          | Not started         | Pending travel budget confirmation. |
-| Google Marketing Livestream | 2026-01-10          | Pending invitation  | Coordinate with partner marketing.  |
+Track conference submissions in this table as opportunities arise.
+
+| Event | Submission deadline | Status | Notes |
+| ----- | ------------------- | ------ | ----- |
+| TBD   | —                   | —      | —     |
 
 Update this table as submissions progress and add retrospective notes after each talk.

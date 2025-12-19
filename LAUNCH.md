@@ -25,11 +25,11 @@ Packages are published under the `@jwiedeman` scope:
 
 Ensure your GitHub repo has:
 
-- [ ] **Public visibility** - Required for organic discovery
-- [ ] **Good README** - Already done ✅
-- [ ] **MIT License** - Already done ✅
+- [x] **Public visibility** - Required for organic discovery
+- [x] **Good README** - Comprehensive README with quickstart, features, and examples
+- [x] **MIT License** - LICENSE file in repo root
 - [x] **Issue templates** - Set up in `.github/ISSUE_TEMPLATE/`
-- [ ] **Contributing guide** - Reference `docs/governance/`
+- [x] **Contributing guide** - Available in `docs/governance/`
 
 ### 3. NPM Token Setup
 
