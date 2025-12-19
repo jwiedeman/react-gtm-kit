@@ -48,16 +48,16 @@ pushEvent(gtm, 'purchase', { value: 49.99, currency: 'USD' });
 
 ## Features
 
-| Feature | Description |
-|---------|-------------|
-| **Zero Dependencies** | No bloat - just what you need |
-| **3.7KB Gzipped** | Minimal impact on bundle size |
-| **SSR-Safe** | Works with server-side rendering |
-| **Consent Mode v2** | Built-in GDPR compliance support |
-| **Multiple Containers** | Load multiple GTM containers |
-| **Custom DataLayer** | Use custom dataLayer names |
-| **CSP Support** | Content Security Policy nonce support |
-| **TypeScript** | Full type definitions included |
+| Feature                 | Description                           |
+| ----------------------- | ------------------------------------- |
+| **Zero Dependencies**   | No bloat - just what you need         |
+| **3.7KB Gzipped**       | Minimal impact on bundle size         |
+| **SSR-Safe**            | Works with server-side rendering      |
+| **Consent Mode v2**     | Built-in GDPR compliance support      |
+| **Multiple Containers** | Load multiple GTM containers          |
+| **Custom DataLayer**    | Use custom dataLayer names            |
+| **CSP Support**         | Content Security Policy nonce support |
+| **TypeScript**          | Full type definitions included        |
 
 ---
 
@@ -69,22 +69,22 @@ Creates a new GTM client instance.
 
 ```ts
 const client = createGtmClient({
-  containers: 'GTM-XXXXXX',           // Required: ID or array of IDs
-  dataLayerName: 'dataLayer',          // Optional: custom name
+  containers: 'GTM-XXXXXX', // Required: ID or array of IDs
+  dataLayerName: 'dataLayer', // Optional: custom name
   host: 'https://www.googletagmanager.com', // Optional: custom host
-  scriptAttributes: { nonce: '...' }   // Optional: for CSP
+  scriptAttributes: { nonce: '...' } // Optional: for CSP
 });
 ```
 
 ### Client Methods
 
 ```ts
-client.init();                          // Load GTM scripts
-client.push({ event: 'custom' });       // Push to dataLayer
-client.setConsentDefaults(state);       // Set consent (before init)
-client.updateConsent(state);            // Update consent (after action)
-client.teardown();                      // Cleanup (for tests)
-await client.whenReady();               // Wait for scripts to load
+client.init(); // Load GTM scripts
+client.push({ event: 'custom' }); // Push to dataLayer
+client.setConsentDefaults(state); // Set consent (before init)
+client.updateConsent(state); // Update consent (after action)
+client.teardown(); // Cleanup (for tests)
+await client.whenReady(); // Wait for scripts to load
 ```
 
 ### Event Helpers
@@ -98,7 +98,7 @@ pushEvent(client, 'button_click', { button_id: 'cta-main' });
 // Ecommerce event (GA4 format)
 pushEcommerce(client, 'purchase', {
   transaction_id: 'T-12345',
-  value: 120.00,
+  value: 120.0,
   currency: 'USD',
   items: [{ item_id: 'SKU-001', item_name: 'Blue T-Shirt', price: 40, quantity: 3 }]
 });
@@ -122,10 +122,32 @@ client.updateConsent({
 });
 ```
 
+**Granular Consent** - Update individual categories without affecting others:
+
+```ts
+// All granted
+client.updateConsent(consentPresets.allGranted);
+
+// All denied
+client.updateConsent(consentPresets.eeaDefault);
+
+// Mixed: analytics only, no ads
+client.updateConsent(consentPresets.analyticsOnly);
+
+// Partial update: only update specific categories
+client.updateConsent({ analytics_storage: 'granted' });
+
+// Update multiple specific categories
+client.updateConsent({ ad_storage: 'granted', ad_user_data: 'granted' });
+```
+
 **Built-in Presets:**
-- `consentPresets.eeaDefault` - All denied (GDPR default)
-- `consentPresets.allGranted` - All granted
-- `consentPresets.analyticsOnly` - Analytics only, no ads
+
+| Preset          | ad_storage | analytics_storage | ad_user_data | ad_personalization |
+| --------------- | ---------- | ----------------- | ------------ | ------------------ |
+| `eeaDefault`    | denied     | denied            | denied       | denied             |
+| `allGranted`    | granted    | granted           | granted      | granted            |
+| `analyticsOnly` | denied     | granted           | denied       | denied             |
 
 ---
 
@@ -133,10 +155,7 @@ client.updateConsent({
 
 ```ts
 const client = createGtmClient({
-  containers: [
-    { id: 'GTM-MAIN' },
-    { id: 'GTM-ADS', queryParams: { gtm_auth: 'abc', gtm_preview: 'env-1' } }
-  ]
+  containers: [{ id: 'GTM-MAIN' }, { id: 'GTM-ADS', queryParams: { gtm_auth: 'abc', gtm_preview: 'env-1' } }]
 });
 ```
 
@@ -158,13 +177,13 @@ const noscriptHtml = generateNoscriptHtml('GTM-XXXXXX');
 
 While `@react-gtm-kit/core` works standalone, we provide framework-specific adapters for better ergonomics:
 
-| Framework | Package | Install |
-|-----------|---------|---------|
+| Framework     | Package                       | Install                                                       |
+| ------------- | ----------------------------- | ------------------------------------------------------------- |
 | React (hooks) | `@react-gtm-kit/react-modern` | `npm install @react-gtm-kit/core @react-gtm-kit/react-modern` |
 | React (class) | `@react-gtm-kit/react-legacy` | `npm install @react-gtm-kit/core @react-gtm-kit/react-legacy` |
-| Vue 3 | `@react-gtm-kit/vue` | `npm install @react-gtm-kit/core @react-gtm-kit/vue` |
-| Nuxt 3 | `@react-gtm-kit/nuxt` | `npm install @react-gtm-kit/core @react-gtm-kit/nuxt` |
-| Next.js | `@react-gtm-kit/next` | `npm install @react-gtm-kit/core @react-gtm-kit/next` |
+| Vue 3         | `@react-gtm-kit/vue`          | `npm install @react-gtm-kit/core @react-gtm-kit/vue`          |
+| Nuxt 3        | `@react-gtm-kit/nuxt`         | `npm install @react-gtm-kit/core @react-gtm-kit/nuxt`         |
+| Next.js       | `@react-gtm-kit/next`         | `npm install @react-gtm-kit/core @react-gtm-kit/next`         |
 
 ---
 

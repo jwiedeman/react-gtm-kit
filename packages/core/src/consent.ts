@@ -4,15 +4,49 @@ const CONSENT_COMMAND = 'consent' as const;
 const CONSENT_DEFAULT = 'default' as const;
 const CONSENT_UPDATE = 'update' as const;
 
-const CONSENT_KEYS = [
-  'ad_storage',
-  'analytics_storage',
-  'ad_user_data',
-  'ad_personalization'
-] as const;
+/**
+ * The four consent categories tracked by Google Consent Mode v2.
+ */
+const CONSENT_KEYS = ['ad_storage', 'analytics_storage', 'ad_user_data', 'ad_personalization'] as const;
 
+/**
+ * A consent category key: 'ad_storage' | 'analytics_storage' | 'ad_user_data' | 'ad_personalization'
+ */
 export type ConsentKey = (typeof CONSENT_KEYS)[number];
+
+/**
+ * A consent decision: 'granted' or 'denied'
+ */
 export type ConsentDecision = 'granted' | 'denied';
+
+/**
+ * Consent state object for one or more categories.
+ *
+ * This is a **partial** record - you only need to specify the categories you want to set.
+ * Unspecified categories retain their previous state when using `updateConsent()`.
+ *
+ * @example
+ * ```ts
+ * // All four categories
+ * const fullState: ConsentState = {
+ *   ad_storage: 'granted',
+ *   analytics_storage: 'granted',
+ *   ad_user_data: 'granted',
+ *   ad_personalization: 'granted'
+ * };
+ *
+ * // Single category (partial update)
+ * const partialState: ConsentState = {
+ *   analytics_storage: 'granted'
+ * };
+ *
+ * // Multiple specific categories
+ * const mixedState: ConsentState = {
+ *   analytics_storage: 'granted',
+ *   ad_storage: 'denied'
+ * };
+ * ```
+ */
 export type ConsentState = Partial<Record<ConsentKey, ConsentDecision>>;
 
 export interface ConsentRegionOptions {
@@ -38,11 +72,9 @@ export type ConsentCommandValue =
   | [typeof CONSENT_COMMAND, ConsentCommand, ConsentState]
   | [typeof CONSENT_COMMAND, ConsentCommand, ConsentState, Record<string, unknown>];
 
-const isConsentKey = (value: string): value is ConsentKey =>
-  (CONSENT_KEYS as readonly string[]).includes(value);
+const isConsentKey = (value: string): value is ConsentKey => (CONSENT_KEYS as readonly string[]).includes(value);
 
-const isConsentDecision = (value: unknown): value is ConsentDecision =>
-  value === 'granted' || value === 'denied';
+const isConsentDecision = (value: unknown): value is ConsentDecision => value === 'granted' || value === 'denied';
 
 const assertValidRegions = (regions: readonly string[]) => {
   if (!Array.isArray(regions)) {
@@ -109,11 +141,7 @@ const normalizeOptions = (options?: ConsentRegionOptions): Record<string, unknow
   return Object.keys(payload).length ? payload : undefined;
 };
 
-export const buildConsentCommand = ({
-  command,
-  state,
-  options
-}: ConsentCommandInput): ConsentCommandValue => {
+export const buildConsentCommand = ({ command, state, options }: ConsentCommandInput): ConsentCommandValue => {
   if (command !== CONSENT_DEFAULT && command !== CONSENT_UPDATE) {
     throw new Error(`Unsupported consent command: ${command}`);
   }
@@ -131,15 +159,11 @@ export const buildConsentCommand = ({
 export const createConsentCommandValue = (input: ConsentCommandInput): DataLayerValue =>
   buildConsentCommand(input) as unknown as DataLayerValue;
 
-export const createConsentDefaultsCommand = (
-  state: ConsentState,
-  options?: ConsentRegionOptions
-): DataLayerValue => createConsentCommandValue({ command: CONSENT_DEFAULT, state, options });
+export const createConsentDefaultsCommand = (state: ConsentState, options?: ConsentRegionOptions): DataLayerValue =>
+  createConsentCommandValue({ command: CONSENT_DEFAULT, state, options });
 
-export const createConsentUpdateCommand = (
-  state: ConsentState,
-  options?: ConsentRegionOptions
-): DataLayerValue => createConsentCommandValue({ command: CONSENT_UPDATE, state, options });
+export const createConsentUpdateCommand = (state: ConsentState, options?: ConsentRegionOptions): DataLayerValue =>
+  createConsentCommandValue({ command: CONSENT_UPDATE, state, options });
 
 export const consent = {
   buildConsentCommand,

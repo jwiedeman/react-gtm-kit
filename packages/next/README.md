@@ -78,11 +78,7 @@ import { pushEvent } from '@react-gtm-kit/core';
 
 // In any client component
 function BuyButton({ client }) {
-  return (
-    <button onClick={() => pushEvent(client, 'purchase', { value: 49.99 })}>
-      Buy Now
-    </button>
-  );
+  return <button onClick={() => pushEvent(client, 'purchase', { value: 49.99 })}>Buy Now</button>;
 }
 ```
 
@@ -90,14 +86,14 @@ function BuyButton({ client }) {
 
 ## Features
 
-| Feature | Description |
-|---------|-------------|
-| **Server Components** | `GtmHeadScript` and `GtmNoScript` are server components |
-| **App Router** | Built for Next.js 13+ App Router |
-| **Auto Page Tracking** | `useTrackPageViews` hook for route changes |
-| **CSP Support** | Nonce support for Content Security Policy |
-| **TypeScript** | Full type definitions included |
-| **Lightweight** | Only what you need for Next.js |
+| Feature                | Description                                             |
+| ---------------------- | ------------------------------------------------------- |
+| **Server Components**  | `GtmHeadScript` and `GtmNoScript` are server components |
+| **App Router**         | Built for Next.js 13+ App Router                        |
+| **Auto Page Tracking** | `useTrackPageViews` hook for route changes              |
+| **CSP Support**        | Nonce support for Content Security Policy               |
+| **TypeScript**         | Full type definitions included                          |
+| **Lightweight**        | Only what you need for Next.js                          |
 
 ---
 
@@ -113,7 +109,7 @@ import { GtmHeadScript } from '@react-gtm-kit/next';
 <GtmHeadScript
   containers="GTM-XXXXXX"
   scriptAttributes={{ nonce: 'your-csp-nonce' }} // Optional
-/>
+/>;
 ```
 
 ### `<GtmNoScript />`
@@ -123,7 +119,7 @@ Renders the noscript fallback iframe. Place at the start of `<body>`.
 ```tsx
 import { GtmNoScript } from '@react-gtm-kit/next';
 
-<GtmNoScript containers="GTM-XXXXXX" />
+<GtmNoScript containers="GTM-XXXXXX" />;
 ```
 
 ---
@@ -205,11 +201,7 @@ import { useGtmClient } from '../providers/gtm';
 export function BuyButton() {
   const client = useGtmClient();
 
-  return (
-    <button onClick={() => pushEvent(client, 'purchase', { value: 49.99 })}>
-      Buy Now
-    </button>
-  );
+  return <button onClick={() => pushEvent(client, 'purchase', { value: 49.99 })}>Buy Now</button>;
 }
 ```
 
@@ -242,19 +234,41 @@ export { client };
 // app/components/CookieBanner.tsx
 'use client';
 import { client } from '../providers/gtm';
+import { consentPresets } from '@react-gtm-kit/core';
 
 export function CookieBanner() {
-  const acceptAll = () => {
-    client.updateConsent({
-      ad_storage: 'granted',
-      analytics_storage: 'granted',
-      ad_user_data: 'granted',
-      ad_personalization: 'granted'
-    });
-  };
+  // Accept all tracking
+  const acceptAll = () => client.updateConsent(consentPresets.allGranted);
 
-  return <button onClick={acceptAll}>Accept Cookies</button>;
+  // Reject all tracking
+  const rejectAll = () => client.updateConsent(consentPresets.eeaDefault);
+
+  // Analytics only (mixed consent)
+  const analyticsOnly = () => client.updateConsent(consentPresets.analyticsOnly);
+
+  // Partial update - only change specific categories
+  const customChoice = () =>
+    client.updateConsent({
+      analytics_storage: 'granted',
+      ad_storage: 'denied'
+    });
+
+  return (
+    <div>
+      <button onClick={acceptAll}>Accept All</button>
+      <button onClick={rejectAll}>Reject All</button>
+      <button onClick={analyticsOnly}>Analytics Only</button>
+    </div>
+  );
 }
+```
+
+**Granular Updates** - Update individual categories without affecting others:
+
+```tsx
+// User later changes ad preferences from settings page
+client.updateConsent({ ad_storage: 'granted', ad_user_data: 'granted' });
+// analytics_storage and ad_personalization remain unchanged
 ```
 
 ---
@@ -274,10 +288,7 @@ export default function RootLayout({ children }) {
   return (
     <html>
       <head>
-        <GtmHeadScript
-          containers="GTM-XXXXXX"
-          scriptAttributes={{ nonce }}
-        />
+        <GtmHeadScript containers="GTM-XXXXXX" scriptAttributes={{ nonce }} />
       </head>
       <body>
         <GtmNoScript containers="GTM-XXXXXX" />
@@ -294,10 +305,7 @@ export default function RootLayout({ children }) {
 
 ```tsx
 <GtmHeadScript
-  containers={[
-    { id: 'GTM-MAIN' },
-    { id: 'GTM-ADS', queryParams: { gtm_auth: 'abc', gtm_preview: 'env-1' } }
-  ]}
+  containers={[{ id: 'GTM-MAIN' }, { id: 'GTM-ADS', queryParams: { gtm_auth: 'abc', gtm_preview: 'env-1' } }]}
 />
 ```
 

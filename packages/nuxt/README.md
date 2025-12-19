@@ -61,14 +61,14 @@ push({ event: 'page_view' });
 
 ## Features
 
-| Feature | Description |
-|---------|-------------|
-| **Native Nuxt Module** | Built specifically for Nuxt 3 |
-| **Auto Page Tracking** | Tracks route changes automatically |
-| **SSR Support** | Server-side rendering compatible |
-| **Composables** | Uses Vue composables under the hood |
-| **TypeScript** | Full type definitions included |
-| **Consent Mode v2** | Built-in GDPR compliance |
+| Feature                | Description                         |
+| ---------------------- | ----------------------------------- |
+| **Native Nuxt Module** | Built specifically for Nuxt 3       |
+| **Auto Page Tracking** | Tracks route changes automatically  |
+| **SSR Support**        | Server-side rendering compatible    |
+| **Composables**        | Uses Vue composables under the hood |
+| **TypeScript**         | Full type definitions included      |
+| **Consent Mode v2**    | Built-in GDPR compliance            |
 
 ---
 
@@ -185,24 +185,50 @@ export default defineNuxtPlugin((nuxtApp) => {
 <!-- components/CookieBanner.vue -->
 <script setup>
 import { useGtmConsent } from '@react-gtm-kit/vue';
+import { consentPresets } from '@react-gtm-kit/core';
 
 const { updateConsent } = useGtmConsent();
 
-function acceptAll() {
+// Accept all tracking
+const acceptAll = () => updateConsent(consentPresets.allGranted);
+
+// Reject all tracking
+const rejectAll = () => updateConsent(consentPresets.eeaDefault);
+
+// Analytics only (mixed consent)
+const analyticsOnly = () => updateConsent(consentPresets.analyticsOnly);
+
+// Partial update - only change specific categories
+const customChoice = () =>
   updateConsent({
-    ad_storage: 'granted',
     analytics_storage: 'granted',
-    ad_user_data: 'granted',
-    ad_personalization: 'granted'
+    ad_storage: 'denied'
   });
-}
 </script>
 
 <template>
   <div class="cookie-banner">
-    <button @click="acceptAll">Accept Cookies</button>
+    <button @click="acceptAll">Accept All</button>
+    <button @click="rejectAll">Reject All</button>
+    <button @click="analyticsOnly">Analytics Only</button>
   </div>
 </template>
+```
+
+**Granular Updates** - Update individual categories without affecting others:
+
+```vue
+<script setup>
+const { updateConsent } = useGtmConsent();
+
+// User later opts into ads from settings page
+const enableAds = () =>
+  updateConsent({
+    ad_storage: 'granted',
+    ad_user_data: 'granted'
+  });
+// analytics_storage and ad_personalization remain unchanged
+</script>
 ```
 
 ---
@@ -239,10 +265,7 @@ For noscript fallback (SEO), you can add this to your `app.vue`:
 // plugins/gtm.client.ts
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(GtmPlugin, {
-    containers: [
-      { id: 'GTM-MAIN' },
-      { id: 'GTM-ADS', queryParams: { gtm_auth: 'abc', gtm_preview: 'env-1' } }
-    ]
+    containers: [{ id: 'GTM-MAIN' }, { id: 'GTM-ADS', queryParams: { gtm_auth: 'abc', gtm_preview: 'env-1' } }]
   });
 });
 ```

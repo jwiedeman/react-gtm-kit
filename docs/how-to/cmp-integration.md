@@ -1,21 +1,48 @@
 # CMP integration and QA
 
 A consent management platform (CMP) is usually the source of truth for Consent Mode
-signals. The React GTM Kit does not ship a CMP, but it provides helpers and ordering
-guarantees so your CMP callbacks can write defaults and updates to the data layer
-before any measurement tags fire.
+signals. GTM Kit does not ship a CMP, but it provides helpers and ordering guarantees
+so your CMP callbacks can write defaults and updates to the data layer before any
+measurement tags fire.
 
 ## Map CMP states to Consent Mode keys
 
-Translate your CMP payloads into the four Consent Mode v2 keys. A typical mapping
-uses the platform's decision values (e.g., `accepted`, `rejected`, `partial`) and
-scopes them to the region reported by the CMP:
+Translate your CMP payloads into the four Consent Mode v2 keys. GTM Kit supports
+**all consent scenarios**: all granted, all denied, and granular (mixed) consent.
 
-| CMP payload                           | Consent Mode update                                                      |
-| ------------------------------------- | ------------------------------------------------------------------------ |
-| `{ status: 'accepted' }`              | `updateConsent({ ad_storage: 'granted', analytics_storage: 'granted' })` |
-| `{ status: 'rejected' }`              | `updateConsent({ ad_storage: 'denied', analytics_storage: 'denied' })`   |
-| `{ status: 'partial', region: 'EEA' }`| `updateConsent({ ad_storage: 'denied', analytics_storage: 'granted' }, { region: ['EEA'] })` |
+### Common CMP scenarios
+
+| CMP Status       | Consent Mode Update                           | Use Case                           |
+| ---------------- | --------------------------------------------- | ---------------------------------- |
+| Accept All       | `updateConsent(consentPresets.allGranted)`    | User clicks "Accept All"           |
+| Reject All       | `updateConsent(consentPresets.eeaDefault)`    | User clicks "Reject All"           |
+| Analytics Only   | `updateConsent(consentPresets.analyticsOnly)` | User accepts analytics but not ads |
+| Custom Selection | Map each CMP category individually            | User makes granular choices        |
+
+### Granular consent mapping
+
+When your CMP provides per-category choices, map each to its Consent Mode equivalent:
+
+```ts
+// Example: CMP returns { analytics: true, marketing: false, personalization: true }
+updateConsent({
+  analytics_storage: cmp.analytics ? 'granted' : 'denied',
+  ad_storage: cmp.marketing ? 'granted' : 'denied',
+  ad_user_data: cmp.marketing ? 'granted' : 'denied',
+  ad_personalization: cmp.personalization ? 'granted' : 'denied'
+});
+```
+
+### Partial updates
+
+When users change individual preferences (e.g., from a preference center), you only
+need to update the categories that changed:
+
+```ts
+// User toggles advertising consent in preference center
+updateConsent({ ad_storage: 'granted', ad_user_data: 'granted' });
+// analytics_storage and ad_personalization remain unchanged
+```
 
 Keep the translator small and deterministic. Cache the last Consent Mode payload so
 repeated CMP events with unchanged values do not spam your tag history.
