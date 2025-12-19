@@ -1,7 +1,7 @@
 import type React from 'react';
-import { DEFAULT_DATA_LAYER_NAME } from '@react-gtm-kit/core';
-import type { ContainerConfigInput } from '@react-gtm-kit/core';
-import { DEFAULT_NOSCRIPT_IFRAME_ATTRIBUTES } from '@react-gtm-kit/core';
+import { DEFAULT_DATA_LAYER_NAME } from '@jwiedeman/gtm-kit';
+import type { ContainerConfigInput } from '@jwiedeman/gtm-kit';
+import { DEFAULT_NOSCRIPT_IFRAME_ATTRIBUTES } from '@jwiedeman/gtm-kit';
 import { buildNoscriptUrl, DEFAULT_GTM_HOST, normalizeContainers } from './internal/container-helpers';
 
 export interface GtmNoScriptProps {

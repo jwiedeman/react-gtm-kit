@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { GtmHeadScript, GtmNoScript } from '@react-gtm-kit/next';
+import { GtmHeadScript, GtmNoScript } from '@jwiedeman/gtm-kit-next';
 
 import { Navigation } from '../components/navigation';
 import { ConsentBanner } from '../components/consent-banner';
@@ -21,11 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
-        <GtmHeadScript
-          containers={GTM_CONTAINERS}
-          dataLayerName="nextAppDataLayer"
-          scriptAttributes={{ nonce }}
-        />
+        <GtmHeadScript containers={GTM_CONTAINERS} dataLayerName="nextAppDataLayer" scriptAttributes={{ nonce }} />
       </head>
       <body>
         <GtmNoScript containers={GTM_CONTAINERS} dataLayerName="nextAppDataLayer" />

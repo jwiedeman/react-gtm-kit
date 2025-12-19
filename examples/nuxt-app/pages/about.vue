@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useGtm } from '@react-gtm-kit/vue';
+import { useGtm } from '@jwiedeman/gtm-kit-vue';
 
 const { push } = useGtm();
 
@@ -32,7 +32,7 @@ useHead({
       <h2>Setup Instructions</h2>
       <ol>
         <li>Install the packages:
-          <code>npm install @react-gtm-kit/core @react-gtm-kit/vue @react-gtm-kit/nuxt</code>
+          <code>npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-vue @jwiedeman/gtm-kit-nuxt</code>
         </li>
         <li>Create a client plugin at <code>plugins/gtm.client.ts</code></li>
         <li>Use the composables in your components</li>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { useGtmPush } from '@react-gtm-kit/vue';
+import { useGtmPush } from '@jwiedeman/gtm-kit-vue';
 import Navigation from './components/Navigation.vue';
 import CookieBanner from './components/CookieBanner.vue';
 

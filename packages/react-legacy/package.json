@@ -1,7 +1,19 @@
 {
-  "name": "@react-gtm-kit/react-legacy",
+  "name": "@jwiedeman/gtm-kit-react-legacy",
   "version": "0.1.0",
-  "description": "Legacy React adapter HOC for React GTM Kit.",
+  "description": "Legacy React HOC adapter for GTM Kit - Google Tag Manager integration.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jwiedeman/GTM-Kit.git",
+    "directory": "packages/react-legacy"
+  },
+  "author": "jwiedeman",
+  "keywords": [
+    "gtm",
+    "google-tag-manager",
+    "react",
+    "hoc"
+  ],
   "license": "MIT",
   "type": "module",
   "main": "dist/index.cjs",
@@ -25,7 +37,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@react-gtm-kit/core": "workspace:*"
+    "@jwiedeman/gtm-kit": "workspace:*"
   },
   "peerDependencies": {
     "react": "^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useGtmPush } from '@react-gtm-kit/vue';
+import { useGtmPush } from '@jwiedeman/gtm-kit-vue';
 
 const push = useGtmPush();
 

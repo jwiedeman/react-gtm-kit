@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Route, Routes, useLocation } from 'react-router-dom';
-import { useGtmConsent, useGtmPush } from '@react-gtm-kit/react-modern';
+import { useGtmConsent, useGtmPush } from '@jwiedeman/gtm-kit-react';
 
 const consentDefaults = {
   ad_storage: 'denied',

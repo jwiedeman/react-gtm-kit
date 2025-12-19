@@ -8,7 +8,7 @@ import {
   type DataLayerValue,
   type GtmClient,
   type ScriptLoadState
-} from '@react-gtm-kit/core';
+} from '@jwiedeman/gtm-kit';
 
 /**
  * Options for creating a GTM store.
@@ -65,7 +65,7 @@ const GTM_CONTEXT_KEY = Symbol('gtm-kit');
  * @example
  * ```svelte
  * <script>
- *   import { createGtmStore, setGtmContext } from '@react-gtm-kit/svelte';
+ *   import { createGtmStore, setGtmContext } from '@jwiedeman/gtm-kit-svelte';
  *   import { onMount } from 'svelte';
  *
  *   const gtm = createGtmStore({ containers: 'GTM-XXXXXX' });
@@ -113,7 +113,7 @@ export function createGtmStore(options: GtmStoreOptions): Writable<GtmStoreValue
  * @example
  * ```svelte
  * <script>
- *   import { getGtmContext } from '@react-gtm-kit/svelte';
+ *   import { getGtmContext } from '@jwiedeman/gtm-kit-svelte';
  *
  *   const gtm = getGtmContext();
  *   $: ({ push } = $gtm);
@@ -138,7 +138,7 @@ export function getGtmContext(): Writable<GtmStoreValue> {
  * @example
  * ```svelte
  * <script>
- *   import { createGtmStore, setGtmContext } from '@react-gtm-kit/svelte';
+ *   import { createGtmStore, setGtmContext } from '@jwiedeman/gtm-kit-svelte';
  *
  *   const gtm = createGtmStore({ containers: 'GTM-XXXXXX' });
  *   setGtmContext(gtm);
@@ -163,7 +163,7 @@ export const gtmContext = getGtmContext;
  * @example
  * ```svelte
  * <script>
- *   import { gtmPush } from '@react-gtm-kit/svelte';
+ *   import { gtmPush } from '@jwiedeman/gtm-kit-svelte';
  *
  *   const push = gtmPush();
  *
@@ -184,7 +184,7 @@ export function gtmPush(): Readable<(value: DataLayerValue) => void> {
  * @example
  * ```svelte
  * <script>
- *   import { gtmConsent } from '@react-gtm-kit/svelte';
+ *   import { gtmConsent } from '@jwiedeman/gtm-kit-svelte';
  *
  *   const consent = gtmConsent();
  *
@@ -208,7 +208,7 @@ export function gtmConsent(): Readable<GtmConsentApi> {
  * @example
  * ```svelte
  * <script>
- *   import { gtmClient } from '@react-gtm-kit/svelte';
+ *   import { gtmClient } from '@jwiedeman/gtm-kit-svelte';
  *
  *   const client = gtmClient();
  * </script>
@@ -225,7 +225,7 @@ export function gtmClient(): Readable<GtmClient> {
  * @example
  * ```svelte
  * <script>
- *   import { gtmReady } from '@react-gtm-kit/svelte';
+ *   import { gtmReady } from '@jwiedeman/gtm-kit-svelte';
  *   import { onMount } from 'svelte';
  *
  *   const whenReady = gtmReady();

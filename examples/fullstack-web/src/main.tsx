@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { GtmProvider } from '@react-gtm-kit/react-modern';
+import { GtmProvider } from '@jwiedeman/gtm-kit-react';
 import App from './App';
 import './styles.css';
 

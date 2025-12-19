@@ -1,10 +1,10 @@
 import { mount } from '@vue/test-utils';
 import { defineComponent, h, reactive, nextTick } from 'vue';
 import { createNuxtGtmPlugin, useTrackPageViews } from '../module';
-import { GtmPlugin, useGtm } from '@react-gtm-kit/vue';
+import { GtmPlugin, useGtm } from '@jwiedeman/gtm-kit-vue';
 
 // Mock the core module
-jest.mock('@react-gtm-kit/core', () => {
+jest.mock('@jwiedeman/gtm-kit', () => {
   const mockClient = {
     init: jest.fn(),
     push: jest.fn(),
@@ -26,7 +26,7 @@ jest.mock('@react-gtm-kit/core', () => {
   };
 });
 
-const { __mockClient: mockClient } = jest.requireMock('@react-gtm-kit/core');
+const { __mockClient: mockClient } = jest.requireMock('@jwiedeman/gtm-kit');
 
 describe('Nuxt GTM Module', () => {
   beforeEach(() => {

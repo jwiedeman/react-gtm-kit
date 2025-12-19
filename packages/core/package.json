@@ -1,7 +1,19 @@
 {
-  "name": "@react-gtm-kit/core",
+  "name": "@jwiedeman/gtm-kit",
   "version": "0.1.0",
-  "description": "Framework-agnostic Google Tag Manager client core for React GTM Kit.",
+  "description": "Framework-agnostic Google Tag Manager client - the core of GTM Kit.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jwiedeman/GTM-Kit.git",
+    "directory": "packages/core"
+  },
+  "author": "jwiedeman",
+  "keywords": [
+    "gtm",
+    "google-tag-manager",
+    "analytics",
+    "dataLayer"
+  ],
   "license": "MIT",
   "type": "module",
   "main": "dist/index.cjs",

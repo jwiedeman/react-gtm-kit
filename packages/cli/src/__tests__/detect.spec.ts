@@ -46,7 +46,7 @@ describe('detectFramework', () => {
       expect(result.framework).toBe('nuxt');
       expect(result.displayName).toBe('Nuxt 3');
       expect(result.confidence).toBe(100);
-      expect(result.packages).toContain('@react-gtm-kit/nuxt');
+      expect(result.packages).toContain('@jwiedeman/gtm-kit-nuxt');
     });
 
     it('detects Nuxt from config file', () => {
@@ -86,7 +86,7 @@ describe('detectFramework', () => {
       expect(result.framework).toBe('next');
       expect(result.displayName).toBe('Next.js');
       expect(result.confidence).toBe(100);
-      expect(result.packages).toContain('@react-gtm-kit/next');
+      expect(result.packages).toContain('@jwiedeman/gtm-kit-next');
     });
 
     it('detects Next.js from config file', () => {
@@ -127,7 +127,7 @@ describe('detectFramework', () => {
       expect(result.framework).toBe('vue');
       expect(result.displayName).toBe('Vue 3');
       expect(result.confidence).toBe(100);
-      expect(result.packages).toContain('@react-gtm-kit/vue');
+      expect(result.packages).toContain('@jwiedeman/gtm-kit-vue');
     });
 
     it('extracts Vue version', () => {
@@ -165,7 +165,7 @@ describe('detectFramework', () => {
       expect(result.framework).toBe('react');
       expect(result.displayName).toBe('React 18+');
       expect(result.confidence).toBe(100);
-      expect(result.packages).toContain('@react-gtm-kit/react-modern');
+      expect(result.packages).toContain('@jwiedeman/gtm-kit-react');
     });
 
     it('detects React 16.8+ from dependencies', () => {
@@ -175,7 +175,7 @@ describe('detectFramework', () => {
 
       expect(result.framework).toBe('react');
       expect(result.displayName).toBe('React 16.8+');
-      expect(result.packages).toContain('@react-gtm-kit/react-modern');
+      expect(result.packages).toContain('@jwiedeman/gtm-kit-react');
     });
 
     it('detects older React and recommends legacy package', () => {
@@ -185,7 +185,7 @@ describe('detectFramework', () => {
 
       expect(result.framework).toBe('react');
       expect(result.displayName).toContain('Legacy');
-      expect(result.packages).toContain('@react-gtm-kit/react-legacy');
+      expect(result.packages).toContain('@jwiedeman/gtm-kit-react-legacy');
     });
 
     it('detects React from .jsx files in src/', () => {
@@ -221,7 +221,7 @@ describe('detectFramework', () => {
       expect(result.framework).toBe('vanilla');
       expect(result.displayName).toBe('Vanilla JavaScript');
       expect(result.confidence).toBe(50);
-      expect(result.packages).toEqual(['@react-gtm-kit/core']);
+      expect(result.packages).toEqual(['@jwiedeman/gtm-kit']);
     });
 
     it('returns vanilla for empty directory', () => {
@@ -309,30 +309,22 @@ describe('detectFramework', () => {
 });
 
 describe('getInstallCommand', () => {
-  const packages = ['@react-gtm-kit/core', '@react-gtm-kit/react-modern'];
+  const packages = ['@jwiedeman/gtm-kit', '@jwiedeman/gtm-kit-react'];
 
   it('generates npm command', () => {
-    expect(getInstallCommand('npm', packages)).toBe(
-      'npm install @react-gtm-kit/core @react-gtm-kit/react-modern'
-    );
+    expect(getInstallCommand('npm', packages)).toBe('npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-react');
   });
 
   it('generates yarn command', () => {
-    expect(getInstallCommand('yarn', packages)).toBe(
-      'yarn add @react-gtm-kit/core @react-gtm-kit/react-modern'
-    );
+    expect(getInstallCommand('yarn', packages)).toBe('yarn add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-react');
   });
 
   it('generates pnpm command', () => {
-    expect(getInstallCommand('pnpm', packages)).toBe(
-      'pnpm add @react-gtm-kit/core @react-gtm-kit/react-modern'
-    );
+    expect(getInstallCommand('pnpm', packages)).toBe('pnpm add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-react');
   });
 
   it('generates bun command', () => {
-    expect(getInstallCommand('bun', packages)).toBe(
-      'bun add @react-gtm-kit/core @react-gtm-kit/react-modern'
-    );
+    expect(getInstallCommand('bun', packages)).toBe('bun add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-react');
   });
 });
 
@@ -342,7 +334,7 @@ describe('getDetectionSummary', () => {
       framework: 'react' as const,
       version: '18.2.0',
       packageManager: 'npm' as const,
-      packages: ['@react-gtm-kit/core', '@react-gtm-kit/react-modern'],
+      packages: ['@jwiedeman/gtm-kit', '@jwiedeman/gtm-kit-react'],
       displayName: 'React 18+',
       confidence: 100,
       reason: 'Found "react" in dependencies'
@@ -354,7 +346,7 @@ describe('getDetectionSummary', () => {
     expect(summary).toContain('18.2.0');
     expect(summary).toContain('npm');
     expect(summary).toContain('100%');
-    expect(summary).toContain('@react-gtm-kit/core');
-    expect(summary).toContain('@react-gtm-kit/react-modern');
+    expect(summary).toContain('@jwiedeman/gtm-kit');
+    expect(summary).toContain('@jwiedeman/gtm-kit-react');
   });
 });

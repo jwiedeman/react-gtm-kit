@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, render, waitFor } from '@testing-library/react';
-import type { PageViewPayload, ScriptLoadState } from '@react-gtm-kit/core';
+import type { PageViewPayload, ScriptLoadState } from '@jwiedeman/gtm-kit';
 import type { UseTrackPageViewsOptions } from '../route-listener';
 import { useTrackPageViews } from '../route-listener';
 import { __resetMockNavigation, __setMockPathname, __setMockSearchParams } from '../__mocks__/next/navigation';

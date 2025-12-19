@@ -1,6 +1,6 @@
 import type React from 'react';
-import { DEFAULT_DATA_LAYER_NAME } from '@react-gtm-kit/core';
-import type { ContainerConfigInput, ScriptAttributes } from '@react-gtm-kit/core';
+import { DEFAULT_DATA_LAYER_NAME } from '@jwiedeman/gtm-kit';
+import type { ContainerConfigInput, ScriptAttributes } from '@jwiedeman/gtm-kit';
 import { buildScriptUrl, DEFAULT_GTM_HOST, normalizeContainers } from './internal/container-helpers';
 
 export interface GtmHeadScriptProps {

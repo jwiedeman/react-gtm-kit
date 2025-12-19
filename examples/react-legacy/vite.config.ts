@@ -8,8 +8,8 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@react-gtm-kit/core': path.resolve(workspaceRoot, 'packages/core/src'),
-      '@react-gtm-kit/react-legacy': path.resolve(workspaceRoot, 'packages/react-legacy/src')
+      '@jwiedeman/gtm-kit': path.resolve(workspaceRoot, 'packages/core/src'),
+      '@jwiedeman/gtm-kit-react-legacy': path.resolve(workspaceRoot, 'packages/react-legacy/src')
     }
   },
   server: {

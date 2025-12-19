@@ -1,5 +1,5 @@
 import { ref, watch, onMounted, type App } from 'vue';
-import { type GtmClient } from '@react-gtm-kit/core';
+import { type GtmClient } from '@jwiedeman/gtm-kit';
 import {
   GtmPlugin,
   useGtm,
@@ -8,7 +8,7 @@ import {
   useGtmClient,
   type GtmPluginOptions,
   type GtmContext
-} from '@react-gtm-kit/vue';
+} from '@jwiedeman/gtm-kit-vue';
 
 /**
  * Options for the Nuxt GTM module.
@@ -49,7 +49,7 @@ export interface NuxtGtmContext extends GtmContext {
  * @example
  * ```ts
  * // plugins/gtm.client.ts
- * import { createNuxtGtmPlugin } from '@react-gtm-kit/nuxt';
+ * import { createNuxtGtmPlugin } from '@jwiedeman/gtm-kit-nuxt';
  *
  * export default defineNuxtPlugin((nuxtApp) => {
  *   createNuxtGtmPlugin(nuxtApp.vueApp, {
@@ -88,7 +88,7 @@ export const createNuxtGtmPlugin = (app: App, options: NuxtGtmOptions): GtmClien
 
 /**
  * Composable for accessing the full GTM context in Nuxt.
- * This is an alias for useGtm() from @react-gtm-kit/vue.
+ * This is an alias for useGtm() from @jwiedeman/gtm-kit-vue.
  *
  * @example
  * ```vue
@@ -103,19 +103,19 @@ export const useNuxtGtm = useGtm;
 
 /**
  * Composable for pushing events in Nuxt.
- * This is an alias for useGtmPush() from @react-gtm-kit/vue.
+ * This is an alias for useGtmPush() from @jwiedeman/gtm-kit-vue.
  */
 export const useNuxtGtmPush = useGtmPush;
 
 /**
  * Composable for consent management in Nuxt.
- * This is an alias for useGtmConsent() from @react-gtm-kit/vue.
+ * This is an alias for useGtmConsent() from @jwiedeman/gtm-kit-vue.
  */
 export const useNuxtGtmConsent = useGtmConsent;
 
 /**
  * Composable for accessing the raw GTM client in Nuxt.
- * This is an alias for useGtmClient() from @react-gtm-kit/vue.
+ * This is an alias for useGtmClient() from @jwiedeman/gtm-kit-vue.
  */
 export const useNuxtGtmClient = useGtmClient;
 
@@ -169,7 +169,7 @@ export interface TrackPageViewsOptions {
  * @example
  * ```vue
  * <script setup>
- * import { useTrackPageViews } from '@react-gtm-kit/nuxt';
+ * import { useTrackPageViews } from '@jwiedeman/gtm-kit-nuxt';
  *
  * const route = useRoute();
  *
@@ -265,6 +265,6 @@ export const useTrackPageViews = (options: TrackPageViewsOptions): void => {
 //
 // declare module '#app' {
 //   interface NuxtApp {
-//     $gtm: import('@react-gtm-kit/vue').GtmContext;
+//     $gtm: import('@jwiedeman/gtm-kit-vue').GtmContext;
 //   }
 // }

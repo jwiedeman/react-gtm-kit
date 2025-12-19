@@ -1,7 +1,20 @@
 {
-  "name": "@react-gtm-kit/nuxt",
+  "name": "@jwiedeman/gtm-kit-nuxt",
   "version": "0.1.0",
   "description": "Nuxt 3 module for GTM Kit - Google Tag Manager integration with auto page tracking.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jwiedeman/GTM-Kit.git",
+    "directory": "packages/nuxt"
+  },
+  "author": "jwiedeman",
+  "keywords": [
+    "gtm",
+    "google-tag-manager",
+    "nuxt",
+    "nuxt3",
+    "module"
+  ],
   "license": "MIT",
   "type": "module",
   "main": "dist/index.cjs",
@@ -25,8 +38,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@react-gtm-kit/core": "workspace:*",
-    "@react-gtm-kit/vue": "workspace:*"
+    "@jwiedeman/gtm-kit": "workspace:*",
+    "@jwiedeman/gtm-kit-vue": "workspace:*"
   },
   "peerDependencies": {
     "nuxt": "^3.0.0",

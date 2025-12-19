@@ -6,7 +6,7 @@ import { createRoot } from 'solid-js';
 import { GtmProvider, useGtm, useGtmPush, useGtmConsent, useGtmClient, useGtmReady } from '../context';
 
 // Mock the core package
-jest.mock('@react-gtm-kit/core', () => ({
+jest.mock('@jwiedeman/gtm-kit', () => ({
   createGtmClient: jest.fn((options) => ({
     init: jest.fn(),
     push: jest.fn(),
@@ -25,7 +25,7 @@ jest.mock('@react-gtm-kit/core', () => ({
   }))
 }));
 
-describe('@react-gtm-kit/solid', () => {
+describe('@jwiedeman/gtm-kit-solid', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     document.querySelectorAll('script[src*="googletagmanager"]').forEach((el) => el.remove());

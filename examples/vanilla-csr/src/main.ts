@@ -1,5 +1,5 @@
 import './style.css';
-import { createGtmClient, pushEvent } from '@react-gtm-kit/core';
+import { createGtmClient, pushEvent } from '@jwiedeman/gtm-kit';
 
 type GtmWindow = Window & Record<string, unknown>;
 

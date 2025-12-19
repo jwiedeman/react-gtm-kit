@@ -6,7 +6,7 @@ import {
   type CreateGtmClientOptions,
   type DataLayerValue,
   type GtmClient
-} from '@react-gtm-kit/core';
+} from '@jwiedeman/gtm-kit';
 
 export interface LegacyGtmApi {
   client: GtmClient;

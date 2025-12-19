@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useGtm } from '@react-gtm-kit/vue';
+import { useGtm } from '@jwiedeman/gtm-kit-vue';
 
 const { push, whenReady } = useGtm();
 

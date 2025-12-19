@@ -1,12 +1,27 @@
 {
-  "name": "react-gtm-kit-monorepo",
+  "name": "@jwiedeman/gtm-kit-monorepo",
   "private": true,
   "version": "0.1.0",
   "packageManager": "pnpm@8.15.4",
+  "description": "Framework-agnostic GTM implementation kit",
   "repository": {
     "type": "git",
-    "url": "https://github.com/react-gtm-kit/react-gtm-kit.git"
+    "url": "https://github.com/jwiedeman/GTM-Kit.git"
   },
+  "author": "jwiedeman",
+  "license": "MIT",
+  "keywords": [
+    "gtm",
+    "google-tag-manager",
+    "analytics",
+    "react",
+    "vue",
+    "svelte",
+    "solid",
+    "next",
+    "nuxt",
+    "remix"
+  ],
   "scripts": {
     "build": "pnpm -r build",
     "clean": "pnpm -r exec rm -rf dist",

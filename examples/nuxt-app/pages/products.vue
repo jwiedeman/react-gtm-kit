@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useGtmClient } from '@react-gtm-kit/vue';
-import { pushEcommerce } from '@react-gtm-kit/core';
+import { useGtmClient } from '@jwiedeman/gtm-kit-vue';
+import { pushEcommerce } from '@jwiedeman/gtm-kit';
 
 const client = useGtmClient();
 

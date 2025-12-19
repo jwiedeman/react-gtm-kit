@@ -12,7 +12,7 @@
     "smoke": "pnpm run build"
   },
   "dependencies": {
-    "@react-gtm-kit/react-modern": "workspace:*",
+    "@jwiedeman/gtm-kit-react": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

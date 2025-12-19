@@ -7,7 +7,7 @@ export default defineConfig({
   root: '.',
   resolve: {
     alias: {
-      '@react-gtm-kit/core': path.resolve(workspaceRoot, 'packages/core/src')
+      '@jwiedeman/gtm-kit': path.resolve(workspaceRoot, 'packages/core/src')
     }
   },
   build: {

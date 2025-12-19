@@ -22,7 +22,7 @@ jest.mock('@remix-run/react', () => ({
 
 // Mock the core package
 const mockPush = jest.fn();
-jest.mock('@react-gtm-kit/core', () => ({
+jest.mock('@jwiedeman/gtm-kit', () => ({
   createGtmClient: jest.fn(() => ({
     init: jest.fn(),
     push: mockPush,

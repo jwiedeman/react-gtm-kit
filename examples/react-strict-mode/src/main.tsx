@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import { GtmProvider } from '@react-gtm-kit/react-modern';
+import { GtmProvider } from '@jwiedeman/gtm-kit-react';
 import App from './App';
 
 const rawContainers = import.meta.env.VITE_GTM_CONTAINERS ?? 'GTM-XXXX';

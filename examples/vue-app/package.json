@@ -12,8 +12,8 @@
     "smoke": "pnpm run build"
   },
   "dependencies": {
-    "@react-gtm-kit/vue": "workspace:*",
-    "@react-gtm-kit/core": "workspace:*",
+    "@jwiedeman/gtm-kit-vue": "workspace:*",
+    "@jwiedeman/gtm-kit": "workspace:*",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },

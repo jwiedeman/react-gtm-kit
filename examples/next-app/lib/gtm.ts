@@ -1,8 +1,6 @@
-import type { ContainerConfigInput } from '@react-gtm-kit/core';
+import type { ContainerConfigInput } from '@jwiedeman/gtm-kit';
 
-export const GTM_CONTAINERS: ContainerConfigInput[] = [
-  { id: 'GTM-NEXTAPP' }
-];
+export const GTM_CONTAINERS: ContainerConfigInput[] = [{ id: 'GTM-NEXTAPP' }];
 
 export const DEFAULT_CONSENT = {
   ad_storage: 'denied',

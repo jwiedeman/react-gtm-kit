@@ -1,5 +1,5 @@
-import type { LegacyGtmProps } from '@react-gtm-kit/react-legacy';
-import { withGtm } from '@react-gtm-kit/react-legacy';
+import type { LegacyGtmProps } from '@jwiedeman/gtm-kit-react-legacy';
+import { withGtm } from '@jwiedeman/gtm-kit-react-legacy';
 import { Component } from 'react';
 
 const styles: Record<string, string> = {
