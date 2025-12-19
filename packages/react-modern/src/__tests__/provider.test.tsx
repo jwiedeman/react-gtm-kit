@@ -9,12 +9,12 @@ import type {
   DataLayerValue,
   GtmClient,
   ScriptLoadState
-} from '@react-gtm-kit/core';
-import { createGtmClient } from '@react-gtm-kit/core';
+} from '@jwiedeman/gtm-kit';
+import { createGtmClient } from '@jwiedeman/gtm-kit';
 import { Link, MemoryRouter, Route as RouterRoute, Routes as RouterRoutes, useLocation } from 'react-router-dom';
 
-jest.mock('@react-gtm-kit/core', () => {
-  const actual = jest.requireActual('@react-gtm-kit/core');
+jest.mock('@jwiedeman/gtm-kit', () => {
+  const actual = jest.requireActual('@jwiedeman/gtm-kit');
   return {
     ...actual,
     createGtmClient: jest.fn()

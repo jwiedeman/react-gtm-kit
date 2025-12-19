@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useGtmConsent } from '@react-gtm-kit/vue';
+import { useGtmConsent } from '@jwiedeman/gtm-kit-vue';
 
 const { updateConsent } = useGtmConsent();
 const isVisible = ref(true);

@@ -4,10 +4,10 @@
  * GTM Kit CLI - Zero-config setup for Google Tag Manager
  *
  * Usage:
- *   npx @react-gtm-kit/cli init          # Interactive setup
- *   npx @react-gtm-kit/cli init GTM-XXX  # Quick setup with container ID
- *   npx @react-gtm-kit/cli detect        # Just detect framework
- *   npx @react-gtm-kit/cli validate      # Validate existing setup
+ *   npx @jwiedeman/gtm-kit-cli init          # Interactive setup
+ *   npx @jwiedeman/gtm-kit-cli init GTM-XXX  # Quick setup with container ID
+ *   npx @jwiedeman/gtm-kit-cli detect        # Just detect framework
+ *   npx @jwiedeman/gtm-kit-cli validate      # Validate existing setup
  */
 
 import * as fs from 'fs';
@@ -97,7 +97,7 @@ ${c('cyan', '╚═════════════════════�
 const showHelp = () => {
   showBanner();
   console.log(`${c('bold', 'Usage:')}
-  npx @react-gtm-kit/cli <command> [options]
+  npx @jwiedeman/gtm-kit-cli <command> [options]
 
 ${c('bold', 'Commands:')}
   ${c('cyan', 'init')} [GTM-ID]     Interactive setup (or quick setup with ID)
@@ -107,10 +107,10 @@ ${c('bold', 'Commands:')}
   ${c('cyan', 'help')}              Show this help message
 
 ${c('bold', 'Examples:')}
-  ${c('dim', '$')} npx @react-gtm-kit/cli init
-  ${c('dim', '$')} npx @react-gtm-kit/cli init GTM-ABC1234
-  ${c('dim', '$')} npx @react-gtm-kit/cli detect
-  ${c('dim', '$')} npx @react-gtm-kit/cli validate GTM-ABC1234
+  ${c('dim', '$')} npx @jwiedeman/gtm-kit-cli init
+  ${c('dim', '$')} npx @jwiedeman/gtm-kit-cli init GTM-ABC1234
+  ${c('dim', '$')} npx @jwiedeman/gtm-kit-cli detect
+  ${c('dim', '$')} npx @jwiedeman/gtm-kit-cli validate GTM-ABC1234
 
 ${c('bold', 'Options:')}
   --typescript, -ts    Generate TypeScript code (default)
@@ -200,7 +200,10 @@ const runGenerate = (containerId: string, options: { typescript?: boolean; conse
 /**
  * Init command - interactive setup
  */
-const runInit = async (quickId?: string, options: { typescript?: boolean; consent?: boolean; dryRun?: boolean } = {}) => {
+const runInit = async (
+  quickId?: string,
+  options: { typescript?: boolean; consent?: boolean; dryRun?: boolean } = {}
+) => {
   showBanner();
   print.header('GTM Kit Setup');
 
@@ -388,7 +391,7 @@ export const run = async (args: string[] = process.argv.slice(2)): Promise<void>
       case 'validate':
         if (!positional[0]) {
           print.error('Please provide a GTM container ID to validate');
-          console.log(`\n  ${c('dim', 'Usage:')} npx @react-gtm-kit/cli validate GTM-ABC1234\n`);
+          console.log(`\n  ${c('dim', 'Usage:')} npx @jwiedeman/gtm-kit-cli validate GTM-ABC1234\n`);
           process.exit(1);
         }
         runValidate(positional[0]);
@@ -398,7 +401,7 @@ export const run = async (args: string[] = process.argv.slice(2)): Promise<void>
       case 'gen':
         if (!positional[0]) {
           print.error('Please provide a GTM container ID');
-          console.log(`\n  ${c('dim', 'Usage:')} npx @react-gtm-kit/cli generate GTM-ABC1234\n`);
+          console.log(`\n  ${c('dim', 'Usage:')} npx @jwiedeman/gtm-kit-cli generate GTM-ABC1234\n`);
           process.exit(1);
         }
         runGenerate(positional[0], options);

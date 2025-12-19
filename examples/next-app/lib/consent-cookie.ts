@@ -1,4 +1,4 @@
-import type { ConsentState } from '@react-gtm-kit/core';
+import type { ConsentState } from '@jwiedeman/gtm-kit';
 
 import { DEFAULT_CONSENT } from './gtm';
 

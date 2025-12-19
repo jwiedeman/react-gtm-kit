@@ -1,11 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useMemo,
-  type ReactNode
-} from 'react';
+import React, { createContext, useContext, useEffect, useRef, useMemo, type ReactNode } from 'react';
 import {
   createGtmClient,
   type ConsentRegionOptions,
@@ -14,7 +7,7 @@ import {
   type DataLayerValue,
   type GtmClient,
   type ScriptLoadState
-} from '@react-gtm-kit/core';
+} from '@jwiedeman/gtm-kit';
 
 /**
  * Props for the GTM Provider component.
@@ -74,7 +67,7 @@ export const GtmContext = createContext<GtmContextValue | null>(null);
  * @example
  * ```tsx
  * // app/root.tsx
- * import { GtmProvider } from '@react-gtm-kit/remix';
+ * import { GtmProvider } from '@jwiedeman/gtm-kit-remix';
  *
  * export default function App() {
  *   return (
@@ -90,12 +83,7 @@ export const GtmContext = createContext<GtmContextValue | null>(null);
  * }
  * ```
  */
-export function GtmProvider({
-  config,
-  children,
-  onBeforeInit,
-  onAfterInit
-}: GtmProviderProps): React.ReactElement {
+export function GtmProvider({ config, children, onBeforeInit, onAfterInit }: GtmProviderProps): React.ReactElement {
   // Create client once and store in ref to survive StrictMode remounts
   const clientRef = useRef<GtmClient | null>(null);
   const initializedRef = useRef(false);
@@ -152,8 +140,7 @@ export function GtmProvider({
       push: (value: DataLayerValue) => client.push(value),
       setConsentDefaults: (state: ConsentState, options?: ConsentRegionOptions) =>
         client.setConsentDefaults(state, options),
-      updateConsent: (state: ConsentState, options?: ConsentRegionOptions) =>
-        client.updateConsent(state, options),
+      updateConsent: (state: ConsentState, options?: ConsentRegionOptions) => client.updateConsent(state, options),
       whenReady: () => client.whenReady()
     }),
     [client]
@@ -187,7 +174,7 @@ const useGtmContext = (): GtmContextValue => {
  *
  * @example
  * ```tsx
- * import { useGtm } from '@react-gtm-kit/remix';
+ * import { useGtm } from '@jwiedeman/gtm-kit-remix';
  *
  * function MyComponent() {
  *   const { push, client } = useGtm();
@@ -209,7 +196,7 @@ export const useGtm = (): GtmContextValue => {
  *
  * @example
  * ```tsx
- * import { useGtmPush } from '@react-gtm-kit/remix';
+ * import { useGtmPush } from '@jwiedeman/gtm-kit-remix';
  *
  * function BuyButton() {
  *   const push = useGtmPush();
@@ -231,7 +218,7 @@ export const useGtmPush = (): ((value: DataLayerValue) => void) => {
  *
  * @example
  * ```tsx
- * import { useGtmConsent } from '@react-gtm-kit/remix';
+ * import { useGtmConsent } from '@jwiedeman/gtm-kit-remix';
  *
  * function CookieBanner() {
  *   const { updateConsent } = useGtmConsent();
@@ -254,7 +241,7 @@ export const useGtmConsent = (): GtmConsentApi => {
  *
  * @example
  * ```tsx
- * import { useGtmClient } from '@react-gtm-kit/remix';
+ * import { useGtmClient } from '@jwiedeman/gtm-kit-remix';
  *
  * function MyComponent() {
  *   const client = useGtmClient();
@@ -271,7 +258,7 @@ export const useGtmClient = (): GtmClient => {
  *
  * @example
  * ```tsx
- * import { useGtmReady } from '@react-gtm-kit/remix';
+ * import { useGtmReady } from '@jwiedeman/gtm-kit-remix';
  * import { useEffect } from 'react';
  *
  * function MyComponent() {

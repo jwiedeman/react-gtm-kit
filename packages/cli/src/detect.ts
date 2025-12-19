@@ -89,10 +89,7 @@ const detectPackageManager = (dir: string, pkg: PackageJson | null): FrameworkIn
 /**
  * Get install command for package manager
  */
-export const getInstallCommand = (
-  packageManager: FrameworkInfo['packageManager'],
-  packages: string[]
-): string => {
+export const getInstallCommand = (packageManager: FrameworkInfo['packageManager'], packages: string[]): string => {
   const pkgList = packages.join(' ');
   switch (packageManager) {
     case 'pnpm':
@@ -121,7 +118,7 @@ export const detectFramework = (dir: string = process.cwd()): FrameworkInfo => {
       framework: 'nuxt',
       version: version?.replace(/^\^|~/, ''),
       packageManager,
-      packages: ['@react-gtm-kit/core', '@react-gtm-kit/nuxt'],
+      packages: ['@jwiedeman/gtm-kit', '@jwiedeman/gtm-kit-nuxt'],
       displayName: 'Nuxt 3',
       confidence: 100,
       reason: 'Found "nuxt" in dependencies'
@@ -133,7 +130,7 @@ export const detectFramework = (dir: string = process.cwd()): FrameworkInfo => {
     return {
       framework: 'nuxt',
       packageManager,
-      packages: ['@react-gtm-kit/core', '@react-gtm-kit/nuxt'],
+      packages: ['@jwiedeman/gtm-kit', '@jwiedeman/gtm-kit-nuxt'],
       displayName: 'Nuxt 3',
       confidence: 95,
       reason: 'Found nuxt.config file'
@@ -147,7 +144,7 @@ export const detectFramework = (dir: string = process.cwd()): FrameworkInfo => {
       framework: 'next',
       version: version?.replace(/^\^|~/, ''),
       packageManager,
-      packages: ['@react-gtm-kit/core', '@react-gtm-kit/next'],
+      packages: ['@jwiedeman/gtm-kit', '@jwiedeman/gtm-kit-next'],
       displayName: 'Next.js',
       confidence: 100,
       reason: 'Found "next" in dependencies'
@@ -155,15 +152,11 @@ export const detectFramework = (dir: string = process.cwd()): FrameworkInfo => {
   }
 
   // Check for Next.js config files
-  if (
-    fileExists(dir, 'next.config.js') ||
-    fileExists(dir, 'next.config.mjs') ||
-    fileExists(dir, 'next.config.ts')
-  ) {
+  if (fileExists(dir, 'next.config.js') || fileExists(dir, 'next.config.mjs') || fileExists(dir, 'next.config.ts')) {
     return {
       framework: 'next',
       packageManager,
-      packages: ['@react-gtm-kit/core', '@react-gtm-kit/next'],
+      packages: ['@jwiedeman/gtm-kit', '@jwiedeman/gtm-kit-next'],
       displayName: 'Next.js',
       confidence: 90,
       reason: 'Found next.config file'
@@ -177,7 +170,7 @@ export const detectFramework = (dir: string = process.cwd()): FrameworkInfo => {
       framework: 'vue',
       version: version?.replace(/^\^|~/, ''),
       packageManager,
-      packages: ['@react-gtm-kit/core', '@react-gtm-kit/vue'],
+      packages: ['@jwiedeman/gtm-kit', '@jwiedeman/gtm-kit-vue'],
       displayName: 'Vue 3',
       confidence: 100,
       reason: 'Found "vue" in dependencies'
@@ -186,17 +179,14 @@ export const detectFramework = (dir: string = process.cwd()): FrameworkInfo => {
 
   // Check for Vite with Vue
   if (fileExists(dir, 'vite.config.ts') || fileExists(dir, 'vite.config.js')) {
-    const viteConfig = path.join(
-      dir,
-      fileExists(dir, 'vite.config.ts') ? 'vite.config.ts' : 'vite.config.js'
-    );
+    const viteConfig = path.join(dir, fileExists(dir, 'vite.config.ts') ? 'vite.config.ts' : 'vite.config.js');
     try {
       const content = fs.readFileSync(viteConfig, 'utf-8');
       if (content.includes('@vitejs/plugin-vue') || content.includes('vue()')) {
         return {
           framework: 'vue',
           packageManager,
-          packages: ['@react-gtm-kit/core', '@react-gtm-kit/vue'],
+          packages: ['@jwiedeman/gtm-kit', '@jwiedeman/gtm-kit-vue'],
           displayName: 'Vue 3 (Vite)',
           confidence: 85,
           reason: 'Found Vue plugin in vite.config'
@@ -218,7 +208,7 @@ export const detectFramework = (dir: string = process.cwd()): FrameworkInfo => {
         framework: 'react',
         version: version?.replace(/^\^|~/, ''),
         packageManager,
-        packages: ['@react-gtm-kit/core', '@react-gtm-kit/react-modern'],
+        packages: ['@jwiedeman/gtm-kit', '@jwiedeman/gtm-kit-react'],
         displayName: majorVersion >= 18 ? 'React 18+' : 'React 16.8+',
         confidence: 100,
         reason: 'Found "react" in dependencies'
@@ -230,7 +220,7 @@ export const detectFramework = (dir: string = process.cwd()): FrameworkInfo => {
       framework: 'react',
       version: version?.replace(/^\^|~/, ''),
       packageManager,
-      packages: ['@react-gtm-kit/core', '@react-gtm-kit/react-legacy'],
+      packages: ['@jwiedeman/gtm-kit', '@jwiedeman/gtm-kit-react-legacy'],
       displayName: 'React (Legacy)',
       confidence: 100,
       reason: 'Found older "react" version in dependencies'
@@ -246,7 +236,7 @@ export const detectFramework = (dir: string = process.cwd()): FrameworkInfo => {
         return {
           framework: 'react',
           packageManager,
-          packages: ['@react-gtm-kit/core', '@react-gtm-kit/react-modern'],
+          packages: ['@jwiedeman/gtm-kit', '@jwiedeman/gtm-kit-react'],
           displayName: 'React (detected from .jsx/.tsx files)',
           confidence: 70,
           reason: 'Found .jsx or .tsx files in src/'
@@ -261,7 +251,7 @@ export const detectFramework = (dir: string = process.cwd()): FrameworkInfo => {
   return {
     framework: 'vanilla',
     packageManager,
-    packages: ['@react-gtm-kit/core'],
+    packages: ['@jwiedeman/gtm-kit'],
     displayName: 'Vanilla JavaScript',
     confidence: 50,
     reason: 'No framework detected, using core package only'

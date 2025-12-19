@@ -1,7 +1,19 @@
 {
-  "name": "@react-gtm-kit/svelte",
+  "name": "@jwiedeman/gtm-kit-svelte",
   "version": "0.1.0",
   "description": "Svelte stores and actions for GTM Kit - Google Tag Manager integration.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jwiedeman/GTM-Kit.git",
+    "directory": "packages/svelte"
+  },
+  "author": "jwiedeman",
+  "keywords": [
+    "gtm",
+    "google-tag-manager",
+    "svelte",
+    "stores"
+  ],
   "license": "MIT",
   "type": "module",
   "main": "dist/index.cjs",
@@ -27,7 +39,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@react-gtm-kit/core": "workspace:*"
+    "@jwiedeman/gtm-kit": "workspace:*"
   },
   "peerDependencies": {
     "svelte": "^4.0.0 || ^5.0.0"

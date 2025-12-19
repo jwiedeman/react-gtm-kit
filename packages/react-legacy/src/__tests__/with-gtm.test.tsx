@@ -2,7 +2,7 @@ import { render, waitFor } from '@testing-library/react';
 import React, { StrictMode } from 'react';
 import type { ComponentType, JSX } from 'react';
 import { withGtm, type LegacyGtmApi, type LegacyGtmProps, type WithGtmOptions } from '../with-gtm';
-import { createGtmClient } from '@react-gtm-kit/core';
+import { createGtmClient } from '@jwiedeman/gtm-kit';
 import type {
   ConsentRegionOptions,
   ConsentState,
@@ -10,10 +10,10 @@ import type {
   DataLayerValue,
   GtmClient,
   ScriptLoadState
-} from '@react-gtm-kit/core';
+} from '@jwiedeman/gtm-kit';
 
-jest.mock('@react-gtm-kit/core', () => {
-  const actual = jest.requireActual('@react-gtm-kit/core');
+jest.mock('@jwiedeman/gtm-kit', () => {
+  const actual = jest.requireActual('@jwiedeman/gtm-kit');
   return {
     ...actual,
     createGtmClient: jest.fn()

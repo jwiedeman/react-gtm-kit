@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { useGtmConsent } from '@react-gtm-kit/react-modern';
+import { useGtmConsent } from '@jwiedeman/gtm-kit-react';
 
 import { DEFAULT_CONSENT, GRANTED_CONSENT } from '../lib/gtm';
 import { persistConsentCookie, getInitialConsent } from '../lib/consent-cookie';

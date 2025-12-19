@@ -71,10 +71,10 @@ const generateNextSetupCode = (ctx: CodeGenContext): GeneratedCode[] => {
   const providerCode = `// app/providers/gtm-provider.${ext}x
 'use client';
 
-import { GtmProvider } from '@react-gtm-kit/react-modern';
-import { useTrackPageViews } from '@react-gtm-kit/next';
+import { GtmProvider } from '@jwiedeman/gtm-kit-react';
+import { useTrackPageViews } from '@jwiedeman/gtm-kit-next';
 ${ctx.ext === 'ts' ? "import type { ReactNode } from 'react';\n" : ''}
-${includeConsent ? `import { eeaDefault } from '@react-gtm-kit/core';\n` : ''}
+${includeConsent ? `import { eeaDefault } from '@jwiedeman/gtm-kit';\n` : ''}
 ${ctx.ext === 'ts' ? `interface GtmProviderWrapperProps {\n  children: ReactNode;\n}\n` : ''}
 export function GtmProviderWrapper({ children }${ctx.ext === 'ts' ? ': GtmProviderWrapperProps' : ''}) {
   return (
@@ -95,7 +95,7 @@ function PageViewTracker() {
 
   const layoutCode = `// app/layout.${ext}x
 import { GtmProviderWrapper } from './providers/gtm-provider';
-import { GtmNoScript } from '@react-gtm-kit/next';
+import { GtmNoScript } from '@jwiedeman/gtm-kit-next';
 ${ctx.ext === 'ts' ? "import type { ReactNode } from 'react';\n" : ''}
 export default function RootLayout({ children }${ctx.ext === 'ts' ? ': { children: ReactNode }' : ''}) {
   return (
@@ -114,7 +114,7 @@ export default function RootLayout({ children }${ctx.ext === 'ts' ? ': { childre
   const exampleUsage = `// Example: Track a button click
 'use client';
 
-import { useGtmPush } from '@react-gtm-kit/react-modern';
+import { useGtmPush } from '@jwiedeman/gtm-kit-react';
 
 export function MyButton() {
   const push = useGtmPush();
@@ -157,8 +157,8 @@ const generateNuxtSetupCode = (ctx: CodeGenContext): GeneratedCode[] => {
   const dataLayerOption = dataLayerName ? `\n    dataLayerName: '${dataLayerName}',` : '';
 
   const pluginCode = `// plugins/gtm.client.${ext}
-import { createNuxtGtmPlugin } from '@react-gtm-kit/nuxt';
-${includeConsent ? `import { eeaDefault } from '@react-gtm-kit/core';\n` : ''}
+import { createNuxtGtmPlugin } from '@jwiedeman/gtm-kit-nuxt';
+${includeConsent ? `import { eeaDefault } from '@jwiedeman/gtm-kit';\n` : ''}
 export default defineNuxtPlugin((nuxtApp) => {
   createNuxtGtmPlugin(nuxtApp.vueApp, {
     containers: ${containerValue},${dataLayerOption}
@@ -168,7 +168,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 `;
 
   const pageTrackingCode = `// composables/usePageTracking.${ext}
-import { useTrackPageViews } from '@react-gtm-kit/nuxt';
+import { useTrackPageViews } from '@jwiedeman/gtm-kit-nuxt';
 
 /**
  * Call this composable in your app.vue or layouts to enable automatic page tracking
@@ -201,7 +201,7 @@ usePageTracking();
 
   const exampleUsage = `<!-- Example: Track a button click -->
 <script setup${ext === 'ts' ? ' lang="ts"' : ''}>
-import { useNuxtGtmPush } from '@react-gtm-kit/nuxt';
+import { useNuxtGtmPush } from '@jwiedeman/gtm-kit-nuxt';
 
 const push = useNuxtGtmPush();
 
@@ -250,8 +250,8 @@ const generateReactSetupCode = (ctx: CodeGenContext): GeneratedCode[] => {
   const dataLayerOption = dataLayerName ? `\n      dataLayerName: '${dataLayerName}',` : '';
 
   const appCode = `// src/App.${ext}x
-import { GtmProvider } from '@react-gtm-kit/react-modern';
-${includeConsent ? `import { eeaDefault } from '@react-gtm-kit/core';\n` : ''}
+import { GtmProvider } from '@jwiedeman/gtm-kit-react';
+${includeConsent ? `import { eeaDefault } from '@jwiedeman/gtm-kit';\n` : ''}
 function App() {
   return (
     <GtmProvider
@@ -271,9 +271,9 @@ export default App;
   const routerCode = `// src/AppWithRouter.${ext}x
 // Use this if you have react-router-dom
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { GtmProvider, useGtmPush } from '@react-gtm-kit/react-modern';
+import { GtmProvider, useGtmPush } from '@jwiedeman/gtm-kit-react';
 import { useEffect } from 'react';
-${includeConsent ? `import { eeaDefault } from '@react-gtm-kit/core';\n` : ''}
+${includeConsent ? `import { eeaDefault } from '@jwiedeman/gtm-kit';\n` : ''}
 // Automatic page view tracking
 function PageViewTracker() {
   const location = useLocation();
@@ -313,7 +313,7 @@ export default App;
 `;
 
   const exampleUsage = `// src/components/TrackingExample.${ext}x
-import { useGtmPush } from '@react-gtm-kit/react-modern';
+import { useGtmPush } from '@jwiedeman/gtm-kit-react';
 
 export function SignupButton() {
   const push = useGtmPush();
@@ -377,8 +377,8 @@ const generateVueSetupCode = (ctx: CodeGenContext): GeneratedCode[] => {
 
   const mainCode = `// src/main.${ext}
 import { createApp } from 'vue';
-import { GtmPlugin } from '@react-gtm-kit/vue';
-${includeConsent ? `import { eeaDefault } from '@react-gtm-kit/core';\n` : ''}import App from './App.vue';
+import { GtmPlugin } from '@jwiedeman/gtm-kit-vue';
+${includeConsent ? `import { eeaDefault } from '@jwiedeman/gtm-kit';\n` : ''}import App from './App.vue';
 
 const app = createApp(App);
 
@@ -391,7 +391,7 @@ app.mount('#app');
 
   const routerCode = `// src/router-tracking.${ext}
 // Add this to your router setup for automatic page tracking
-import { useGtmPush } from '@react-gtm-kit/vue';
+import { useGtmPush } from '@jwiedeman/gtm-kit-vue';
 import { watch } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -431,7 +431,7 @@ import { usePageTracking } from './router-tracking';
 
   const exampleUsage = `<!-- src/components/TrackingExample.vue -->
 <script setup${ext === 'ts' ? ' lang="ts"' : ''}>
-import { useGtmPush } from '@react-gtm-kit/vue';
+import { useGtmPush } from '@jwiedeman/gtm-kit-vue';
 
 const push = useGtmPush();
 
@@ -496,7 +496,7 @@ const generateVanillaSetupCode = (ctx: CodeGenContext): GeneratedCode[] => {
   const dataLayerOption = dataLayerName ? `\n  dataLayerName: '${dataLayerName}',` : '';
 
   const esmCode = `// gtm-setup.${ext}
-import { createGtmClient${includeConsent ? ', eeaDefault' : ''} } from '@react-gtm-kit/core';
+import { createGtmClient${includeConsent ? ', eeaDefault' : ''} } from '@jwiedeman/gtm-kit';
 
 // Create the GTM client
 const gtm = createGtmClient({
@@ -584,7 +584,7 @@ export { gtm };
 
   const umdCode = `<!-- Alternative: UMD/Script Tag Setup -->
 <!-- Add this in your HTML head -->
-<script src="https://unpkg.com/@react-gtm-kit/core/dist/index.umd.js"></script>
+<script src="https://unpkg.com/@jwiedeman/gtm-kit/dist/index.umd.js"></script>
 <script>
   // GTM Kit is available as window.GtmKit
   var gtm = GtmKit.createGtmClient({

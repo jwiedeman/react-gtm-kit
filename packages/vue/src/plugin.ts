@@ -7,7 +7,7 @@ import {
   type DataLayerValue,
   type GtmClient,
   type ScriptLoadState
-} from '@react-gtm-kit/core';
+} from '@jwiedeman/gtm-kit';
 
 /**
  * Options for the GTM Vue plugin.
@@ -65,7 +65,7 @@ export const GTM_INJECTION_KEY: InjectionKey<GtmContext> = Symbol('gtm-kit');
  * @example
  * ```ts
  * import { createApp } from 'vue';
- * import { GtmPlugin } from '@react-gtm-kit/vue';
+ * import { GtmPlugin } from '@jwiedeman/gtm-kit-vue';
  *
  * createApp(App)
  *   .use(GtmPlugin, { containers: 'GTM-XXXXXX' })
@@ -135,7 +135,7 @@ const useGtmContext = (): GtmContext => {
  * @example
  * ```vue
  * <script setup>
- * import { useGtm } from '@react-gtm-kit/vue';
+ * import { useGtm } from '@jwiedeman/gtm-kit-vue';
  *
  * const { push, client, whenReady } = useGtm();
  *
@@ -156,7 +156,7 @@ export const useGtm = (): GtmContext => {
  * @example
  * ```vue
  * <script setup>
- * import { useGtmPush } from '@react-gtm-kit/vue';
+ * import { useGtmPush } from '@jwiedeman/gtm-kit-vue';
  *
  * const push = useGtmPush();
  *
@@ -176,7 +176,7 @@ export const useGtmPush = (): ((value: DataLayerValue) => void) => {
  * @example
  * ```vue
  * <script setup>
- * import { useGtmConsent } from '@react-gtm-kit/vue';
+ * import { useGtmConsent } from '@jwiedeman/gtm-kit-vue';
  *
  * const { updateConsent } = useGtmConsent();
  *
@@ -203,7 +203,7 @@ export const useGtmConsent = (): GtmConsentApi => {
  * @example
  * ```vue
  * <script setup>
- * import { useGtmClient } from '@react-gtm-kit/vue';
+ * import { useGtmClient } from '@jwiedeman/gtm-kit-vue';
  *
  * const client = useGtmClient();
  *
@@ -225,7 +225,7 @@ export const useGtmClient = (): GtmClient => {
  * @example
  * ```vue
  * <script setup>
- * import { useGtmReady } from '@react-gtm-kit/vue';
+ * import { useGtmReady } from '@jwiedeman/gtm-kit-vue';
  * import { onMounted } from 'vue';
  *
  * const whenReady = useGtmReady();

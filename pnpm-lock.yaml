@@ -110,7 +110,7 @@ importers:
 
   examples/fullstack-web:
     dependencies:
-      '@react-gtm-kit/react-modern':
+      '@jwiedeman/gtm-kit-react':
         specifier: workspace:*
         version: link:../../packages/react-modern
       react:
@@ -138,13 +138,13 @@ importers:
 
   examples/next-app:
     dependencies:
-      '@react-gtm-kit/core':
+      '@jwiedeman/gtm-kit':
         specifier: workspace:*
         version: link:../../packages/core
-      '@react-gtm-kit/next':
+      '@jwiedeman/gtm-kit-next':
         specifier: workspace:*
         version: link:../../packages/next
-      '@react-gtm-kit/react-modern':
+      '@jwiedeman/gtm-kit-react':
         specifier: workspace:*
         version: link:../../packages/react-modern
       next:
@@ -178,13 +178,13 @@ importers:
 
   examples/nuxt-app:
     dependencies:
-      '@react-gtm-kit/core':
+      '@jwiedeman/gtm-kit':
         specifier: workspace:*
         version: link:../../packages/core
-      '@react-gtm-kit/nuxt':
+      '@jwiedeman/gtm-kit-nuxt':
         specifier: workspace:*
         version: link:../../packages/nuxt
-      '@react-gtm-kit/vue':
+      '@jwiedeman/gtm-kit-vue':
         specifier: workspace:*
         version: link:../../packages/vue
     devDependencies:
@@ -209,7 +209,7 @@ importers:
 
   examples/react-legacy:
     dependencies:
-      '@react-gtm-kit/react-legacy':
+      '@jwiedeman/gtm-kit-react-legacy':
         specifier: workspace:*
         version: link:../../packages/react-legacy
       react:
@@ -237,7 +237,7 @@ importers:
 
   examples/react-strict-mode:
     dependencies:
-      '@react-gtm-kit/react-modern':
+      '@jwiedeman/gtm-kit-react':
         specifier: workspace:*
         version: link:../../packages/react-modern
       react:
@@ -270,7 +270,7 @@ importers:
 
   examples/vanilla-csr:
     dependencies:
-      '@react-gtm-kit/core':
+      '@jwiedeman/gtm-kit':
         specifier: workspace:*
         version: link:../../packages/core
     devDependencies:
@@ -286,10 +286,10 @@ importers:
 
   examples/vue-app:
     dependencies:
-      '@react-gtm-kit/core':
+      '@jwiedeman/gtm-kit':
         specifier: workspace:*
         version: link:../../packages/core
-      '@react-gtm-kit/vue':
+      '@jwiedeman/gtm-kit-vue':
         specifier: workspace:*
         version: link:../../packages/vue
       vue:
@@ -335,7 +335,7 @@ importers:
 
   packages/next:
     dependencies:
-      '@react-gtm-kit/core':
+      '@jwiedeman/gtm-kit':
         specifier: workspace:*
         version: link:../core
       next:
@@ -366,10 +366,10 @@ importers:
 
   packages/nuxt:
     dependencies:
-      '@react-gtm-kit/core':
+      '@jwiedeman/gtm-kit':
         specifier: workspace:*
         version: link:../core
-      '@react-gtm-kit/vue':
+      '@jwiedeman/gtm-kit-vue':
         specifier: workspace:*
         version: link:../vue
     devDependencies:
@@ -388,7 +388,7 @@ importers:
 
   packages/react-legacy:
     dependencies:
-      '@react-gtm-kit/core':
+      '@jwiedeman/gtm-kit':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -416,7 +416,7 @@ importers:
 
   packages/react-modern:
     dependencies:
-      '@react-gtm-kit/core':
+      '@jwiedeman/gtm-kit':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -447,7 +447,7 @@ importers:
 
   packages/remix:
     dependencies:
-      '@react-gtm-kit/core':
+      '@jwiedeman/gtm-kit':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -478,7 +478,7 @@ importers:
 
   packages/solid:
     dependencies:
-      '@react-gtm-kit/core':
+      '@jwiedeman/gtm-kit':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -497,7 +497,7 @@ importers:
 
   packages/svelte:
     dependencies:
-      '@react-gtm-kit/core':
+      '@jwiedeman/gtm-kit':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -516,7 +516,7 @@ importers:
 
   packages/vue:
     dependencies:
-      '@react-gtm-kit/core':
+      '@jwiedeman/gtm-kit':
         specifier: workspace:*
         version: link:../core
     devDependencies:

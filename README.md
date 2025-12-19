@@ -52,7 +52,7 @@ Works with React, Vue, Next.js, Nuxt, Svelte, SolidJS, Remix, or vanilla JavaScr
 Just run this command. It auto-detects your framework and sets everything up:
 
 ```bash
-npx @react-gtm-kit/cli init
+npx @jwiedeman/gtm-kit-cli init
 ```
 
 Done. Seriously, that's it.
@@ -63,30 +63,30 @@ Done. Seriously, that's it.
 
 If you prefer to install manually, copy-paste the command for your framework:
 
-| Framework         | Command                                                       |
-| ----------------- | ------------------------------------------------------------- |
-| **React**         | `npm install @react-gtm-kit/core @react-gtm-kit/react-modern` |
-| **Vue 3**         | `npm install @react-gtm-kit/core @react-gtm-kit/vue`          |
-| **Next.js**       | `npm install @react-gtm-kit/core @react-gtm-kit/next`         |
-| **Nuxt 3**        | `npm install @react-gtm-kit/core @react-gtm-kit/nuxt`         |
-| **Svelte**        | `npm install @react-gtm-kit/core @react-gtm-kit/svelte`       |
-| **SolidJS**       | `npm install @react-gtm-kit/core @react-gtm-kit/solid`        |
-| **Remix**         | `npm install @react-gtm-kit/core @react-gtm-kit/remix`        |
-| **Vanilla**       | `npm install @react-gtm-kit/core`                             |
-| **React (class)** | `npm install @react-gtm-kit/core @react-gtm-kit/react-legacy` |
+| Framework         | Command                                                          |
+| ----------------- | ---------------------------------------------------------------- |
+| **React**         | `npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-react`        |
+| **Vue 3**         | `npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-vue`          |
+| **Next.js**       | `npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-next`         |
+| **Nuxt 3**        | `npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-nuxt`         |
+| **Svelte**        | `npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-svelte`       |
+| **SolidJS**       | `npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-solid`        |
+| **Remix**         | `npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-remix`        |
+| **Vanilla**       | `npm install @jwiedeman/gtm-kit`                                 |
+| **React (class)** | `npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-react-legacy` |
 
 <details>
 <summary><strong>Using yarn, pnpm, or bun?</strong></summary>
 
 ```bash
 # Yarn
-yarn add @react-gtm-kit/core @react-gtm-kit/react-modern
+yarn add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-react
 
 # pnpm
-pnpm add @react-gtm-kit/core @react-gtm-kit/react-modern
+pnpm add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-react
 
 # Bun
-bun add @react-gtm-kit/core @react-gtm-kit/react-modern
+bun add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-react
 ```
 
 </details>
@@ -99,7 +99,7 @@ bun add @react-gtm-kit/core @react-gtm-kit/react-modern
 
 ```tsx
 // Step 1: Wrap your app (usually in index.tsx or App.tsx)
-import { GtmProvider } from '@react-gtm-kit/react-modern';
+import { GtmProvider } from '@jwiedeman/gtm-kit-react';
 
 function App() {
   return (
@@ -112,7 +112,7 @@ function App() {
 
 ```tsx
 // Step 2: Push events from any component
-import { useGtmPush } from '@react-gtm-kit/react-modern';
+import { useGtmPush } from '@jwiedeman/gtm-kit-react';
 
 function BuyButton() {
   const push = useGtmPush();
@@ -134,7 +134,7 @@ function BuyButton() {
 ```ts
 // Step 1: Add plugin (main.ts)
 import { createApp } from 'vue';
-import { GtmPlugin } from '@react-gtm-kit/vue';
+import { GtmPlugin } from '@jwiedeman/gtm-kit-vue';
 import App from './App.vue';
 
 createApp(App).use(GtmPlugin, { containers: 'GTM-XXXXXX' }).mount('#app');
@@ -143,7 +143,7 @@ createApp(App).use(GtmPlugin, { containers: 'GTM-XXXXXX' }).mount('#app');
 ```vue
 <!-- Step 2: Push events from any component -->
 <script setup>
-import { useGtm } from '@react-gtm-kit/vue';
+import { useGtm } from '@jwiedeman/gtm-kit-vue';
 
 const { push } = useGtm();
 
@@ -163,7 +163,7 @@ function handleClick() {
 
 ```tsx
 // Step 1: Add to layout (app/layout.tsx)
-import { GtmHeadScript, GtmNoScript } from '@react-gtm-kit/next';
+import { GtmHeadScript, GtmNoScript } from '@jwiedeman/gtm-kit-next';
 
 export default function RootLayout({ children }) {
   return (
@@ -183,8 +183,8 @@ export default function RootLayout({ children }) {
 ```tsx
 // Step 2: Create a client provider (app/providers/gtm.tsx)
 'use client';
-import { createGtmClient } from '@react-gtm-kit/core';
-import { useTrackPageViews } from '@react-gtm-kit/next';
+import { createGtmClient } from '@jwiedeman/gtm-kit';
+import { useTrackPageViews } from '@jwiedeman/gtm-kit-next';
 
 const client = createGtmClient({ containers: 'GTM-XXXXXX' });
 client.init();
@@ -197,7 +197,7 @@ export function GtmProvider({ children }) {
 
 ```tsx
 // Step 3: Push events
-import { pushEvent } from '@react-gtm-kit/core';
+import { pushEvent } from '@jwiedeman/gtm-kit';
 
 // Use the same client instance
 pushEvent(client, 'purchase', { value: 49.99 });
@@ -209,7 +209,7 @@ pushEvent(client, 'purchase', { value: 49.99 });
 
 ```ts
 // Step 1: Create plugin (plugins/gtm.client.ts)
-import { GtmPlugin } from '@react-gtm-kit/nuxt';
+import { GtmPlugin } from '@jwiedeman/gtm-kit-nuxt';
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(GtmPlugin, { containers: 'GTM-XXXXXX' });
@@ -219,7 +219,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 ```vue
 <!-- Step 2: Push events from any component -->
 <script setup>
-import { useGtm } from '@react-gtm-kit/vue';
+import { useGtm } from '@jwiedeman/gtm-kit-vue';
 
 const { push } = useGtm();
 push({ event: 'page_view' });
@@ -231,7 +231,7 @@ push({ event: 'page_view' });
 ### Vanilla JavaScript
 
 ```ts
-import { createGtmClient, pushEvent } from '@react-gtm-kit/core';
+import { createGtmClient, pushEvent } from '@jwiedeman/gtm-kit';
 
 // Step 1: Create and initialize
 const gtm = createGtmClient({ containers: 'GTM-XXXXXX' });
@@ -252,8 +252,8 @@ Required for EU compliance. GTM Kit makes it easy:
 
 ```tsx
 // React example
-import { GtmProvider, useGtmConsent } from '@react-gtm-kit/react-modern';
-import { consentPresets } from '@react-gtm-kit/core';
+import { GtmProvider, useGtmConsent } from '@jwiedeman/gtm-kit-react';
+import { consentPresets } from '@jwiedeman/gtm-kit';
 
 // Set defaults BEFORE GTM loads (required by Google)
 <GtmProvider
@@ -308,7 +308,7 @@ function CookieBanner() {
 ## Ecommerce Events (GA4)
 
 ```ts
-import { pushEcommerce } from '@react-gtm-kit/core';
+import { pushEcommerce } from '@jwiedeman/gtm-kit';
 
 // Purchase
 pushEcommerce(client, 'purchase', {
@@ -358,7 +358,7 @@ const client = createGtmClient({
 
 ```tsx
 import { useLocation } from 'react-router-dom';
-import { useGtmPush } from '@react-gtm-kit/react-modern';
+import { useGtmPush } from '@jwiedeman/gtm-kit-react';
 import { useEffect, useRef } from 'react';
 
 function PageTracker() {
@@ -381,7 +381,7 @@ function PageTracker() {
 ### Track Page Views (Vue Router)
 
 ```ts
-import { useGtm } from '@react-gtm-kit/vue';
+import { useGtm } from '@jwiedeman/gtm-kit-vue';
 import { watch } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -403,7 +403,7 @@ watch(
 ### Core Client
 
 ```ts
-import { createGtmClient, pushEvent, pushEcommerce } from '@react-gtm-kit/core';
+import { createGtmClient, pushEvent, pushEcommerce } from '@jwiedeman/gtm-kit';
 
 const client = createGtmClient({
   containers: 'GTM-XXXXXX', // Required: ID or array of IDs
@@ -429,7 +429,7 @@ import {
   useGtmConsent, // { setConsentDefaults, updateConsent }
   useGtmClient, // Raw client instance
   useGtmReady // whenReady() function
-} from '@react-gtm-kit/react-modern';
+} from '@jwiedeman/gtm-kit-react';
 ```
 
 ### Vue Composables
@@ -439,7 +439,7 @@ import {
   useGtm, // Full API { client, push, updateConsent, ... }
   useGtmPush, // Just push()
   useGtmConsent // Consent methods
-} from '@react-gtm-kit/vue';
+} from '@jwiedeman/gtm-kit-vue';
 ```
 
 ### Next.js Helpers
@@ -449,24 +449,24 @@ import {
   GtmHeadScript, // Server component for <head>
   GtmNoScript, // Server component for noscript fallback
   useTrackPageViews // Auto page tracking hook
-} from '@react-gtm-kit/next';
+} from '@jwiedeman/gtm-kit-next';
 ```
 
 ---
 
 ## Package Sizes
 
-| Package                       | Size (gzip) | Use Case               |
-| ----------------------------- | ----------- | ---------------------- |
-| `@react-gtm-kit/core`         | 3.7 KB      | Required for all       |
-| `@react-gtm-kit/react-modern` | 6.9 KB      | React 16.8+            |
-| `@react-gtm-kit/react-legacy` | 6.9 KB      | React class components |
-| `@react-gtm-kit/vue`          | ~4 KB       | Vue 3                  |
-| `@react-gtm-kit/next`         | 14.2 KB     | Next.js 13+            |
-| `@react-gtm-kit/nuxt`         | ~5 KB       | Nuxt 3                 |
-| `@react-gtm-kit/svelte`       | ~4 KB       | Svelte 4+              |
-| `@react-gtm-kit/solid`        | ~5 KB       | SolidJS 1+             |
-| `@react-gtm-kit/remix`        | ~8 KB       | Remix 2+               |
+| Package                           | Size (gzip) | Use Case               |
+| --------------------------------- | ----------- | ---------------------- |
+| `@jwiedeman/gtm-kit`              | 3.7 KB      | Required for all       |
+| `@jwiedeman/gtm-kit-react`        | 6.9 KB      | React 16.8+            |
+| `@jwiedeman/gtm-kit-react-legacy` | 6.9 KB      | React class components |
+| `@jwiedeman/gtm-kit-vue`          | ~4 KB       | Vue 3                  |
+| `@jwiedeman/gtm-kit-next`         | 14.2 KB     | Next.js 13+            |
+| `@jwiedeman/gtm-kit-nuxt`         | ~5 KB       | Nuxt 3                 |
+| `@jwiedeman/gtm-kit-svelte`       | ~4 KB       | Svelte 4+              |
+| `@jwiedeman/gtm-kit-solid`        | ~5 KB       | SolidJS 1+             |
+| `@jwiedeman/gtm-kit-remix`        | ~8 KB       | Remix 2+               |
 
 ---
 
@@ -589,9 +589,9 @@ npm install
 
 Use the correct adapter for your framework:
 
-- **Next.js**: Use `@react-gtm-kit/next` with `GtmHeadScript` and `GtmNoScript`
-- **Nuxt**: Use `@react-gtm-kit/nuxt` with `.client.ts` plugin
-- **Remix**: Use `@react-gtm-kit/remix` with `GtmScripts`
+- **Next.js**: Use `@jwiedeman/gtm-kit-next` with `GtmHeadScript` and `GtmNoScript`
+- **Nuxt**: Use `@jwiedeman/gtm-kit-nuxt` with `.client.ts` plugin
+- **Remix**: Use `@jwiedeman/gtm-kit-remix` with `GtmScripts`
 - **SvelteKit**: Wrap GTM in `browser` check
 
 </details>
@@ -600,18 +600,18 @@ Use the correct adapter for your framework:
 
 ## Framework Support Matrix
 
-| Framework     | Package                       | Status    | Min Version | Tests                                                                   | Coverage                                                        | Size                                                     |
-| ------------- | ----------------------------- | --------- | ----------- | ----------------------------------------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------- |
-| Vanilla JS    | `@react-gtm-kit/core`         | ✅ Stable | ES2018+     | ![155 tests](https://img.shields.io/badge/tests-155_passed-brightgreen) | ![82%](https://img.shields.io/badge/coverage-82%25-green)       | ![3.7KB](https://img.shields.io/badge/gzip-3.7KB-blue)   |
-| React (hooks) | `@react-gtm-kit/react-modern` | ✅ Stable | 16.8+       | ![9 tests](https://img.shields.io/badge/tests-9_passed-brightgreen)     | ![84%](https://img.shields.io/badge/coverage-84%25-green)       | ![6.9KB](https://img.shields.io/badge/gzip-6.9KB-blue)   |
-| React (class) | `@react-gtm-kit/react-legacy` | ✅ Stable | 16.0+       | ![4 tests](https://img.shields.io/badge/tests-4_passed-brightgreen)     | ![98%](https://img.shields.io/badge/coverage-98%25-brightgreen) | ![6.9KB](https://img.shields.io/badge/gzip-6.9KB-blue)   |
-| Next.js       | `@react-gtm-kit/next`         | ✅ Stable | 13+         | ![14 tests](https://img.shields.io/badge/tests-14_passed-brightgreen)   | ![87%](https://img.shields.io/badge/coverage-87%25-green)       | ![14.2KB](https://img.shields.io/badge/gzip-14.2KB-blue) |
-| Vue 3         | `@react-gtm-kit/vue`          | ✅ Stable | 3.0+        | ![23 tests](https://img.shields.io/badge/tests-23_passed-brightgreen)   | ![98%](https://img.shields.io/badge/coverage-98%25-brightgreen) | ![4KB](https://img.shields.io/badge/gzip-~4KB-blue)      |
-| Nuxt 3        | `@react-gtm-kit/nuxt`         | ✅ Stable | 3.0+        | ![12 tests](https://img.shields.io/badge/tests-12_passed-brightgreen)   | ![84%](https://img.shields.io/badge/coverage-84%25-green)       | ![5KB](https://img.shields.io/badge/gzip-~5KB-blue)      |
-| Svelte        | `@react-gtm-kit/svelte`       | ✅ Stable | 4.0+        | ![15 tests](https://img.shields.io/badge/tests-15_passed-brightgreen)   | ![83%](https://img.shields.io/badge/coverage-83%25-green)       | ![4KB](https://img.shields.io/badge/gzip-~4KB-blue)      |
-| SolidJS       | `@react-gtm-kit/solid`        | ✅ Stable | 1.0+        | ![21 tests](https://img.shields.io/badge/tests-21_passed-brightgreen)   | ![96%](https://img.shields.io/badge/coverage-96%25-brightgreen) | ![5KB](https://img.shields.io/badge/gzip-~5KB-blue)      |
-| Remix         | `@react-gtm-kit/remix`        | ✅ Stable | 2.0+        | ![19 tests](https://img.shields.io/badge/tests-19_passed-brightgreen)   | ![71%](https://img.shields.io/badge/coverage-71%25-yellow)      | ![8KB](https://img.shields.io/badge/gzip-~8KB-blue)      |
-| CLI           | `@react-gtm-kit/cli`          | ✅ Stable | Node 18+    | ![94 tests](https://img.shields.io/badge/tests-94_passed-brightgreen)   | ![72%](https://img.shields.io/badge/coverage-72%25-yellow)      | ![0KB](https://img.shields.io/badge/runtime-0KB-blue)    |
+| Framework     | Package                           | Status    | Min Version | Tests                                                                   | Coverage                                                        | Size                                                     |
+| ------------- | --------------------------------- | --------- | ----------- | ----------------------------------------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------- |
+| Vanilla JS    | `@jwiedeman/gtm-kit`              | ✅ Stable | ES2018+     | ![155 tests](https://img.shields.io/badge/tests-155_passed-brightgreen) | ![82%](https://img.shields.io/badge/coverage-82%25-green)       | ![3.7KB](https://img.shields.io/badge/gzip-3.7KB-blue)   |
+| React (hooks) | `@jwiedeman/gtm-kit-react`        | ✅ Stable | 16.8+       | ![9 tests](https://img.shields.io/badge/tests-9_passed-brightgreen)     | ![84%](https://img.shields.io/badge/coverage-84%25-green)       | ![6.9KB](https://img.shields.io/badge/gzip-6.9KB-blue)   |
+| React (class) | `@jwiedeman/gtm-kit-react-legacy` | ✅ Stable | 16.0+       | ![4 tests](https://img.shields.io/badge/tests-4_passed-brightgreen)     | ![98%](https://img.shields.io/badge/coverage-98%25-brightgreen) | ![6.9KB](https://img.shields.io/badge/gzip-6.9KB-blue)   |
+| Next.js       | `@jwiedeman/gtm-kit-next`         | ✅ Stable | 13+         | ![14 tests](https://img.shields.io/badge/tests-14_passed-brightgreen)   | ![87%](https://img.shields.io/badge/coverage-87%25-green)       | ![14.2KB](https://img.shields.io/badge/gzip-14.2KB-blue) |
+| Vue 3         | `@jwiedeman/gtm-kit-vue`          | ✅ Stable | 3.0+        | ![23 tests](https://img.shields.io/badge/tests-23_passed-brightgreen)   | ![98%](https://img.shields.io/badge/coverage-98%25-brightgreen) | ![4KB](https://img.shields.io/badge/gzip-~4KB-blue)      |
+| Nuxt 3        | `@jwiedeman/gtm-kit-nuxt`         | ✅ Stable | 3.0+        | ![12 tests](https://img.shields.io/badge/tests-12_passed-brightgreen)   | ![84%](https://img.shields.io/badge/coverage-84%25-green)       | ![5KB](https://img.shields.io/badge/gzip-~5KB-blue)      |
+| Svelte        | `@jwiedeman/gtm-kit-svelte`       | ✅ Stable | 4.0+        | ![15 tests](https://img.shields.io/badge/tests-15_passed-brightgreen)   | ![83%](https://img.shields.io/badge/coverage-83%25-green)       | ![4KB](https://img.shields.io/badge/gzip-~4KB-blue)      |
+| SolidJS       | `@jwiedeman/gtm-kit-solid`        | ✅ Stable | 1.0+        | ![21 tests](https://img.shields.io/badge/tests-21_passed-brightgreen)   | ![96%](https://img.shields.io/badge/coverage-96%25-brightgreen) | ![5KB](https://img.shields.io/badge/gzip-~5KB-blue)      |
+| Remix         | `@jwiedeman/gtm-kit-remix`        | ✅ Stable | 2.0+        | ![19 tests](https://img.shields.io/badge/tests-19_passed-brightgreen)   | ![71%](https://img.shields.io/badge/coverage-71%25-yellow)      | ![8KB](https://img.shields.io/badge/gzip-~8KB-blue)      |
+| CLI           | `@jwiedeman/gtm-kit-cli`          | ✅ Stable | Node 18+    | ![94 tests](https://img.shields.io/badge/tests-94_passed-brightgreen)   | ![72%](https://img.shields.io/badge/coverage-72%25-yellow)      | ![0KB](https://img.shields.io/badge/runtime-0KB-blue)    |
 
 **Total: 366 tests across 10 packages**
 

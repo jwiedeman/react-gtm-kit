@@ -14,9 +14,9 @@
     "smoke": "pnpm run build"
   },
   "dependencies": {
-    "@react-gtm-kit/nuxt": "workspace:*",
-    "@react-gtm-kit/vue": "workspace:*",
-    "@react-gtm-kit/core": "workspace:*"
+    "@jwiedeman/gtm-kit-nuxt": "workspace:*",
+    "@jwiedeman/gtm-kit-vue": "workspace:*",
+    "@jwiedeman/gtm-kit": "workspace:*"
   },
   "devDependencies": {
     "@vue/eslint-config-typescript": "^13.0.0",

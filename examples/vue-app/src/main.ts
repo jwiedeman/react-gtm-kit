@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
-import { GtmPlugin, type GtmPluginOptions } from '@react-gtm-kit/vue';
-import { consentPresets } from '@react-gtm-kit/core';
+import { GtmPlugin, type GtmPluginOptions } from '@jwiedeman/gtm-kit-vue';
+import { consentPresets } from '@jwiedeman/gtm-kit';
 import App from './App.vue';
 import Home from './views/Home.vue';
 import Products from './views/Products.vue';

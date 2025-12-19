@@ -49,7 +49,7 @@ export interface PageViewData {
  * @example
  * ```tsx
  * // app/root.tsx
- * import { GtmProvider, useTrackPageViews } from '@react-gtm-kit/remix';
+ * import { GtmProvider, useTrackPageViews } from '@jwiedeman/gtm-kit-remix';
  *
  * function PageViewTracker() {
  *   useTrackPageViews();
@@ -79,12 +79,7 @@ export interface PageViewData {
  * ```
  */
 export function useTrackPageViews(options: UseTrackPageViewsOptions = {}): void {
-  const {
-    eventName = 'page_view',
-    trackInitialPageView = true,
-    customData = {},
-    transformEvent
-  } = options;
+  const { eventName = 'page_view', trackInitialPageView = true, customData = {}, transformEvent } = options;
 
   const location = useLocation();
   const push = useGtmPush();

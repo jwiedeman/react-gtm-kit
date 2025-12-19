@@ -8,7 +8,7 @@ import {
   type DataLayerValue,
   type GtmClient,
   type ScriptLoadState
-} from '@react-gtm-kit/core';
+} from '@jwiedeman/gtm-kit';
 
 /**
  * Props for the GTM Provider component.
@@ -73,7 +73,7 @@ export const GtmContext = createContext<GtmContextValue>();
  *
  * @example
  * ```tsx
- * import { GtmProvider } from '@react-gtm-kit/solid';
+ * import { GtmProvider } from '@jwiedeman/gtm-kit-solid';
  *
  * function App() {
  *   return (
@@ -162,7 +162,7 @@ const useGtmContext = (): GtmContextValue => {
  *
  * @example
  * ```tsx
- * import { useGtm } from '@react-gtm-kit/solid';
+ * import { useGtm } from '@jwiedeman/gtm-kit-solid';
  *
  * function MyComponent() {
  *   const { push, client } = useGtm();
@@ -185,7 +185,7 @@ export const useGtm = (): GtmContextValue => {
  *
  * @example
  * ```tsx
- * import { useGtmPush } from '@react-gtm-kit/solid';
+ * import { useGtmPush } from '@jwiedeman/gtm-kit-solid';
  *
  * function MyComponent() {
  *   const push = useGtmPush();
@@ -207,7 +207,7 @@ export const useGtmPush = (): ((value: DataLayerValue) => void) => {
  *
  * @example
  * ```tsx
- * import { useGtmConsent } from '@react-gtm-kit/solid';
+ * import { useGtmConsent } from '@jwiedeman/gtm-kit-solid';
  *
  * function CookieBanner() {
  *   const { updateConsent } = useGtmConsent();
@@ -233,7 +233,7 @@ export const useGtmConsent = (): GtmConsentApi => {
  *
  * @example
  * ```tsx
- * import { useGtmClient } from '@react-gtm-kit/solid';
+ * import { useGtmClient } from '@jwiedeman/gtm-kit-solid';
  *
  * function MyComponent() {
  *   const client = useGtmClient();
@@ -252,7 +252,7 @@ export const useGtmClient = (): GtmClient => {
  *
  * @example
  * ```tsx
- * import { useGtmReady } from '@react-gtm-kit/solid';
+ * import { useGtmReady } from '@jwiedeman/gtm-kit-solid';
  * import { onMount } from 'solid-js';
  *
  * function MyComponent() {

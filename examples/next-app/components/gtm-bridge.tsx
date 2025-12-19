@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useMemo } from 'react';
-import { useTrackPageViews } from '@react-gtm-kit/next';
-import { pushEvent } from '@react-gtm-kit/core';
-import { useGtmClient, useGtmConsent } from '@react-gtm-kit/react-modern';
+import { useTrackPageViews } from '@jwiedeman/gtm-kit-next';
+import { pushEvent } from '@jwiedeman/gtm-kit';
+import { useGtmClient, useGtmConsent } from '@jwiedeman/gtm-kit-react';
 
 import { DEFAULT_CONSENT } from '../lib/gtm';
 import { getInitialConsent } from '../lib/consent-cookie';

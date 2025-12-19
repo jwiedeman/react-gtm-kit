@@ -1,7 +1,19 @@
 {
-  "name": "@react-gtm-kit/cli",
+  "name": "@jwiedeman/gtm-kit-cli",
   "version": "0.1.0",
   "description": "CLI tool for easy GTM Kit setup - auto-detects your framework and installs everything you need.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jwiedeman/GTM-Kit.git",
+    "directory": "packages/cli"
+  },
+  "author": "jwiedeman",
+  "keywords": [
+    "gtm",
+    "google-tag-manager",
+    "cli",
+    "setup"
+  ],
   "license": "MIT",
   "type": "module",
   "bin": {

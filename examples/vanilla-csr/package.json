@@ -12,7 +12,7 @@
     "smoke": "pnpm run build"
   },
   "dependencies": {
-    "@react-gtm-kit/core": "workspace:*"
+    "@jwiedeman/gtm-kit": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.11.30",

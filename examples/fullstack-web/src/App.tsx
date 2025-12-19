@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useGtmConsent, useGtmPush } from '@react-gtm-kit/react-modern';
+import { useGtmConsent, useGtmPush } from '@jwiedeman/gtm-kit-react';
 
 type ConsentState = 'granted' | 'denied';
 type RelayState = 'idle' | 'sending' | 'success' | 'error';

@@ -4,17 +4,10 @@
 
 import React from 'react';
 import { render, screen, act } from '@testing-library/react';
-import {
-  GtmProvider,
-  useGtm,
-  useGtmPush,
-  useGtmConsent,
-  useGtmClient,
-  useGtmReady
-} from '../provider';
+import { GtmProvider, useGtm, useGtmPush, useGtmConsent, useGtmClient, useGtmReady } from '../provider';
 
 // Mock the core package
-jest.mock('@react-gtm-kit/core', () => ({
+jest.mock('@jwiedeman/gtm-kit', () => ({
   createGtmClient: jest.fn((options) => ({
     init: jest.fn(),
     push: jest.fn(),
@@ -23,7 +16,9 @@ jest.mock('@react-gtm-kit/core', () => ({
     whenReady: jest.fn().mockResolvedValue([{ status: 'loaded' }]),
     onReady: jest.fn((cb) => {
       cb([{ status: 'loaded' }]);
-      return () => { /* cleanup */ };
+      return () => {
+        /* cleanup */
+      };
     }),
     teardown: jest.fn(),
     isInitialized: jest.fn().mockReturnValue(true),
@@ -31,7 +26,7 @@ jest.mock('@react-gtm-kit/core', () => ({
   }))
 }));
 
-describe('@react-gtm-kit/remix Provider', () => {
+describe('@jwiedeman/gtm-kit-remix Provider', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     document.querySelectorAll('script[src*="googletagmanager"]').forEach((el) => el.remove());
@@ -72,10 +67,7 @@ describe('@react-gtm-kit/remix Provider', () => {
       const onBeforeInit = jest.fn();
 
       render(
-        <GtmProvider
-          config={{ containers: 'GTM-TEST123' }}
-          onBeforeInit={onBeforeInit}
-        >
+        <GtmProvider config={{ containers: 'GTM-TEST123' }} onBeforeInit={onBeforeInit}>
           <div />
         </GtmProvider>
       );
@@ -87,10 +79,7 @@ describe('@react-gtm-kit/remix Provider', () => {
       const onAfterInit = jest.fn();
 
       render(
-        <GtmProvider
-          config={{ containers: 'GTM-TEST123' }}
-          onAfterInit={onAfterInit}
-        >
+        <GtmProvider config={{ containers: 'GTM-TEST123' }} onAfterInit={onAfterInit}>
           <div />
         </GtmProvider>
       );
@@ -210,7 +199,9 @@ describe('@react-gtm-kit/remix Provider', () => {
       }
 
       // Suppress React error boundary logs
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { /* suppress */ });
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {
+        /* suppress */
+      });
 
       expect(() => {
         render(<TestComponent />);

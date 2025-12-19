@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTrackPageViews } from '@react-gtm-kit/nuxt';
+import { useTrackPageViews } from '@jwiedeman/gtm-kit-nuxt';
 
 // Enable automatic page view tracking
 const route = useRoute();

@@ -4,12 +4,12 @@ const baseConfig = require('../../config/jest.base.cjs');
 module.exports = {
   ...baseConfig,
   rootDir: __dirname,
-  displayName: '@react-gtm-kit/solid',
+  displayName: '@jwiedeman/gtm-kit-solid',
   testEnvironment: 'jsdom',
   testPathIgnorePatterns: ['/node_modules/', 'setup\\.ts$'],
   moduleNameMapper: {
     ...(baseConfig.moduleNameMapper ?? {}),
-    '^@react-gtm-kit/core$': path.join(__dirname, '../core/src'),
+    '^@jwiedeman/gtm-kit$': path.join(__dirname, '../core/src'),
     // Mock solid-js modules for testing
     '^solid-js$': '<rootDir>/src/__mocks__/solid-js.tsx',
     '^solid-js/store$': '<rootDir>/src/__mocks__/solid-js-store.ts',

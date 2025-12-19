@@ -3,7 +3,7 @@ import { defineComponent, h } from 'vue';
 import { GtmPlugin, useGtm, useGtmPush, useGtmConsent, useGtmClient, useGtmReady } from '../plugin';
 
 // Mock the core module
-jest.mock('@react-gtm-kit/core', () => {
+jest.mock('@jwiedeman/gtm-kit', () => {
   const mockClient = {
     init: jest.fn(),
     push: jest.fn(),
@@ -26,7 +26,7 @@ jest.mock('@react-gtm-kit/core', () => {
   };
 });
 
-const { createGtmClient, __mockClient: mockClient } = jest.requireMock('@react-gtm-kit/core');
+const { createGtmClient, __mockClient: mockClient } = jest.requireMock('@jwiedeman/gtm-kit');
 
 describe('GtmPlugin', () => {
   beforeEach(() => {

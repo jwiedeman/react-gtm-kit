@@ -1,12 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  type PropsWithChildren,
-  type JSX
-} from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef, type PropsWithChildren, type JSX } from 'react';
 import {
   createGtmClient,
   type ConsentRegionOptions,
@@ -15,7 +7,7 @@ import {
   type DataLayerValue,
   type GtmClient,
   type ScriptLoadState
-} from '@react-gtm-kit/core';
+} from '@jwiedeman/gtm-kit';
 
 export interface GtmProviderProps extends PropsWithChildren {
   config: CreateGtmClientOptions;
@@ -40,8 +32,8 @@ const GtmContext = createContext<GtmContextValue | null>(null);
 const warnOnConfigChange = (initialConfig: CreateGtmClientOptions, nextConfig: CreateGtmClientOptions): void => {
   if (process.env.NODE_ENV !== 'production' && initialConfig !== nextConfig) {
     console.warn(
-      '[react-gtm-kit] GtmProvider received new configuration; reconfiguration after mount is not supported. '
-        + 'The initial configuration will continue to be used.'
+      '[react-gtm-kit] GtmProvider received new configuration; reconfiguration after mount is not supported. ' +
+        'The initial configuration will continue to be used.'
     );
   }
 };
@@ -70,14 +62,17 @@ export const GtmProvider = ({ config, children }: GtmProviderProps): JSX.Element
     };
   }, [client]);
 
-  const value = useMemo<GtmContextValue>(() => ({
-    client,
-    push: (value) => client.push(value),
-    setConsentDefaults: (state, options) => client.setConsentDefaults(state, options),
-    updateConsent: (state, options) => client.updateConsent(state, options),
-    whenReady: () => client.whenReady(),
-    onReady: (callback) => client.onReady(callback)
-  }), [client]);
+  const value = useMemo<GtmContextValue>(
+    () => ({
+      client,
+      push: (value) => client.push(value),
+      setConsentDefaults: (state, options) => client.setConsentDefaults(state, options),
+      updateConsent: (state, options) => client.updateConsent(state, options),
+      whenReady: () => client.whenReady(),
+      onReady: (callback) => client.onReady(callback)
+    }),
+    [client]
+  );
 
   return <GtmContext.Provider value={value}>{children}</GtmContext.Provider>;
 };
@@ -102,10 +97,7 @@ export const useGtmPush = (): ((value: DataLayerValue) => void) => {
 
 export const useGtmConsent = (): GtmConsentApi => {
   const { setConsentDefaults, updateConsent } = useGtmContext();
-  return useMemo(
-    () => ({ setConsentDefaults, updateConsent }),
-    [setConsentDefaults, updateConsent]
-  );
+  return useMemo(() => ({ setConsentDefaults, updateConsent }), [setConsentDefaults, updateConsent]);
 };
 
 export const useGtmReady = (): (() => Promise<ScriptLoadState[]>) => {

@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { Suspense } from 'react';
-import { GtmProvider } from '@react-gtm-kit/react-modern';
+import { GtmProvider } from '@jwiedeman/gtm-kit-react';
 
 import { GTM_CONTAINERS } from '../lib/gtm';
 import { GtmBridge } from '../components/gtm-bridge';

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { watch } from 'vue';
-import { useGtmPush } from '@react-gtm-kit/vue';
+import { useGtmPush } from '@jwiedeman/gtm-kit-vue';
 
 const route = useRoute();
 const push = useGtmPush();

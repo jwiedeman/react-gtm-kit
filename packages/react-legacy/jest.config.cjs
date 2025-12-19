@@ -4,10 +4,10 @@ const baseConfig = require('../../config/jest.base.cjs');
 module.exports = {
   ...baseConfig,
   rootDir: __dirname,
-  displayName: '@react-gtm-kit/react-legacy',
+  displayName: '@jwiedeman/gtm-kit-react-legacy',
   setupFilesAfterEnv: [...baseConfig.setupFilesAfterEnv, '@testing-library/jest-dom'],
   moduleNameMapper: {
     ...(baseConfig.moduleNameMapper ?? {}),
-    '^@react-gtm-kit/core$': path.join(__dirname, '../core/src')
+    '^@jwiedeman/gtm-kit$': path.join(__dirname, '../core/src')
   }
 };

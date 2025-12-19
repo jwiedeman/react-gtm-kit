@@ -17,7 +17,7 @@ export {
   useGtmReady,
   GtmPlugin,
   GTM_INJECTION_KEY
-} from '@react-gtm-kit/vue';
+} from '@jwiedeman/gtm-kit-vue';
 
 // Re-export core types for convenience
 export type {
@@ -27,6 +27,6 @@ export type {
   ConsentRegionOptions,
   DataLayerValue,
   ScriptLoadState
-} from '@react-gtm-kit/core';
+} from '@jwiedeman/gtm-kit';
 
-export { consentPresets, pushEvent, pushEcommerce } from '@react-gtm-kit/core';
+export { consentPresets, pushEvent, pushEcommerce } from '@jwiedeman/gtm-kit';

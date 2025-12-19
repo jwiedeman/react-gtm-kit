@@ -6,7 +6,7 @@ import { get } from 'svelte/store';
 import { createGtmStore } from '../store';
 
 // Mock the core package
-jest.mock('@react-gtm-kit/core', () => ({
+jest.mock('@jwiedeman/gtm-kit', () => ({
   createGtmClient: jest.fn((options) => ({
     init: jest.fn(),
     push: jest.fn(),
@@ -15,7 +15,9 @@ jest.mock('@react-gtm-kit/core', () => ({
     whenReady: jest.fn().mockResolvedValue([{ status: 'loaded' }]),
     onReady: jest.fn((cb) => {
       cb([{ status: 'loaded' }]);
-      return () => { /* cleanup */ };
+      return () => {
+        /* cleanup */
+      };
     }),
     teardown: jest.fn(),
     isInitialized: jest.fn().mockReturnValue(true),
@@ -23,7 +25,7 @@ jest.mock('@react-gtm-kit/core', () => ({
   }))
 }));
 
-describe('@react-gtm-kit/svelte', () => {
+describe('@jwiedeman/gtm-kit-svelte', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     // Clean up any GTM scripts
@@ -89,10 +91,7 @@ describe('@react-gtm-kit/svelte', () => {
 
       value.setConsentDefaults({ analytics_storage: 'denied' }, { region: ['US'] });
 
-      expect(value.client.setConsentDefaults).toHaveBeenCalledWith(
-        { analytics_storage: 'denied' },
-        { region: ['US'] }
-      );
+      expect(value.client.setConsentDefaults).toHaveBeenCalledWith({ analytics_storage: 'denied' }, { region: ['US'] });
     });
 
     it('updateConsent calls client.updateConsent', () => {
@@ -101,10 +100,7 @@ describe('@react-gtm-kit/svelte', () => {
 
       value.updateConsent({ analytics_storage: 'granted' });
 
-      expect(value.client.updateConsent).toHaveBeenCalledWith(
-        { analytics_storage: 'granted' },
-        undefined
-      );
+      expect(value.client.updateConsent).toHaveBeenCalledWith({ analytics_storage: 'granted' }, undefined);
     });
 
     it('whenReady returns a promise', async () => {

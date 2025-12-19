@@ -11,5 +11,5 @@ module.exports = {
     }
   },
   rootDir: __dirname,
-  displayName: '@react-gtm-kit/core'
+  displayName: '@jwiedeman/gtm-kit'
 };

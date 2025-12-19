@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
-import type { GtmClient, PageViewPayload, ScriptLoadState } from '@react-gtm-kit/core';
-import { pushEvent } from '@react-gtm-kit/core';
+import type { GtmClient, PageViewPayload, ScriptLoadState } from '@jwiedeman/gtm-kit';
+import { pushEvent } from '@jwiedeman/gtm-kit';
 
 const DEFAULT_EVENT_NAME = 'page_view';
 
@@ -93,7 +93,9 @@ export const useTrackPageViews = ({
   const previousRef = useRef<RouteSnapshot | null>(null);
   const hasTrackedRef = useRef(false);
   const pendingKeyRef = useRef<string | null>(null);
-  const readinessRef = useRef<Promise<ScriptLoadState[]> | null>(waitForReady ? readyPromise ?? client.whenReady() : null);
+  const readinessRef = useRef<Promise<ScriptLoadState[]> | null>(
+    waitForReady ? (readyPromise ?? client.whenReady()) : null
+  );
   const isMountedRef = useRef(true);
 
   useEffect(() => {
@@ -104,7 +106,7 @@ export const useTrackPageViews = ({
   }, []);
 
   useEffect(() => {
-    readinessRef.current = waitForReady ? readyPromise ?? client.whenReady() : null;
+    readinessRef.current = waitForReady ? (readyPromise ?? client.whenReady()) : null;
   }, [client, readyPromise, waitForReady]);
 
   const logFailures = useCallback((states: ScriptLoadState[]) => {
@@ -207,17 +209,7 @@ export const useTrackPageViews = ({
 
       pushPayload();
     },
-    [
-      buildPayload,
-      client,
-      eventName,
-      logFailures,
-      pushEventFn,
-      skipSamePath,
-      trackHash,
-      trackOnMount,
-      waitForReady
-    ]
+    [buildPayload, client, eventName, logFailures, pushEventFn, skipSamePath, trackHash, trackOnMount, waitForReady]
   );
 
   useEffect(() => {

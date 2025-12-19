@@ -4,8 +4,8 @@
  * This plugin initializes Google Tag Manager using GTM Kit.
  * The `.client.ts` suffix ensures this only runs on the client side.
  */
-import { GtmPlugin, type GtmPluginOptions } from '@react-gtm-kit/vue';
-import { consentPresets } from '@react-gtm-kit/core';
+import { GtmPlugin, type GtmPluginOptions } from '@jwiedeman/gtm-kit-vue';
+import { consentPresets } from '@jwiedeman/gtm-kit';
 
 export default defineNuxtPlugin((nuxtApp) => {
   // Configure GTM options

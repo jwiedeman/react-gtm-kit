@@ -1,5 +1,5 @@
-import { DEFAULT_DATA_LAYER_NAME } from '@react-gtm-kit/core';
-import type { ContainerConfigInput, ContainerDescriptor } from '@react-gtm-kit/core';
+import { DEFAULT_DATA_LAYER_NAME } from '@jwiedeman/gtm-kit';
+import type { ContainerConfigInput, ContainerDescriptor } from '@jwiedeman/gtm-kit';
 
 export const DEFAULT_GTM_HOST = 'https://www.googletagmanager.com';
 

@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  createNoscriptMarkup,
-  type ContainerConfigInput,
-  type ContainerDescriptor
-} from '@react-gtm-kit/core';
+import { createNoscriptMarkup, type ContainerConfigInput, type ContainerDescriptor } from '@jwiedeman/gtm-kit';
 
 /**
  * Props for the GtmScripts component.
@@ -35,9 +31,7 @@ export interface GtmScriptsProps {
 /**
  * Normalize container config to array format.
  */
-function normalizeContainers(
-  containers: ContainerConfigInput | ContainerConfigInput[]
-): ContainerDescriptor[] {
+function normalizeContainers(containers: ContainerConfigInput | ContainerConfigInput[]): ContainerDescriptor[] {
   if (typeof containers === 'string') {
     return [{ id: containers }];
   }
@@ -54,7 +48,7 @@ function normalizeContainers(
  * @example
  * ```tsx
  * // app/root.tsx
- * import { GtmScripts } from '@react-gtm-kit/remix';
+ * import { GtmScripts } from '@jwiedeman/gtm-kit-remix';
  *
  * export default function App() {
  *   return (
@@ -136,10 +130,7 @@ export function GtmScripts({
 
   return (
     <>
-      <script
-        {...scriptAttributes}
-        dangerouslySetInnerHTML={{ __html: inlineScript }}
-      />
+      <script {...scriptAttributes} dangerouslySetInnerHTML={{ __html: inlineScript }} />
       <noscript dangerouslySetInnerHTML={{ __html: noscriptHtml }} />
     </>
   );
