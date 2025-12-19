@@ -28,6 +28,9 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
       - run: pnpm install
+      - name: Build packages
+        if: ${{ matrix.task == 'test' || matrix.task == 'typecheck' || matrix.task == 'verify:lightweight' }}
+        run: pnpm run build
       - name: Run ${{ matrix.task }}
         run: pnpm run ${{ matrix.task }}
       - name: Upload coverage to Codecov
