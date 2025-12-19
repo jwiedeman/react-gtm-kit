@@ -16,15 +16,15 @@ Works with React, Vue, Next.js, Nuxt, Svelte, SolidJS, Remix, or vanilla JavaScr
 
 ![core](https://img.shields.io/badge/core-3.7KB-brightgreen?logo=javascript&logoColor=white)
 ![react](https://img.shields.io/badge/react-6.9KB-61DAFB?logo=react&logoColor=white)
-![vue](https://img.shields.io/badge/vue-4KB-4FC08D?logo=vuedotjs&logoColor=white)
+![vue](https://img.shields.io/badge/vue-4.0KB-4FC08D?logo=vuedotjs&logoColor=white)
 ![next](https://img.shields.io/badge/next-14.2KB-000000?logo=nextdotjs&logoColor=white)
-![nuxt](https://img.shields.io/badge/nuxt-5KB-00DC82?logo=nuxtdotjs&logoColor=white)
+![nuxt](https://img.shields.io/badge/nuxt-8.3KB-00DC82?logo=nuxtdotjs&logoColor=white)
 
 <!-- Badges: More Frameworks -->
 
-![svelte](https://img.shields.io/badge/svelte-4KB-FF3E00?logo=svelte&logoColor=white)
-![solid](https://img.shields.io/badge/solid-5KB-2C4F7C?logo=solid&logoColor=white)
-![remix](https://img.shields.io/badge/remix-8KB-000000?logo=remix&logoColor=white)
+![svelte](https://img.shields.io/badge/svelte-5.4KB-FF3E00?logo=svelte&logoColor=white)
+![solid](https://img.shields.io/badge/solid-7.6KB-2C4F7C?logo=solid&logoColor=white)
+![remix](https://img.shields.io/badge/remix-7KB-000000?logo=remix&logoColor=white)
 
 <!-- Badges: Meta -->
 
@@ -481,12 +481,12 @@ import {
 | `@jwiedeman/gtm-kit`              | 3.7 KB      | Required for all       |
 | `@jwiedeman/gtm-kit-react`        | 6.9 KB      | React 16.8+            |
 | `@jwiedeman/gtm-kit-react-legacy` | 6.9 KB      | React class components |
-| `@jwiedeman/gtm-kit-vue`          | ~4 KB       | Vue 3                  |
+| `@jwiedeman/gtm-kit-vue`          | 4.0 KB      | Vue 3                  |
 | `@jwiedeman/gtm-kit-next`         | 14.2 KB     | Next.js 13+            |
-| `@jwiedeman/gtm-kit-nuxt`         | ~5 KB       | Nuxt 3                 |
-| `@jwiedeman/gtm-kit-svelte`       | ~4 KB       | Svelte 4+              |
-| `@jwiedeman/gtm-kit-solid`        | ~5 KB       | SolidJS 1+             |
-| `@jwiedeman/gtm-kit-remix`        | ~8 KB       | Remix 2+               |
+| `@jwiedeman/gtm-kit-nuxt`         | 8.3 KB      | Nuxt 3                 |
+| `@jwiedeman/gtm-kit-svelte`       | 5.4 KB      | Svelte 4+              |
+| `@jwiedeman/gtm-kit-solid`        | 7.6 KB      | SolidJS 1+             |
+| `@jwiedeman/gtm-kit-remix`        | 7.0 KB      | Remix 2+               |
 
 ---
 
@@ -626,11 +626,11 @@ Use the correct adapter for your framework:
 | React (hooks) | `@jwiedeman/gtm-kit-react`        | ✅ Stable | 16.8+       | ![9 tests](https://img.shields.io/badge/tests-9_passed-brightgreen)     | ![84%](https://img.shields.io/badge/coverage-84%25-green)       | ![6.9KB](https://img.shields.io/badge/gzip-6.9KB-blue)   |
 | React (class) | `@jwiedeman/gtm-kit-react-legacy` | ✅ Stable | 16.0+       | ![4 tests](https://img.shields.io/badge/tests-4_passed-brightgreen)     | ![98%](https://img.shields.io/badge/coverage-98%25-brightgreen) | ![6.9KB](https://img.shields.io/badge/gzip-6.9KB-blue)   |
 | Next.js       | `@jwiedeman/gtm-kit-next`         | ✅ Stable | 13+         | ![14 tests](https://img.shields.io/badge/tests-14_passed-brightgreen)   | ![87%](https://img.shields.io/badge/coverage-87%25-green)       | ![14.2KB](https://img.shields.io/badge/gzip-14.2KB-blue) |
-| Vue 3         | `@jwiedeman/gtm-kit-vue`          | ✅ Stable | 3.0+        | ![23 tests](https://img.shields.io/badge/tests-23_passed-brightgreen)   | ![98%](https://img.shields.io/badge/coverage-98%25-brightgreen) | ![4KB](https://img.shields.io/badge/gzip-~4KB-blue)      |
-| Nuxt 3        | `@jwiedeman/gtm-kit-nuxt`         | ✅ Stable | 3.0+        | ![12 tests](https://img.shields.io/badge/tests-12_passed-brightgreen)   | ![84%](https://img.shields.io/badge/coverage-84%25-green)       | ![5KB](https://img.shields.io/badge/gzip-~5KB-blue)      |
-| Svelte        | `@jwiedeman/gtm-kit-svelte`       | ✅ Stable | 4.0+        | ![15 tests](https://img.shields.io/badge/tests-15_passed-brightgreen)   | ![83%](https://img.shields.io/badge/coverage-83%25-green)       | ![4KB](https://img.shields.io/badge/gzip-~4KB-blue)      |
-| SolidJS       | `@jwiedeman/gtm-kit-solid`        | ✅ Stable | 1.0+        | ![21 tests](https://img.shields.io/badge/tests-21_passed-brightgreen)   | ![96%](https://img.shields.io/badge/coverage-96%25-brightgreen) | ![5KB](https://img.shields.io/badge/gzip-~5KB-blue)      |
-| Remix         | `@jwiedeman/gtm-kit-remix`        | ✅ Stable | 2.0+        | ![19 tests](https://img.shields.io/badge/tests-19_passed-brightgreen)   | ![71%](https://img.shields.io/badge/coverage-71%25-yellow)      | ![8KB](https://img.shields.io/badge/gzip-~8KB-blue)      |
+| Vue 3         | `@jwiedeman/gtm-kit-vue`          | ✅ Stable | 3.0+        | ![23 tests](https://img.shields.io/badge/tests-23_passed-brightgreen)   | ![98%](https://img.shields.io/badge/coverage-98%25-brightgreen) | ![4.0KB](https://img.shields.io/badge/gzip-4.0KB-blue)   |
+| Nuxt 3        | `@jwiedeman/gtm-kit-nuxt`         | ✅ Stable | 3.0+        | ![12 tests](https://img.shields.io/badge/tests-12_passed-brightgreen)   | ![84%](https://img.shields.io/badge/coverage-84%25-green)       | ![8.3KB](https://img.shields.io/badge/gzip-8.3KB-blue)   |
+| Svelte        | `@jwiedeman/gtm-kit-svelte`       | ✅ Stable | 4.0+        | ![15 tests](https://img.shields.io/badge/tests-15_passed-brightgreen)   | ![83%](https://img.shields.io/badge/coverage-83%25-green)       | ![5.4KB](https://img.shields.io/badge/gzip-5.4KB-blue)   |
+| SolidJS       | `@jwiedeman/gtm-kit-solid`        | ✅ Stable | 1.0+        | ![21 tests](https://img.shields.io/badge/tests-21_passed-brightgreen)   | ![96%](https://img.shields.io/badge/coverage-96%25-brightgreen) | ![7.6KB](https://img.shields.io/badge/gzip-7.6KB-blue)   |
+| Remix         | `@jwiedeman/gtm-kit-remix`        | ✅ Stable | 2.0+        | ![19 tests](https://img.shields.io/badge/tests-19_passed-brightgreen)   | ![71%](https://img.shields.io/badge/coverage-71%25-yellow)      | ![7.0KB](https://img.shields.io/badge/gzip-7.0KB-blue)   |
 | CLI           | `@jwiedeman/gtm-kit-cli`          | ✅ Stable | Node 18+    | ![94 tests](https://img.shields.io/badge/tests-94_passed-brightgreen)   | ![72%](https://img.shields.io/badge/coverage-72%25-yellow)      | ![0KB](https://img.shields.io/badge/runtime-0KB-blue)    |
 
 **Total: 366 tests across 10 packages**
