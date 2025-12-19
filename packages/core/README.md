@@ -52,6 +52,7 @@ pushEvent(gtm, 'purchase', { value: 49.99, currency: 'USD' });
 | ----------------------- | ------------------------------------- |
 | **Zero Dependencies**   | No bloat - just what you need         |
 | **3.7KB Gzipped**       | Minimal impact on bundle size         |
+| **Auto-Queue**          | Automatic buffering eliminates races  |
 | **SSR-Safe**            | Works with server-side rendering      |
 | **Consent Mode v2**     | Built-in GDPR compliance support      |
 | **Multiple Containers** | Load multiple GTM containers          |
@@ -169,6 +170,48 @@ import { generateNoscriptHtml } from '@react-gtm-kit/core';
 // Generate noscript HTML for server-side rendering
 const noscriptHtml = generateNoscriptHtml('GTM-XXXXXX');
 // Returns: '<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXX" ...></iframe></noscript>'
+```
+
+---
+
+## Auto-Queue (Race Condition Protection)
+
+Automatically buffer events that fire before GTM loads, then replay them in order:
+
+```ts
+import { installAutoQueue, createGtmClient } from '@react-gtm-kit/core';
+
+// Install FIRST - captures all dataLayer pushes
+installAutoQueue();
+
+// Events before GTM loads are buffered
+window.dataLayer.push({ event: 'early_event' }); // Buffered!
+
+// When GTM loads, everything replays automatically
+const client = createGtmClient({ containers: 'GTM-XXXXXX' });
+client.init(); // Buffer replays, GTM processes all events
+```
+
+**For earliest possible protection**, embed in your HTML `<head>`:
+
+```ts
+import { createAutoQueueScript } from '@react-gtm-kit/core';
+
+// Returns minified inline script for SSR
+const script = createAutoQueueScript();
+// Output: <script>{script}</script> in <head>
+```
+
+**Configuration:**
+
+```ts
+installAutoQueue({
+  pollInterval: 50, // Check interval (ms)
+  timeout: 30000, // Max wait time (ms)
+  maxBufferSize: 1000, // Prevent memory issues
+  onReplay: (count) => console.log(`Replayed ${count} events`),
+  onTimeout: (count) => console.warn(`GTM slow, ${count} waiting`)
+});
 ```
 
 ---

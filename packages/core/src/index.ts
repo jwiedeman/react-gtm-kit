@@ -10,12 +10,7 @@ export type {
 } from './types';
 export { DEFAULT_DATA_LAYER_NAME, DEFAULT_GTM_HOST } from './constants';
 export type { ConsentCommand, ConsentRegionOptions, ConsentState } from './consent';
-export {
-  buildConsentCommand,
-  consent,
-  createConsentDefaultsCommand,
-  createConsentUpdateCommand
-} from './consent';
+export { buildConsentCommand, consent, createConsentDefaultsCommand, createConsentUpdateCommand } from './consent';
 export { consentPresets, getConsentPreset } from './consent/presets';
 export { createGtmClient } from './client';
 export { pushEvent, pushEcommerce } from './events';
@@ -37,3 +32,5 @@ export type {
   PageViewPayload,
   PushEcommerceOptions
 } from './events';
+export type { AutoQueueOptions, AutoQueueState } from './auto-queue';
+export { installAutoQueue, createAutoQueueScript, attachToInlineBuffer } from './auto-queue';
