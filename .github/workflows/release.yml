@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Setup pnpm
@@ -68,7 +68,7 @@ jobs:
             echo "::warning::NPM_TOKEN is not configured. npm publishing will be skipped."
           fi
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           ref: ${{ github.event.inputs.release_branch || github.ref }}
