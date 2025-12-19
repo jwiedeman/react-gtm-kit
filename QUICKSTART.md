@@ -1,17 +1,17 @@
 # Quickstart Guide
 
-Get React GTM Kit running in your project in under 5 minutes.
+Get GTM Kit running in your project in under 5 minutes.
 
 ---
 
 ## Choose Your Setup
 
-| Your Stack | Install | Time |
-|------------|---------|------|
-| React (hooks) | [React Setup](#react-with-hooks) | 2 min |
-| Next.js App Router | [Next.js Setup](#nextjs-app-router) | 3 min |
-| Vanilla JS/TypeScript | [Vanilla Setup](#vanilla-javascript) | 1 min |
-| Legacy React (class components) | [Legacy Setup](#legacy-react) | 2 min |
+| Your Stack                      | Install                              | Time  |
+| ------------------------------- | ------------------------------------ | ----- |
+| React (hooks)                   | [React Setup](#react-with-hooks)     | 2 min |
+| Next.js App Router              | [Next.js Setup](#nextjs-app-router)  | 3 min |
+| Vanilla JS/TypeScript           | [Vanilla Setup](#vanilla-javascript) | 1 min |
+| Legacy React (class components) | [Legacy Setup](#legacy-react)        | 2 min |
 
 ---
 
@@ -20,7 +20,7 @@ Get React GTM Kit running in your project in under 5 minutes.
 ### 1. Install
 
 ```bash
-npm install @react-gtm-kit/core @react-gtm-kit/react-modern
+npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-react
 ```
 
 ### 2. Add the Provider
@@ -29,7 +29,7 @@ Wrap your app with `GtmProvider` at the root:
 
 ```tsx
 // src/App.tsx (or main.tsx)
-import { GtmProvider } from '@react-gtm-kit/react-modern';
+import { GtmProvider } from '@jwiedeman/gtm-kit-react';
 
 function App() {
   return (
@@ -47,7 +47,7 @@ function App() {
 Use the `useGtmPush` hook anywhere in your app:
 
 ```tsx
-import { useGtmPush } from '@react-gtm-kit/react-modern';
+import { useGtmPush } from '@jwiedeman/gtm-kit-react';
 
 function ProductPage({ product }) {
   const push = useGtmPush();
@@ -80,14 +80,14 @@ function ProductPage({ product }) {
 ### 1. Install
 
 ```bash
-npm install @react-gtm-kit/core @react-gtm-kit/next
+npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-next
 ```
 
 ### 2. Add GTM to Layout
 
 ```tsx
 // app/layout.tsx
-import { GtmHeadScript, GtmNoScript } from '@react-gtm-kit/next';
+import { GtmHeadScript, GtmNoScript } from '@jwiedeman/gtm-kit-next';
 import { GtmClientProvider } from './gtm-client-provider';
 
 const GTM_ID = 'GTM-XXXXXX';
@@ -100,9 +100,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <GtmNoScript containers={GTM_ID} />
-        <GtmClientProvider>
-          {children}
-        </GtmClientProvider>
+        <GtmClientProvider>{children}</GtmClientProvider>
       </body>
     </html>
   );
@@ -115,8 +113,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 // app/gtm-client-provider.tsx
 'use client';
 
-import { createGtmClient } from '@react-gtm-kit/core';
-import { useTrackPageViews } from '@react-gtm-kit/next';
+import { createGtmClient } from '@jwiedeman/gtm-kit';
+import { useTrackPageViews } from '@jwiedeman/gtm-kit-next';
 import { ReactNode } from 'react';
 
 const client = createGtmClient({ containers: 'GTM-XXXXXX' });
@@ -135,7 +133,7 @@ export function GtmClientProvider({ children }: { children: ReactNode }) {
 // components/AddToCartButton.tsx
 'use client';
 
-import { createGtmClient, pushEvent } from '@react-gtm-kit/core';
+import { createGtmClient, pushEvent } from '@jwiedeman/gtm-kit';
 
 // Use the same client instance
 const client = createGtmClient({ containers: 'GTM-XXXXXX' });
@@ -162,14 +160,14 @@ export function AddToCartButton({ product }) {
 ### 1. Install
 
 ```bash
-npm install @react-gtm-kit/core
+npm install @jwiedeman/gtm-kit
 ```
 
 ### 2. Initialize
 
 ```ts
 // src/analytics.ts
-import { createGtmClient, pushEvent } from '@react-gtm-kit/core';
+import { createGtmClient, pushEvent } from '@jwiedeman/gtm-kit';
 
 export const gtm = createGtmClient({ containers: 'GTM-XXXXXX' });
 gtm.init();
@@ -205,13 +203,13 @@ For class components without hooks support (React < 16.8):
 ### 1. Install
 
 ```bash
-npm install @react-gtm-kit/core @react-gtm-kit/react-legacy
+npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-react-legacy
 ```
 
 ### 2. Wrap Your Component
 
 ```tsx
-import { withGtm } from '@react-gtm-kit/react-legacy';
+import { withGtm } from '@jwiedeman/gtm-kit-react-legacy';
 
 class ProductPage extends React.Component {
   componentDidMount() {
@@ -239,8 +237,8 @@ If you need GDPR compliance, set consent defaults **before** GTM loads:
 ### React
 
 ```tsx
-import { GtmProvider } from '@react-gtm-kit/react-modern';
-import { consentPresets } from '@react-gtm-kit/core';
+import { GtmProvider } from '@jwiedeman/gtm-kit-react';
+import { consentPresets } from '@jwiedeman/gtm-kit';
 
 <GtmProvider
   config={{ containers: 'GTM-XXXXXX' }}
@@ -290,12 +288,13 @@ console.log(window.dataLayer);
 ```
 
 You should see:
+
 ```js
 [
   { event: 'gtm.js', 'gtm.start': 1234567890 },
-  { event: 'page_view', page_path: '/' },
+  { event: 'page_view', page_path: '/' }
   // ... your events
-]
+];
 ```
 
 ### GTM Preview Mode

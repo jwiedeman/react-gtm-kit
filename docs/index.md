@@ -1,29 +1,29 @@
-# React GTM Kit
+# GTM Kit
 
-A lightweight, production-ready Google Tag Manager integration for React applications.
+A lightweight, production-ready Google Tag Manager integration for any JavaScript application.
 
 ## Quick Links
 
-| I want to... | Go to |
-|--------------|-------|
-| Get started quickly | [Quickstart Guide](/QUICKSTART.md) |
+| I want to...                | Go to                                               |
+| --------------------------- | --------------------------------------------------- |
+| Get started quickly         | [Quickstart Guide](/QUICKSTART.md)                  |
 | Understand the architecture | [Architecture Concepts](./concepts/architecture.md) |
-| Set up consent mode | [Consent Guide](./how-to/consent.md) |
-| Track ecommerce events | [GA4 Ecommerce](./how-to/ga4-ecommerce.md) |
-| Debug issues | [Troubleshooting](./how-to/troubleshooting.md) |
-| See the full API | [API Reference](./reference/api.md) |
+| Set up consent mode         | [Consent Guide](./how-to/consent.md)                |
+| Track ecommerce events      | [GA4 Ecommerce](./how-to/ga4-ecommerce.md)          |
+| Debug issues                | [Troubleshooting](./how-to/troubleshooting.md)      |
+| See the full API            | [API Reference](./reference/api.md)                 |
 
 ## Installation
 
 ```bash
 # React (hooks) - most common
-npm install @react-gtm-kit/core @react-gtm-kit/react-modern
+npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-react
 
 # Next.js App Router
-npm install @react-gtm-kit/core @react-gtm-kit/next
+npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-next
 
 # Vanilla JavaScript
-npm install @react-gtm-kit/core
+npm install @jwiedeman/gtm-kit
 ```
 
 ## Basic Setup
@@ -31,7 +31,7 @@ npm install @react-gtm-kit/core
 ### React
 
 ```tsx
-import { GtmProvider, useGtmPush } from '@react-gtm-kit/react-modern';
+import { GtmProvider, useGtmPush } from '@jwiedeman/gtm-kit-react';
 
 function App() {
   return (
@@ -43,11 +43,7 @@ function App() {
 
 function TrackableButton() {
   const push = useGtmPush();
-  return (
-    <button onClick={() => push({ event: 'button_click' })}>
-      Click me
-    </button>
-  );
+  return <button onClick={() => push({ event: 'button_click' })}>Click me</button>;
 }
 ```
 
@@ -55,7 +51,7 @@ function TrackableButton() {
 
 ```tsx
 // app/layout.tsx
-import { GtmHeadScript, GtmNoScript } from '@react-gtm-kit/next';
+import { GtmHeadScript, GtmNoScript } from '@jwiedeman/gtm-kit-next';
 
 export default function RootLayout({ children }) {
   return (
@@ -75,7 +71,7 @@ export default function RootLayout({ children }) {
 ### Vanilla JavaScript
 
 ```ts
-import { createGtmClient, pushEvent } from '@react-gtm-kit/core';
+import { createGtmClient, pushEvent } from '@jwiedeman/gtm-kit';
 
 const gtm = createGtmClient({ containers: 'GTM-XXXXXX' });
 gtm.init();
@@ -95,7 +91,7 @@ pushEvent(gtm, 'page_view', { page_path: '/' });
 
 ### Concepts
 
-Understand how React GTM Kit works under the hood:
+Understand how GTM Kit works under the hood:
 
 - [Architecture](./concepts/architecture.md) - Package structure and data flow
 - [Consent Lifecycle](./concepts/consent-lifecycle.md) - How consent mode works
@@ -123,17 +119,17 @@ Technical specifications:
 
 ### Examples
 
-Working example applications in the [examples/](https://github.com/react-gtm-kit/react-gtm-kit/tree/main/examples) directory:
+Working example applications in the [examples/](https://github.com/jwiedeman/GTM-Kit/tree/main/examples) directory:
 
-| Example | Description |
-|---------|-------------|
-| `next-app` | Next.js 14 App Router with page tracking |
-| `react-strict-mode` | React + React Router with StrictMode |
-| `react-legacy` | Class components with HOC adapter |
-| `vanilla-csr` | Plain TypeScript, no framework |
-| `fullstack-web` | Full-stack app with Vite |
+| Example             | Description                              |
+| ------------------- | ---------------------------------------- |
+| `next-app`          | Next.js 14 App Router with page tracking |
+| `react-strict-mode` | React + React Router with StrictMode     |
+| `react-legacy`      | Class components with HOC adapter        |
+| `vanilla-csr`       | Plain TypeScript, no framework           |
+| `fullstack-web`     | Full-stack app with Vite                 |
 
 ## Support
 
-- [GitHub Issues](https://github.com/react-gtm-kit/react-gtm-kit/issues) - Bug reports and feature requests
+- [GitHub Issues](https://github.com/jwiedeman/GTM-Kit/issues) - Bug reports and feature requests
 - [Common Issues](../GOTCHAS.md) - Solutions to frequent problems
