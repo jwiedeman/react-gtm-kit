@@ -11,5 +11,14 @@ module.exports = {
     ...(baseConfig.moduleNameMapper ?? {}),
     '^@jwiedeman/gtm-kit$': path.join(__dirname, '../core/src'),
     '^next/navigation$': path.join(__dirname, 'src/__mocks__/next/navigation.ts')
+  },
+  // Next.js package has some hard-to-test server component code
+  coverageThreshold: {
+    global: {
+      statements: 85,
+      branches: 70,
+      functions: 85,
+      lines: 85
+    }
   }
 };
