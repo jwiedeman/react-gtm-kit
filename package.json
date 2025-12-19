@@ -34,7 +34,7 @@
     "@babel/core": "^7.28.5",
     "@babel/preset-env": "^7.28.5",
     "@babel/preset-typescript": "^7.28.5",
-    "@commitlint/cli": "^19.3.0",
+    "@commitlint/cli": "^20.2.0",
     "@commitlint/config-conventional": "^19.2.2",
     "@playwright/test": "^1.48.1",
     "@semantic-release/changelog": "^6.0.3",
