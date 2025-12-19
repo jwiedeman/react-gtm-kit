@@ -17,11 +17,9 @@ jobs:
           node-version: 20
           cache: pnpm
       - name: Install dependencies
-        run: pnpm install --ignore-scripts
-      - name: Build packages
-        run: pnpm build
-      - name: Run postinstall scripts
-        run: pnpm -r run --if-present postinstall || true
+        run: pnpm install || pnpm install --ignore-scripts
+      - name: Build packages (excluding nuxt-app due to oxc-parser native binding issues)
+        run: pnpm -r --filter '!@react-gtm-kit/example-nuxt-app' build
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium
         env:
