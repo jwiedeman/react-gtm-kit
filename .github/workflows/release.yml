@@ -63,7 +63,7 @@ jobs:
         run: |
           if [ -n "$NPM_TOKEN" ]; then
             echo "has_npm_token=true" >> $GITHUB_OUTPUT
-            echo "NPM_TOKEN is configured"
+            echo "NPM_TOKEN is configured (length: ${#NPM_TOKEN})"
           else
             echo "has_npm_token=false" >> $GITHUB_OUTPUT
             echo "::warning::NPM_TOKEN is not configured. npm publishing will be skipped."
@@ -85,6 +85,15 @@ jobs:
         run: pnpm install --frozen-lockfile || pnpm install --frozen-lockfile --ignore-scripts
       - name: Build packages (excluding nuxt-app due to oxc-parser native binding issues)
         run: pnpm -r --filter '!@react-gtm-kit/example-nuxt-app' build
+      - name: Configure npm authentication
+        if: steps.check-npm-token.outputs.has_npm_token == 'true'
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          # Write the auth token directly to .npmrc
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
+          # Verify authentication works
+          npm whoami --registry https://registry.npmjs.org
       - name: semantic-release (with npm publishing)
         if: steps.check-npm-token.outputs.has_npm_token == 'true'
         run: pnpm run release
