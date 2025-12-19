@@ -8,6 +8,8 @@ export default defineConfig({
   expect: {
     timeout: 10_000
   },
+  // Skip nuxt-app tests in CI - nuxt-app is excluded from CI builds due to oxc-parser native binding issues
+  testIgnore: process.env.CI ? ['**/nuxt-app.spec.ts'] : [],
   use: {
     headless: true,
     trace: 'on-first-retry'

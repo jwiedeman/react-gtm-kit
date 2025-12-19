@@ -12,7 +12,9 @@ export const sharedConfig = defineConfig({
   dts: true,
   sourcemap: true,
   clean: true,
-  target: 'es2018'
+  target: 'es2018',
+  minify: true,
+  treeshake: true
 });
 
 export default sharedConfig;

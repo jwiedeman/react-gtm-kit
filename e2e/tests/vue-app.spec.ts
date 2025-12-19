@@ -72,20 +72,20 @@ test.describe('Vue 3 App example', () => {
   test('navigates between pages with Vue Router', async ({ page }) => {
     await page.goto(server.url, { waitUntil: 'networkidle' });
 
-    // Verify home page
-    await expect(page).toHaveURL('/');
+    // Verify home page (use regex to match URL ending with /)
+    await expect(page).toHaveURL(/\/$/);
 
     // Navigate to Products
     await page.click('text=Products');
-    await expect(page).toHaveURL('/products');
+    await expect(page).toHaveURL(/\/products/);
 
     // Navigate to About
     await page.click('text=About');
-    await expect(page).toHaveURL('/about');
+    await expect(page).toHaveURL(/\/about/);
 
     // Navigate back to Home
     await page.click('text=Home');
-    await expect(page).toHaveURL('/');
+    await expect(page).toHaveURL(/\/$/);
   });
 
   test('handles consent updates from cookie banner', async ({ page }) => {
@@ -130,10 +130,10 @@ test.describe('Vue 3 App example', () => {
 
     // Navigate to multiple pages
     await page.click('text=Products');
-    await page.waitForURL('/products');
+    await page.waitForURL(/\/products/);
 
     await page.click('text=About');
-    await page.waitForURL('/about');
+    await page.waitForURL(/\/about/);
 
     // Data layer should still exist and potentially have more entries
     const finalLength = await page.evaluate(() => {

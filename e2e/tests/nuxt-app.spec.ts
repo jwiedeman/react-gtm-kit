@@ -77,16 +77,16 @@ test.describe('Nuxt 3 App example', () => {
     await expect(page.locator('h1, h2, main')).toBeVisible();
 
     // Navigate to Products (if link exists)
-    const productsLink = page.locator('a[href="/products"], text=Products');
+    const productsLink = page.locator('a[href="/products"]').or(page.locator('text=Products'));
     if ((await productsLink.count()) > 0) {
-      await productsLink.click();
+      await productsLink.first().click();
       await expect(page).toHaveURL(/\/products/);
     }
 
     // Navigate to About (if link exists)
-    const aboutLink = page.locator('a[href="/about"], text=About');
+    const aboutLink = page.locator('a[href="/about"]').or(page.locator('text=About'));
     if ((await aboutLink.count()) > 0) {
-      await aboutLink.click();
+      await aboutLink.first().click();
       await expect(page).toHaveURL(/\/about/);
     }
   });
