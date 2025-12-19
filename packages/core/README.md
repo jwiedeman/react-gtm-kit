@@ -1,0 +1,173 @@
+# @react-gtm-kit/core
+
+[![CI](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=core)](https://codecov.io/gh/jwiedeman/react-gtm-kit)
+[![npm version](https://img.shields.io/npm/v/@react-gtm-kit/core.svg)](https://www.npmjs.com/package/@react-gtm-kit/core)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@react-gtm-kit/core)](https://bundlephobia.com/package/@react-gtm-kit/core)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](https://www.npmjs.com/package/@react-gtm-kit/core)
+
+**Framework-agnostic Google Tag Manager client. Zero dependencies. 3.7KB gzipped.**
+
+The foundation of GTM Kit - works with any JavaScript project, framework, or build system.
+
+---
+
+## Installation
+
+```bash
+npm install @react-gtm-kit/core
+```
+
+```bash
+yarn add @react-gtm-kit/core
+```
+
+```bash
+pnpm add @react-gtm-kit/core
+```
+
+---
+
+## Quick Start
+
+```ts
+import { createGtmClient, pushEvent } from '@react-gtm-kit/core';
+
+// Create and initialize
+const gtm = createGtmClient({ containers: 'GTM-XXXXXX' });
+gtm.init();
+
+// Push events
+pushEvent(gtm, 'page_view', { page_path: '/' });
+pushEvent(gtm, 'purchase', { value: 49.99, currency: 'USD' });
+```
+
+---
+
+## Features
+
+| Feature | Description |
+|---------|-------------|
+| **Zero Dependencies** | No bloat - just what you need |
+| **3.7KB Gzipped** | Minimal impact on bundle size |
+| **SSR-Safe** | Works with server-side rendering |
+| **Consent Mode v2** | Built-in GDPR compliance support |
+| **Multiple Containers** | Load multiple GTM containers |
+| **Custom DataLayer** | Use custom dataLayer names |
+| **CSP Support** | Content Security Policy nonce support |
+| **TypeScript** | Full type definitions included |
+
+---
+
+## API Reference
+
+### `createGtmClient(config)`
+
+Creates a new GTM client instance.
+
+```ts
+const client = createGtmClient({
+  containers: 'GTM-XXXXXX',           // Required: ID or array of IDs
+  dataLayerName: 'dataLayer',          // Optional: custom name
+  host: 'https://www.googletagmanager.com', // Optional: custom host
+  scriptAttributes: { nonce: '...' }   // Optional: for CSP
+});
+```
+
+### Client Methods
+
+```ts
+client.init();                          // Load GTM scripts
+client.push({ event: 'custom' });       // Push to dataLayer
+client.setConsentDefaults(state);       // Set consent (before init)
+client.updateConsent(state);            // Update consent (after action)
+client.teardown();                      // Cleanup (for tests)
+await client.whenReady();               // Wait for scripts to load
+```
+
+### Event Helpers
+
+```ts
+import { pushEvent, pushEcommerce } from '@react-gtm-kit/core';
+
+// Generic event
+pushEvent(client, 'button_click', { button_id: 'cta-main' });
+
+// Ecommerce event (GA4 format)
+pushEcommerce(client, 'purchase', {
+  transaction_id: 'T-12345',
+  value: 120.00,
+  currency: 'USD',
+  items: [{ item_id: 'SKU-001', item_name: 'Blue T-Shirt', price: 40, quantity: 3 }]
+});
+```
+
+### Consent Mode v2
+
+```ts
+import { consentPresets } from '@react-gtm-kit/core';
+
+// Set defaults BEFORE init (required by Google)
+client.setConsentDefaults(consentPresets.eeaDefault, { region: ['EEA'] });
+client.init();
+
+// Update after user consent
+client.updateConsent({
+  ad_storage: 'granted',
+  analytics_storage: 'granted',
+  ad_user_data: 'granted',
+  ad_personalization: 'granted'
+});
+```
+
+**Built-in Presets:**
+- `consentPresets.eeaDefault` - All denied (GDPR default)
+- `consentPresets.allGranted` - All granted
+- `consentPresets.analyticsOnly` - Analytics only, no ads
+
+---
+
+## Multiple Containers
+
+```ts
+const client = createGtmClient({
+  containers: [
+    { id: 'GTM-MAIN' },
+    { id: 'GTM-ADS', queryParams: { gtm_auth: 'abc', gtm_preview: 'env-1' } }
+  ]
+});
+```
+
+---
+
+## SSR / Server-Side Rendering
+
+```ts
+import { generateNoscriptHtml } from '@react-gtm-kit/core';
+
+// Generate noscript HTML for server-side rendering
+const noscriptHtml = generateNoscriptHtml('GTM-XXXXXX');
+// Returns: '<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXX" ...></iframe></noscript>'
+```
+
+---
+
+## Framework Adapters
+
+While `@react-gtm-kit/core` works standalone, we provide framework-specific adapters for better ergonomics:
+
+| Framework | Package | Install |
+|-----------|---------|---------|
+| React (hooks) | `@react-gtm-kit/react-modern` | `npm install @react-gtm-kit/core @react-gtm-kit/react-modern` |
+| React (class) | `@react-gtm-kit/react-legacy` | `npm install @react-gtm-kit/core @react-gtm-kit/react-legacy` |
+| Vue 3 | `@react-gtm-kit/vue` | `npm install @react-gtm-kit/core @react-gtm-kit/vue` |
+| Nuxt 3 | `@react-gtm-kit/nuxt` | `npm install @react-gtm-kit/core @react-gtm-kit/nuxt` |
+| Next.js | `@react-gtm-kit/next` | `npm install @react-gtm-kit/core @react-gtm-kit/next` |
+
+---
+
+## License
+
+MIT

@@ -1,0 +1,40 @@
+{
+  "name": "@react-gtm-kit/solid",
+  "version": "0.1.0",
+  "description": "SolidJS primitives and context for GTM Kit - Google Tag Manager integration.",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "solid": "./dist/index.js",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "clean": "rm -rf dist",
+    "lint": "eslint --max-warnings=0 \"src/**/*.{ts,tsx}\"",
+    "test": "jest --config ./jest.config.cjs --runInBand --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@react-gtm-kit/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "solid-js": "^1.0.0"
+  },
+  "devDependencies": {
+    "@solidjs/testing-library": "^0.8.7",
+    "solid-js": "^1.8.17",
+    "solid-testing-library": "^0.5.1",
+    "tslib": "^2.6.2"
+  }
+}
