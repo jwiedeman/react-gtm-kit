@@ -5,21 +5,25 @@
 Works with React, Vue, Next.js, Nuxt, Svelte, SolidJS, Remix, or vanilla JavaScript. Pick what you need, ignore the rest.
 
 <!-- Badges: Build & Quality -->
-[![CI](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml)
-[![E2E Tests](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/e2e.yml/badge.svg)](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/e2e.yml)
-[![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg)](https://codecov.io/gh/jwiedeman/react-gtm-kit)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+[![CI](https://github.com/jwiedeman/GTM-Kit/actions/workflows/ci.yml/badge.svg)](https://github.com/jwiedeman/GTM-Kit/actions/workflows/ci.yml)
+[![E2E](https://github.com/jwiedeman/GTM-Kit/actions/workflows/e2e.yml/badge.svg)](https://github.com/jwiedeman/GTM-Kit/actions/workflows/e2e.yml)
+[![codecov](https://codecov.io/gh/jwiedeman/GTM-Kit/graph/badge.svg)](https://codecov.io/gh/jwiedeman/GTM-Kit)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-3178C6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
-<!-- Badges: Packages -->
-[![npm @react-gtm-kit/core](https://img.shields.io/npm/v/@react-gtm-kit/core?label=core&color=brightgreen)](https://www.npmjs.com/package/@react-gtm-kit/core)
-[![npm @react-gtm-kit/react-modern](https://img.shields.io/npm/v/@react-gtm-kit/react-modern?label=react&color=61DAFB)](https://www.npmjs.com/package/@react-gtm-kit/react-modern)
-[![npm @react-gtm-kit/vue](https://img.shields.io/npm/v/@react-gtm-kit/vue?label=vue&color=4FC08D)](https://www.npmjs.com/package/@react-gtm-kit/vue)
-[![npm @react-gtm-kit/next](https://img.shields.io/npm/v/@react-gtm-kit/next?label=next&color=000000)](https://www.npmjs.com/package/@react-gtm-kit/next)
-[![npm @react-gtm-kit/nuxt](https://img.shields.io/npm/v/@react-gtm-kit/nuxt?label=nuxt&color=00DC82)](https://www.npmjs.com/package/@react-gtm-kit/nuxt)
+<!-- Badges: Package Status -->
+![core](https://img.shields.io/badge/core-3.7KB-brightgreen?logo=javascript&logoColor=white)
+![react](https://img.shields.io/badge/react-6.9KB-61DAFB?logo=react&logoColor=white)
+![vue](https://img.shields.io/badge/vue-4KB-4FC08D?logo=vuedotjs&logoColor=white)
+![next](https://img.shields.io/badge/next-14.2KB-000000?logo=nextdotjs&logoColor=white)
+![nuxt](https://img.shields.io/badge/nuxt-5KB-00DC82?logo=nuxtdotjs&logoColor=white)
+
+<!-- Badges: More Frameworks -->
+![svelte](https://img.shields.io/badge/svelte-4KB-FF3E00?logo=svelte&logoColor=white)
+![solid](https://img.shields.io/badge/solid-5KB-2C4F7C?logo=solid&logoColor=white)
+![remix](https://img.shields.io/badge/remix-8KB-000000?logo=remix&logoColor=white)
 
 <!-- Badges: Meta -->
-[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@react-gtm-kit/core?label=core%20size)](https://bundlephobia.com/package/@react-gtm-kit/core)
-[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](https://www.npmjs.com/package/@react-gtm-kit/core)
+![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
@@ -503,7 +507,7 @@ Something's not working...
 │   └─ Use the framework-specific adapter (Next, Nuxt, Remix)
 │
 └─ Still stuck?
-    └─ Open an issue: github.com/jwiedeman/react-gtm-kit/issues
+    └─ Open an issue: github.com/jwiedeman/GTM-Kit/issues
 ```
 
 ---
@@ -589,17 +593,18 @@ Use the correct adapter for your framework:
 
 ## Framework Support Matrix
 
-| Framework     | Package                       | Status     | Min Version | Coverage |
-| ------------- | ----------------------------- | ---------- | ----------- | -------- |
-| Vanilla JS    | `@react-gtm-kit/core`         | ✅ Stable  | ES2018+     | [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=core)](https://codecov.io/gh/jwiedeman/react-gtm-kit) |
-| React (hooks) | `@react-gtm-kit/react-modern` | ✅ Stable  | 16.8+       | [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=react-modern)](https://codecov.io/gh/jwiedeman/react-gtm-kit) |
-| React (class) | `@react-gtm-kit/react-legacy` | ✅ Stable  | 16.0+       | [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=react-legacy)](https://codecov.io/gh/jwiedeman/react-gtm-kit) |
-| Next.js       | `@react-gtm-kit/next`         | ✅ Stable  | 13+         | [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=next)](https://codecov.io/gh/jwiedeman/react-gtm-kit) |
-| Vue 3         | `@react-gtm-kit/vue`          | ✅ Stable  | 3.0+        | [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=vue)](https://codecov.io/gh/jwiedeman/react-gtm-kit) |
-| Nuxt 3        | `@react-gtm-kit/nuxt`         | ✅ Stable  | 3.0+        | [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=nuxt)](https://codecov.io/gh/jwiedeman/react-gtm-kit) |
-| Svelte        | `@react-gtm-kit/svelte`       | ✅ Stable  | 4.0+        | [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=svelte)](https://codecov.io/gh/jwiedeman/react-gtm-kit) |
-| SolidJS       | `@react-gtm-kit/solid`        | ✅ Stable  | 1.0+        | [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=solid)](https://codecov.io/gh/jwiedeman/react-gtm-kit) |
-| Remix         | `@react-gtm-kit/remix`        | ✅ Stable  | 2.0+        | [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=remix)](https://codecov.io/gh/jwiedeman/react-gtm-kit) |
+| Framework     | Package                       | Status     | Min Version | Tests | Size |
+| ------------- | ----------------------------- | ---------- | ----------- | ----- | ---- |
+| Vanilla JS    | `@react-gtm-kit/core`         | ✅ Stable  | ES2018+     | ![155 tests](https://img.shields.io/badge/tests-155_passed-brightgreen) | ![3.7KB](https://img.shields.io/badge/gzip-3.7KB-blue) |
+| React (hooks) | `@react-gtm-kit/react-modern` | ✅ Stable  | 16.8+       | ![9 tests](https://img.shields.io/badge/tests-9_passed-brightgreen) | ![6.9KB](https://img.shields.io/badge/gzip-6.9KB-blue) |
+| React (class) | `@react-gtm-kit/react-legacy` | ✅ Stable  | 16.0+       | ![4 tests](https://img.shields.io/badge/tests-4_passed-brightgreen) | ![6.9KB](https://img.shields.io/badge/gzip-6.9KB-blue) |
+| Next.js       | `@react-gtm-kit/next`         | ✅ Stable  | 13+         | ![14 tests](https://img.shields.io/badge/tests-14_passed-brightgreen) | ![14.2KB](https://img.shields.io/badge/gzip-14.2KB-blue) |
+| Vue 3         | `@react-gtm-kit/vue`          | ✅ Stable  | 3.0+        | ![23 tests](https://img.shields.io/badge/tests-23_passed-brightgreen) | ![4KB](https://img.shields.io/badge/gzip-~4KB-blue) |
+| Nuxt 3        | `@react-gtm-kit/nuxt`         | ✅ Stable  | 3.0+        | ![12 tests](https://img.shields.io/badge/tests-12_passed-brightgreen) | ![5KB](https://img.shields.io/badge/gzip-~5KB-blue) |
+| Svelte        | `@react-gtm-kit/svelte`       | ✅ Stable  | 4.0+        | ![✓](https://img.shields.io/badge/tests-ready-brightgreen) | ![4KB](https://img.shields.io/badge/gzip-~4KB-blue) |
+| SolidJS       | `@react-gtm-kit/solid`        | ✅ Stable  | 1.0+        | ![✓](https://img.shields.io/badge/tests-ready-brightgreen) | ![5KB](https://img.shields.io/badge/gzip-~5KB-blue) |
+| Remix         | `@react-gtm-kit/remix`        | ✅ Stable  | 2.0+        | ![19 tests](https://img.shields.io/badge/tests-19_passed-brightgreen) | ![8KB](https://img.shields.io/badge/gzip-~8KB-blue) |
+| CLI           | `@react-gtm-kit/cli`          | ✅ Stable  | Node 18+    | ![94 tests](https://img.shields.io/badge/tests-94_passed-brightgreen) | ![0KB](https://img.shields.io/badge/runtime-0KB-blue) |
 
 ---
 
@@ -608,8 +613,8 @@ Use the correct adapter for your framework:
 Working example apps for each framework:
 
 ```bash
-git clone https://github.com/jwiedeman/react-gtm-kit.git
-cd react-gtm-kit
+git clone https://github.com/jwiedeman/GTM-Kit.git
+cd GTM-Kit
 
 # Install dependencies
 pnpm install

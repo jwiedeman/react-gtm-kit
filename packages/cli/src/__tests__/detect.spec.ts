@@ -33,7 +33,7 @@ describe('detectFramework', () => {
     fs.writeFileSync(path.join(tempDir, name), '');
   };
 
-  const writeConfigFile = (name: string, content: string = '') => {
+  const writeConfigFile = (name: string, content = '') => {
     fs.writeFileSync(path.join(tempDir, name), content);
   };
 
