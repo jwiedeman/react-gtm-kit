@@ -9,5 +9,14 @@ module.exports = {
   moduleNameMapper: {
     ...(baseConfig.moduleNameMapper ?? {}),
     '^@jwiedeman/gtm-kit$': path.join(__dirname, '../core/src')
+  },
+  // Some display name/debug utilities are difficult to test
+  coverageThreshold: {
+    global: {
+      statements: 90,
+      branches: 90,
+      functions: 85,
+      lines: 90
+    }
   }
 };
