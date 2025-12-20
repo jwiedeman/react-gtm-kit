@@ -22,11 +22,16 @@ const packageMap = {
   '@jwiedeman/gtm-kit-vue': 'vue'
 };
 
-function getPackageVersion(packageDir) {
-  const pkgPath = join(rootDir, 'packages', packageDir, 'package.json');
+// Get version from root package.json (already updated by semantic-release)
+// All packages in this monorepo share the same version
+function getReleaseVersion() {
+  const pkgPath = join(rootDir, 'package.json');
   const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
   return pkg.version;
 }
+
+const releaseVersion = getReleaseVersion();
+console.log(`Release version: ${releaseVersion}\n`);
 
 function updatePackageDeps(packageDir) {
   const pkgPath = join(rootDir, 'packages', packageDir, 'package.json');
@@ -38,9 +43,9 @@ function updatePackageDeps(packageDir) {
       if (depVersion === 'workspace:*') {
         const depDir = packageMap[depName];
         if (depDir) {
-          const actualVersion = getPackageVersion(depDir);
-          pkg.dependencies[depName] = `^${actualVersion}`;
-          console.log(`  ${depName}: workspace:* -> ^${actualVersion}`);
+          // Use the release version from root package.json
+          pkg.dependencies[depName] = `^${releaseVersion}`;
+          console.log(`  ${depName}: workspace:* -> ^${releaseVersion}`);
           modified = true;
         }
       }
