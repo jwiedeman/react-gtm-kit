@@ -1,3 +1,11 @@
+## [1.0.1](https://github.com/jwiedeman/GTM-Kit/compare/v1.0.0...v1.0.1) (2025-12-20)
+
+### Bug Fixes
+
+- add publishConfig access:public to all packages ([da6180d](https://github.com/jwiedeman/GTM-Kit/commit/da6180da50c8303bf85d77afd7caf0cd47fcce56))
+- prevent lockfile mismatch after release ([77adb53](https://github.com/jwiedeman/GTM-Kit/commit/77adb5332d7c4ad8dcff702f75f16c83620a487e))
+- restore workspace:\* dependencies after failed release ([d80b34e](https://github.com/jwiedeman/GTM-Kit/commit/d80b34e04615a4e8a908f26505610e61f338b87b))
+
 # 1.0.0 (2025-12-20)
 
 ### Bug Fixes
