@@ -15,5 +15,14 @@ module.exports = {
   },
   transform: {
     '^.+\\.tsx?$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.json' }]
+  },
+  // Some Vue composables are difficult to test in isolation
+  coverageThreshold: {
+    global: {
+      statements: 95,
+      branches: 90,
+      functions: 85,
+      lines: 95
+    }
   }
 };
