@@ -9,5 +9,14 @@ module.exports = {
   moduleNameMapper: {
     ...(baseConfig.moduleNameMapper ?? {}),
     '^@jwiedeman/gtm-kit$': path.join(__dirname, '../core/src')
+  },
+  // HOC wrapper has some display name utilities that are hard to test
+  coverageThreshold: {
+    global: {
+      statements: 95,
+      branches: 80,
+      functions: 80,
+      lines: 95
+    }
   }
 };
