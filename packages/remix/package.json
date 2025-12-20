@@ -40,7 +40,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@jwiedeman/gtm-kit": "^0.1.0"
+    "@jwiedeman/gtm-kit": "workspace:*"
   },
   "peerDependencies": {
     "@remix-run/react": "^2.0.0",

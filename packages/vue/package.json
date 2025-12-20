@@ -41,7 +41,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@jwiedeman/gtm-kit": "^0.1.0"
+    "@jwiedeman/gtm-kit": "workspace:*"
   },
   "peerDependencies": {
     "vue": "^3.3.0"
