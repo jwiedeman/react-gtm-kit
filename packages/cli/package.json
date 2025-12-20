@@ -15,6 +15,9 @@
     "setup"
   ],
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "bin": {
     "gtm-kit": "./dist/cli.js",
