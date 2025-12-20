@@ -1,6 +1,6 @@
 {
   "name": "@jwiedeman/gtm-kit-cli",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "CLI tool for easy GTM Kit setup - auto-detects your framework and installs everything you need.",
   "repository": {
     "type": "git",

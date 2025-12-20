@@ -1,6 +1,6 @@
 {
   "name": "@jwiedeman/gtm-kit-remix",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Remix adapter for GTM Kit - Google Tag Manager integration with route tracking.",
   "repository": {
     "type": "git",
@@ -37,7 +37,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@jwiedeman/gtm-kit": "workspace:*"
+    "@jwiedeman/gtm-kit": "^0.1.0"
   },
   "peerDependencies": {
     "@remix-run/react": "^2.0.0",

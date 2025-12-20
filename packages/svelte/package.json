@@ -1,6 +1,6 @@
 {
   "name": "@jwiedeman/gtm-kit-svelte",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Svelte stores and actions for GTM Kit - Google Tag Manager integration.",
   "repository": {
     "type": "git",
@@ -39,7 +39,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@jwiedeman/gtm-kit": "workspace:*"
+    "@jwiedeman/gtm-kit": "^0.1.0"
   },
   "peerDependencies": {
     "svelte": "^4.0.0 || ^5.0.0"

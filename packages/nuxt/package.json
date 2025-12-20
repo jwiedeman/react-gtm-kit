@@ -1,6 +1,6 @@
 {
   "name": "@jwiedeman/gtm-kit-nuxt",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Nuxt 3 module for GTM Kit - Google Tag Manager integration with auto page tracking.",
   "repository": {
     "type": "git",
@@ -38,8 +38,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@jwiedeman/gtm-kit": "workspace:*",
-    "@jwiedeman/gtm-kit-vue": "workspace:*"
+    "@jwiedeman/gtm-kit": "^0.1.0",
+    "@jwiedeman/gtm-kit-vue": "^0.1.0"
   },
   "peerDependencies": {
     "nuxt": "^3.0.0",

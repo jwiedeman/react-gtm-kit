@@ -1,6 +1,6 @@
 {
   "name": "@jwiedeman/gtm-kit-solid",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "SolidJS primitives and context for GTM Kit - Google Tag Manager integration.",
   "repository": {
     "type": "git",
@@ -39,7 +39,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@jwiedeman/gtm-kit": "workspace:*"
+    "@jwiedeman/gtm-kit": "^0.1.0"
   },
   "peerDependencies": {
     "solid-js": "^1.0.0"

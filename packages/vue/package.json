@@ -1,6 +1,6 @@
 {
   "name": "@jwiedeman/gtm-kit-vue",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Vue 3 composables and plugin for GTM Kit - Google Tag Manager integration.",
   "repository": {
     "type": "git",
@@ -38,7 +38,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@jwiedeman/gtm-kit": "workspace:*"
+    "@jwiedeman/gtm-kit": "^0.1.0"
   },
   "peerDependencies": {
     "vue": "^3.3.0"
