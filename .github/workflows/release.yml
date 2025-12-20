@@ -80,7 +80,6 @@ jobs:
         with:
           node-version: 22
           cache: 'pnpm'
-          registry-url: 'https://registry.npmjs.org'
       - name: Install dependencies
         run: pnpm install --frozen-lockfile || pnpm install --frozen-lockfile --ignore-scripts
       - name: Build packages (excluding nuxt-app due to oxc-parser native binding issues)
@@ -90,8 +89,8 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          # Write the auth token directly to .npmrc
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
+          # Write a clean .npmrc file (overwrite, don't append)
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
           # Verify authentication works
           npm whoami --registry https://registry.npmjs.org
       - name: semantic-release (with npm publishing)
