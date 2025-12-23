@@ -1,3 +1,13 @@
+# [1.1.0](https://github.com/jwiedeman/GTM-Kit/compare/v1.0.1...v1.1.0) (2025-12-23)
+
+### Bug Fixes
+
+- address code quality issues from security/professionalism review ([ab26df2](https://github.com/jwiedeman/GTM-Kit/commit/ab26df2ea53f7cf87cdee1a792be00850b29aad9))
+
+### Features
+
+- **astro:** add Astro.js framework adapter ([fc1c0d2](https://github.com/jwiedeman/GTM-Kit/commit/fc1c0d2704e3d2f14e8cba52386f7555693952a4))
+
 ## [1.0.1](https://github.com/jwiedeman/GTM-Kit/compare/v1.0.0...v1.0.1) (2025-12-20)
 
 ### Bug Fixes
