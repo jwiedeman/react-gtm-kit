@@ -28,4 +28,4 @@ export type {
 } from '@jwiedeman/gtm-kit';
 
 // Re-export consent helpers
-export { consentPresets, getConsentPreset } from '@jwiedeman/gtm-kit';
+export { consentPresets, getConsentPreset, eeaDefault, allGranted, analyticsOnly } from '@jwiedeman/gtm-kit';

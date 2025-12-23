@@ -11,7 +11,7 @@ export type {
 export { DEFAULT_DATA_LAYER_NAME, DEFAULT_GTM_HOST } from './constants';
 export type { ConsentCommand, ConsentRegionOptions, ConsentState } from './consent';
 export { buildConsentCommand, consent, createConsentDefaultsCommand, createConsentUpdateCommand } from './consent';
-export { consentPresets, getConsentPreset } from './consent/presets';
+export { consentPresets, getConsentPreset, eeaDefault, allGranted, analyticsOnly } from './consent/presets';
 export { createGtmClient } from './client';
 export { pushEvent, pushEcommerce } from './events';
 export { createNoscriptMarkup, DEFAULT_NOSCRIPT_IFRAME_ATTRIBUTES } from './noscript';
