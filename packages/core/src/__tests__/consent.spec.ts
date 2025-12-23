@@ -4,7 +4,10 @@ import {
   consentPresets,
   createConsentDefaultsCommand,
   createConsentUpdateCommand,
-  getConsentPreset
+  getConsentPreset,
+  eeaDefault,
+  allGranted,
+  analyticsOnly
 } from '../../src';
 
 describe('consent helpers', () => {
@@ -67,16 +70,8 @@ describe('consent helpers', () => {
 
   it('creates typed consent helpers for defaults and updates', () => {
     expect(
-      createConsentDefaultsCommand(
-        { analytics_storage: 'denied' },
-        { region: ['EEA'], waitForUpdate: 1000 }
-      )
-    ).toEqual([
-      'consent',
-      'default',
-      { analytics_storage: 'denied' },
-      { region: ['EEA'], wait_for_update: 1000 }
-    ]);
+      createConsentDefaultsCommand({ analytics_storage: 'denied' }, { region: ['EEA'], waitForUpdate: 1000 })
+    ).toEqual(['consent', 'default', { analytics_storage: 'denied' }, { region: ['EEA'], wait_for_update: 1000 }]);
 
     expect(createConsentUpdateCommand({ ad_personalization: 'granted' })).toEqual([
       'consent',
@@ -112,5 +107,20 @@ describe('consent helpers', () => {
     expect(Object.isFrozen(clone)).toBe(false);
     clone.ad_storage = 'denied';
     expect(consentPresets.allGranted.ad_storage).toBe('granted');
+  });
+
+  it('exports convenience preset references', () => {
+    // Verify direct exports match the presets object
+    expect(eeaDefault).toBe(consentPresets.eeaDefault);
+    expect(allGranted).toBe(consentPresets.allGranted);
+    expect(analyticsOnly).toBe(consentPresets.analyticsOnly);
+
+    // Verify the content
+    expect(eeaDefault.ad_storage).toBe('denied');
+    expect(eeaDefault.analytics_storage).toBe('denied');
+    expect(allGranted.ad_storage).toBe('granted');
+    expect(allGranted.analytics_storage).toBe('granted');
+    expect(analyticsOnly.analytics_storage).toBe('granted');
+    expect(analyticsOnly.ad_storage).toBe('denied');
   });
 });

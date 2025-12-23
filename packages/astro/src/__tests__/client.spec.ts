@@ -51,12 +51,19 @@ describe('Astro GTM Client', () => {
       expect(createGtmClient).toHaveBeenCalledTimes(1);
     });
 
-    it('should teardown and create new client if config changes', () => {
-      initGtm({ containers: 'GTM-TEST123' });
-      initGtm({ containers: 'GTM-DIFFERENT' });
+    it('should return existing client even with different config (idempotent)', () => {
+      // In Astro with view transitions, initGtm may be called multiple times
+      // It should always return the existing client to prevent duplicate initialization
+      const client1 = initGtm({ containers: 'GTM-TEST123' });
 
-      expect(mockClient.teardown).toHaveBeenCalled();
-      expect(createGtmClient).toHaveBeenCalledTimes(2);
+      // Clear mocks after first init so we can check that second call doesn't create new client
+      jest.clearAllMocks();
+
+      const client2 = initGtm({ containers: 'GTM-DIFFERENT' });
+
+      expect(client1).toBe(client2);
+      expect(createGtmClient).not.toHaveBeenCalled(); // Should not create new client
+      expect(mockClient.teardown).not.toHaveBeenCalled(); // Should not teardown existing client
     });
   });
 

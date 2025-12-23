@@ -29,4 +29,4 @@ export type {
   ScriptLoadState
 } from '@jwiedeman/gtm-kit';
 
-export { consentPresets, pushEvent, pushEcommerce } from '@jwiedeman/gtm-kit';
+export { consentPresets, eeaDefault, allGranted, analyticsOnly, pushEvent, pushEcommerce } from '@jwiedeman/gtm-kit';

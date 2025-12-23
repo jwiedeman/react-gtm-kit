@@ -1,7 +1,8 @@
-import { DEFAULT_DATA_LAYER_NAME } from '@jwiedeman/gtm-kit';
+import { DEFAULT_DATA_LAYER_NAME, DEFAULT_GTM_HOST } from '@jwiedeman/gtm-kit';
 import type { ContainerConfigInput, ContainerDescriptor } from '@jwiedeman/gtm-kit';
 
-export const DEFAULT_GTM_HOST = 'https://www.googletagmanager.com';
+// Re-export for convenience
+export { DEFAULT_GTM_HOST };
 
 const isString = (value: unknown): value is string => typeof value === 'string';
 

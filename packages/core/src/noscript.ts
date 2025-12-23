@@ -1,6 +1,5 @@
 import type { ContainerConfigInput, ContainerDescriptor } from './types';
-
-const DEFAULT_HOST = 'https://www.googletagmanager.com';
+import { DEFAULT_GTM_HOST } from './constants';
 const DEFAULT_IFRAME_ATTRIBUTES: Record<string, string> = {
   height: '0',
   width: '0',
@@ -18,9 +17,7 @@ const normalizeContainer = (input: ContainerConfigInput): ContainerDescriptor =>
   return input;
 };
 
-const toRecord = (
-  params?: Record<string, string | number | boolean>
-): Record<string, string> => {
+const toRecord = (params?: Record<string, string | number | boolean>): Record<string, string> => {
   if (!params) {
     return {};
   }
@@ -32,11 +29,7 @@ const toRecord = (
 };
 
 const escapeAttributeValue = (value: string): string =>
-  value
-    .replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+  value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 const buildNoscriptUrl = (
   host: string,
@@ -57,9 +50,7 @@ const buildNoscriptUrl = (
   return `${normalizedHost}/ns.html?${searchParams.toString()}`;
 };
 
-const buildAttributeString = (
-  attributes: Record<string, string | number | boolean> | undefined
-): string => {
+const buildAttributeString = (attributes: Record<string, string | number | boolean> | undefined): string => {
   if (!attributes) {
     return '';
   }
@@ -69,9 +60,7 @@ const buildAttributeString = (
     return '';
   }
 
-  return entries
-    .map(([key, value]) => `${key}="${escapeAttributeValue(String(value))}"`)
-    .join(' ');
+  return entries.map(([key, value]) => `${key}="${escapeAttributeValue(String(value))}"`).join(' ');
 };
 
 export interface NoscriptOptions {
@@ -80,15 +69,12 @@ export interface NoscriptOptions {
   iframeAttributes?: Record<string, string | number | boolean>;
 }
 
-const buildNoscriptForContainer = (
-  container: ContainerDescriptor,
-  options: NoscriptOptions
-): string => {
+const buildNoscriptForContainer = (container: ContainerDescriptor, options: NoscriptOptions): string => {
   if (!container.id) {
     throw new Error('Container id is required to build noscript markup.');
   }
 
-  const host = options.host ?? DEFAULT_HOST;
+  const host = options.host ?? DEFAULT_GTM_HOST;
   const params = {
     ...options.defaultQueryParams,
     ...container.queryParams
@@ -117,9 +103,7 @@ export const createNoscriptMarkup = (
     throw new Error('At least one container is required to build noscript markup.');
   }
 
-  return normalizedContainers
-    .map((container) => buildNoscriptForContainer(container, options))
-    .join('');
+  return normalizedContainers.map((container) => buildNoscriptForContainer(container, options)).join('');
 };
 
 export const DEFAULT_NOSCRIPT_IFRAME_ATTRIBUTES = { ...DEFAULT_IFRAME_ATTRIBUTES };

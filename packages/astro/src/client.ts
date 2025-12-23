@@ -24,13 +24,10 @@ let clientConfig: CreateGtmClientOptions | null = null;
  * ```
  */
 export const initGtm = (options: CreateGtmClientOptions): GtmClient => {
-  if (clientInstance && clientConfig) {
-    // If already initialized with same config, return existing instance
-    if (JSON.stringify(clientConfig) === JSON.stringify(options)) {
-      return clientInstance;
-    }
-    // Teardown existing client if config changed
-    clientInstance.teardown();
+  // If already initialized, return existing instance
+  // (common in Astro with view transitions where initGtm may be called multiple times)
+  if (clientInstance) {
+    return clientInstance;
   }
 
   clientInstance = createGtmClient(options);

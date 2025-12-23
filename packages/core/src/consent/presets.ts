@@ -92,3 +92,21 @@ export type ConsentPresetName = keyof typeof consentPresets;
 export const getConsentPreset = (name: ConsentPresetName): ConsentState => ({
   ...consentPresets[name]
 });
+
+/**
+ * Convenience export for the EEA default consent state.
+ * All categories denied - GDPR/EEA compliant default.
+ */
+export const eeaDefault = consentPresets.eeaDefault;
+
+/**
+ * Convenience export for the all-granted consent state.
+ * All categories granted - user accepts all tracking.
+ */
+export const allGranted = consentPresets.allGranted;
+
+/**
+ * Convenience export for the analytics-only consent state.
+ * Analytics allowed, advertising denied.
+ */
+export const analyticsOnly = consentPresets.analyticsOnly;
