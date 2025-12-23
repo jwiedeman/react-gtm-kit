@@ -87,6 +87,7 @@ export function GtmProvider({ config, children, onBeforeInit, onAfterInit }: Gtm
   // Create client once and store in ref to survive StrictMode remounts
   const clientRef = useRef<GtmClient | null>(null);
   const initializedRef = useRef(false);
+  const teardownTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Create client on first render only
   if (!clientRef.current) {
@@ -97,6 +98,12 @@ export function GtmProvider({ config, children, onBeforeInit, onAfterInit }: Gtm
 
   // Initialize GTM (handles StrictMode correctly)
   useEffect(() => {
+    // Clear any pending teardown from StrictMode unmount/remount cycle
+    if (teardownTimerRef.current) {
+      clearTimeout(teardownTimerRef.current);
+      teardownTimerRef.current = null;
+    }
+
     // Skip if already initialized (StrictMode protection)
     if (initializedRef.current) {
       return;
@@ -116,20 +123,17 @@ export function GtmProvider({ config, children, onBeforeInit, onAfterInit }: Gtm
       onAfterInit(client);
     }
 
-    // Cleanup on unmount
+    // Cleanup on unmount - defer to allow StrictMode remount
     return () => {
-      // Don't teardown immediately in StrictMode
-      // Only teardown if we're truly unmounting
-      const timer = setTimeout(() => {
+      teardownTimerRef.current = setTimeout(() => {
+        // Only teardown if we're truly unmounting (no provider in DOM)
         if (!document.querySelector('[data-gtm-kit-provider]')) {
           client.teardown();
           clientRef.current = null;
           initializedRef.current = false;
         }
+        teardownTimerRef.current = null;
       }, 100);
-
-      // Clear the timeout on cleanup
-      clearTimeout(timer);
     };
   }, [client, onBeforeInit, onAfterInit]);
 

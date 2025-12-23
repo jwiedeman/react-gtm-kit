@@ -34,6 +34,22 @@
 import { DEFAULT_DATA_LAYER_NAME } from './constants';
 import type { DataLayerValue } from './types';
 
+/**
+ * Escape a string for safe use in JavaScript string literals.
+ * Prevents XSS when interpolating values into inline scripts.
+ */
+const escapeJsString = (value: string): string =>
+  value
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\r')
+    .replace(/</g, '\\x3c')
+    .replace(/>/g, '\\x3e')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
+
 /** Options for configuring the auto-queue behavior */
 export interface AutoQueueOptions {
   /**
@@ -309,7 +325,9 @@ export function createAutoQueueScript(dataLayerName: string = DEFAULT_DATA_LAYER
   // 1. Creates dataLayer if missing
   // 2. Overrides push to capture events
   // 3. Stores buffer in __gtmkit_buffer for later retrieval
-  return `(function(w,n){w[n]=w[n]||[];var q=[],o=w[n].push.bind(w[n]);w[n].push=function(){for(var i=0;i<arguments.length;i++){q.push({v:arguments[i],t:Date.now()});o(arguments[i])}return w[n].length};w.__gtmkit_buffer={q:q,o:o,n:n}})(window,'${dataLayerName}');`;
+  // SECURITY: Escape the dataLayerName to prevent XSS via malicious input
+  const safeName = escapeJsString(dataLayerName);
+  return `(function(w,n){w[n]=w[n]||[];var q=[],o=w[n].push.bind(w[n]);w[n].push=function(){for(var i=0;i<arguments.length;i++){q.push({v:arguments[i],t:Date.now()});o(arguments[i])}return w[n].length};w.__gtmkit_buffer={q:q,o:o,n:n}})(window,'${safeName}');`;
 }
 
 /**
