@@ -23,7 +23,8 @@
       "@jwiedeman/gtm-kit-solid": ["./packages/solid/src/index.ts"],
       "@jwiedeman/gtm-kit-svelte": ["./packages/svelte/src/index.ts"],
       "@jwiedeman/gtm-kit-remix": ["./packages/remix/src/index.ts"],
-      "@jwiedeman/gtm-kit-cli": ["./packages/cli/src/index.ts"]
+      "@jwiedeman/gtm-kit-cli": ["./packages/cli/src/index.ts"],
+      "@jwiedeman/gtm-kit-astro": ["./packages/astro/src/index.ts"]
     }
   }
 }

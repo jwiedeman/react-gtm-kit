@@ -78,9 +78,7 @@ describe('Nuxt GTM Module', () => {
       createNuxtGtmPlugin(mockApp as unknown as import('vue').App, {
         containers: 'GTM-TEST123',
         dataLayerName: 'customLayer',
-        autoInit: false,
-        trackPageViews: true,
-        pageViewEventName: 'custom_page_view'
+        autoInit: false
       });
 
       expect(mockApp.use).toHaveBeenCalledWith(GtmPlugin, {

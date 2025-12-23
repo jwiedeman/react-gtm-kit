@@ -118,7 +118,7 @@ ${c('bold', 'Options:')}
   --consent            Include consent mode setup
   --dry-run            Show what would be done without doing it
 
-${c('bold', 'More info:')} https://github.com/react-gtm-kit/react-gtm-kit
+${c('bold', 'More info:')} https://github.com/jwiedeman/GTM-Kit
 `);
 };
 
@@ -338,7 +338,7 @@ const runInit = async (
     '2. Add your routes/pages',
     '3. Test with GTM Preview mode',
     '',
-    'Docs: https://github.com/react-gtm-kit/react-gtm-kit'
+    'Docs: https://github.com/jwiedeman/GTM-Kit'
   ]);
 
   return { info, containerId, files };

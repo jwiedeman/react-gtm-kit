@@ -153,11 +153,11 @@ GTM Kit is designed to work safely with Nuxt's SSR:
 
 ```typescript
 import {
-  useNuxtGtm,        // Full GTM context (push, client, consent)
-  useNuxtGtmPush,    // Just the push function
+  useNuxtGtm, // Full GTM context (push, client, consent)
+  useNuxtGtmPush, // Just the push function
   useNuxtGtmConsent, // Consent management (update, setDefaults)
-  useNuxtGtmClient,  // Raw GTM client instance
-  useTrackPageViews  // Automatic page view tracking
+  useNuxtGtmClient, // Raw GTM client instance
+  useTrackPageViews // Automatic page view tracking
 } from '@react-gtm-kit/nuxt';
 ```
 
@@ -184,21 +184,25 @@ pnpm e2e:test
 ## Common Issues
 
 ### GTM not initializing
+
 - Ensure the plugin file ends with `.client.ts`
 - Verify the GTM ID is correct
 - Check browser console for errors
 
 ### Page views not tracking on navigation
+
 - Make sure `useTrackPageViews` is called in `app.vue` or a layout
 - Verify `useRoute()` is available (should be auto-imported)
 - Check that `trackInitialPageView` is set to `true`
 
 ### SSR errors
+
 - Never access `window` or `document` in server-side code
 - Use `.client.ts` for client-only plugins
 - Guard browser APIs with `typeof window !== 'undefined'`
 
 ### Consent not persisting
+
 - Implement cookie storage for consent preferences
 - Update consent on app mount based on stored preferences
 
@@ -228,7 +232,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
 ## Learn More
 
-- [GTM Kit Documentation](https://github.com/react-gtm-kit/react-gtm-kit)
+- [GTM Kit Documentation](https://github.com/jwiedeman/GTM-Kit)
 - [Nuxt 3 Documentation](https://nuxt.com/)
 - [Google Tag Manager](https://tagmanager.google.com/)
 - [Consent Mode v2](https://developers.google.com/tag-platform/security/guides/consent)

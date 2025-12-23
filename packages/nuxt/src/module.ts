@@ -12,27 +12,12 @@ import {
 
 /**
  * Options for the Nuxt GTM module.
- * Extends the Vue plugin options with Nuxt-specific features.
+ * Extends the Vue plugin options.
+ *
+ * For automatic page tracking, use the `useTrackPageViews` composable
+ * in your app.vue or layout component.
  */
-export interface NuxtGtmOptions extends GtmPluginOptions {
-  /**
-   * Whether to automatically track page views on route changes.
-   * @default true
-   */
-  trackPageViews?: boolean;
-
-  /**
-   * Custom page view event name.
-   * @default 'page_view'
-   */
-  pageViewEventName?: string;
-
-  /**
-   * Whether to include query parameters in page path.
-   * @default true
-   */
-  includeQueryParams?: boolean;
-}
+export type NuxtGtmOptions = GtmPluginOptions;
 
 /**
  * Extended context for Nuxt with additional helpers.
@@ -53,28 +38,14 @@ export interface NuxtGtmContext extends GtmContext {
  *
  * export default defineNuxtPlugin((nuxtApp) => {
  *   createNuxtGtmPlugin(nuxtApp.vueApp, {
- *     containers: 'GTM-XXXXXX',
- *     trackPageViews: true
+ *     containers: 'GTM-XXXXXX'
  *   });
  * });
  * ```
  */
 export const createNuxtGtmPlugin = (app: App, options: NuxtGtmOptions): GtmClient => {
-  const {
-    // These options are extracted for potential future auto-tracking features
-    trackPageViews: _trackPageViews = true,
-    pageViewEventName: _pageViewEventName = 'page_view',
-    includeQueryParams: _includeQueryParams = true,
-    ...pluginOptions
-  } = options;
-
-  // Silence unused variable warnings - these are reserved for future auto-tracking
-  void _trackPageViews;
-  void _pageViewEventName;
-  void _includeQueryParams;
-
   // Install the Vue plugin
-  app.use(GtmPlugin, pluginOptions);
+  app.use(GtmPlugin, options);
 
   // Get the client from the Vue plugin
   const client = (app.config.globalProperties as { $gtm?: GtmContext }).$gtm?.client;

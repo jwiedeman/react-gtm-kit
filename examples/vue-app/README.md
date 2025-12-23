@@ -167,21 +167,24 @@ pnpm e2e:test
 ## Common Issues
 
 ### GTM script not loading
+
 - Verify your container ID is correct
 - Check that `onBeforeInit` doesn't throw errors
 - Ensure the Vue plugin is installed before mounting
 
 ### Page views not tracking
+
 - Make sure `useRoute()` is called in a component inside `<router-view>`
 - Check that the watcher is set up with `immediate: true`
 
 ### Consent not updating
+
 - Verify the consent update is called after user interaction
 - Check browser cookies for persisted consent state
 
 ## Learn More
 
-- [GTM Kit Documentation](https://github.com/react-gtm-kit/react-gtm-kit)
+- [GTM Kit Documentation](https://github.com/jwiedeman/GTM-Kit)
 - [Vue 3 Documentation](https://vuejs.org/)
 - [Vue Router Documentation](https://router.vuejs.org/)
 - [Google Tag Manager](https://tagmanager.google.com/)
