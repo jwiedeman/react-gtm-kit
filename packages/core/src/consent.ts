@@ -156,8 +156,10 @@ export const buildConsentCommand = ({ command, state, options }: ConsentCommandI
   return [CONSENT_COMMAND, command, normalizedState];
 };
 
-export const createConsentCommandValue = (input: ConsentCommandInput): DataLayerValue =>
-  buildConsentCommand(input) as unknown as DataLayerValue;
+export const createConsentCommandValue = (input: ConsentCommandInput): DataLayerValue => {
+  // Spread the tuple to convert it to a plain array for DataLayerValue compatibility
+  return [...buildConsentCommand(input)];
+};
 
 export const createConsentDefaultsCommand = (state: ConsentState, options?: ConsentRegionOptions): DataLayerValue =>
   createConsentCommandValue({ command: CONSENT_DEFAULT, state, options });

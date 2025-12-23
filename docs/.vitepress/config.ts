@@ -118,7 +118,7 @@ const config: UserConfig = {
       { text: 'Marketing', link: '/marketing/launch-plan' }
     ],
     sidebar,
-    socialLinks: [{ icon: 'github', link: 'https://github.com/react-gtm-kit/react-gtm-kit' }],
+    socialLinks: [{ icon: 'github', link: 'https://github.com/jwiedeman/GTM-Kit' }],
     footer: {
       message: 'Released under the MIT License.',
       copyright: 'Copyright © 2025 React GTM Kit maintainers'

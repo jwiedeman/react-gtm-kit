@@ -105,13 +105,13 @@ export const GtmPlugin = {
       client.init();
     }
 
-    // Register cleanup on app unmount
-    app.mixin({
-      unmounted() {
-        // Note: This runs for each component, but teardown is idempotent
-        // The actual teardown should only happen when the app is fully unmounted
-      }
-    });
+    // Register cleanup when the Vue app is unmounted
+    // We wrap the app.unmount method to ensure proper teardown
+    const originalUnmount = app.unmount.bind(app);
+    app.unmount = () => {
+      client.teardown();
+      return originalUnmount();
+    };
   }
 };
 

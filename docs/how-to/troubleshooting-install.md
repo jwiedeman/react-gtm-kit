@@ -23,6 +23,7 @@ document.querySelectorAll('script[src*="googletagmanager"]')
 ### 1. "Module not found" Error
 
 **Symptoms:**
+
 ```
 Error: Cannot find module '@react-gtm-kit/core'
 ```
@@ -50,6 +51,7 @@ pnpm install  # or yarn install
 ### 2. GTM Script Not Loading
 
 **Symptoms:**
+
 - No script tag in DOM
 - No network request to googletagmanager.com
 - `dataLayer` is undefined
@@ -90,6 +92,7 @@ app.use(GtmPlugin, { containers: 'GTM-XXXXXX' });
 ### 3. Invalid GTM Container ID
 
 **Symptoms:**
+
 ```
 Error: Invalid GTM container ID format
 ```
@@ -97,26 +100,28 @@ Error: Invalid GTM container ID format
 **Solution:**
 
 GTM IDs must follow the format `GTM-XXXXXX`:
+
 - Starts with `GTM-`
 - Followed by 6-8 alphanumeric characters
 - All uppercase
 
 ```typescript
 // Valid
-'GTM-ABC1234'
-'GTM-ABCD12'
-'GTM-ABCD1234'
+'GTM-ABC1234';
+'GTM-ABCD12';
+'GTM-ABCD1234';
 
 // Invalid
-'gtm-abc1234'    // lowercase
-'G-ABC123'       // GA4 ID, not GTM
-'UA-123456-1'    // Universal Analytics ID
-'GTM-ABC'        // too short
+'gtm-abc1234'; // lowercase
+'G-ABC123'; // GA4 ID, not GTM
+'UA-123456-1'; // Universal Analytics ID
+'GTM-ABC'; // too short
 ```
 
 ### 4. Consent Mode Not Working
 
 **Symptoms:**
+
 - No consent commands in dataLayer
 - Analytics firing before consent
 
@@ -147,11 +152,13 @@ const client = createGtmClient({
 ### 5. Multiple GTM Scripts Loading
 
 **Symptoms:**
+
 - Duplicate script tags
 - Events firing twice
 - Performance issues
 
 **Debug:**
+
 ```javascript
 console.log('GTM scripts:', document.querySelectorAll('script[src*="gtm.js"]').length);
 ```
@@ -179,6 +186,7 @@ afterEach(() => {
 ### 6. TypeScript Errors
 
 **Symptoms:**
+
 ```
 Property 'push' does not exist on type...
 Type '...' is not assignable to type...
@@ -210,6 +218,7 @@ client.push<CustomEvent>({ event: 'custom', myField: 'value' });
 ### 7. CSP (Content Security Policy) Errors
 
 **Symptoms:**
+
 ```
 Refused to load the script 'https://www.googletagmanager.com/gtm.js'
 because it violates the following Content Security Policy directive
@@ -249,6 +258,7 @@ export default function RootLayout() {
 ### 8. SSR Hydration Mismatch
 
 **Symptoms:**
+
 ```
 Hydration failed because the initial UI does not match
 Warning: Expected server HTML to contain a matching <script>
@@ -277,6 +287,7 @@ if (typeof window !== 'undefined') {
 ### 9. Events Not Appearing in GTM
 
 **Symptoms:**
+
 - dataLayer shows events
 - GTM Preview mode shows nothing
 
@@ -300,6 +311,7 @@ const client = createGtmClient({
 ### 10. Bundle Size Issues
 
 **Symptoms:**
+
 - Larger than expected bundle
 - Warning about chunk size
 
@@ -366,7 +378,7 @@ const push = useNuxtGtmPush(); // Works
 
 If you're still stuck:
 
-1. **Check existing issues**: [GitHub Issues](https://github.com/react-gtm-kit/react-gtm-kit/issues)
+1. **Check existing issues**: [GitHub Issues](https://github.com/jwiedeman/GTM-Kit/issues)
 2. **Search documentation**: Review all docs in `/docs`
 3. **Create minimal reproduction**: Isolate the issue
 4. **Open an issue**: Include:

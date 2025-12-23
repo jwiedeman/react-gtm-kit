@@ -542,7 +542,7 @@ test('tracks purchase', () => {
 ## Still Stuck?
 
 1. **Check the examples:** [examples/](./examples/) has working implementations
-2. **Search existing issues:** [GitHub Issues](https://github.com/react-gtm-kit/react-gtm-kit/issues)
+2. **Search existing issues:** [GitHub Issues](https://github.com/jwiedeman/GTM-Kit/issues)
 3. **Open a new issue:** Include your setup, code, and what you've tried
 
 ---
