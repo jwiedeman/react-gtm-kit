@@ -208,6 +208,85 @@ describe('auto-queue', () => {
       expect(buffer.q[0].v).toEqual({ event: 'inline_event' });
       expect(buffer.q[0].t).toBeGreaterThan(0);
     });
+
+    describe('XSS prevention', () => {
+      it('escapes single quotes in dataLayerName', () => {
+        const script = createAutoQueueScript("test'injection");
+
+        expect(script).not.toContain("'test'injection'");
+        expect(script).toContain("test\\'injection");
+      });
+
+      it('escapes double quotes in dataLayerName', () => {
+        const script = createAutoQueueScript('test"injection');
+
+        expect(script).not.toContain('"test"injection"');
+        expect(script).toContain('test\\"injection');
+      });
+
+      it('escapes backslashes in dataLayerName', () => {
+        const script = createAutoQueueScript('test\\injection');
+
+        expect(script).toContain('test\\\\injection');
+      });
+
+      it('escapes script tags in dataLayerName', () => {
+        const script = createAutoQueueScript('test</script><script>alert(1)</script>');
+
+        expect(script).not.toContain('</script>');
+        expect(script).toContain('\\x3c/script\\x3e');
+      });
+
+      it('escapes newlines in dataLayerName', () => {
+        const script = createAutoQueueScript('test\ninjection');
+
+        expect(script).not.toContain('\n');
+        expect(script).toContain('test\\ninjection');
+      });
+
+      it('escapes carriage returns in dataLayerName', () => {
+        const script = createAutoQueueScript('test\rinjection');
+
+        expect(script).not.toContain('\r');
+        expect(script).toContain('test\\rinjection');
+      });
+
+      it('escapes line separators (U+2028) in dataLayerName', () => {
+        const script = createAutoQueueScript('test\u2028injection');
+
+        expect(script).not.toContain('\u2028');
+        expect(script).toContain('\\u2028');
+      });
+
+      it('escapes paragraph separators (U+2029) in dataLayerName', () => {
+        const script = createAutoQueueScript('test\u2029injection');
+
+        expect(script).not.toContain('\u2029');
+        expect(script).toContain('\\u2029');
+      });
+
+      it('prevents XSS with breakout attempt', () => {
+        const malicious = "'); alert('XSS'); //";
+        const script = createAutoQueueScript(malicious);
+
+        // The script should NOT contain unescaped single quotes that break out
+        expect(script).not.toContain("'); alert('XSS'); //");
+        // Should contain properly escaped version
+        expect(script).toContain("\\'");
+      });
+
+      it('produces safe executable script with malicious input', () => {
+        const malicious = "dataLayer'); alert('XSS'); ('";
+        const script = createAutoQueueScript(malicious);
+
+        // This should not throw - if XSS was possible, eval would execute alert
+        // eslint-disable-next-line no-eval
+        expect(() => eval(script)).not.toThrow();
+
+        // Cleanup
+        delete (globalThis as Record<string, unknown>)[malicious.replace(/'/g, "\\'")];
+      });
+    });
   });
 
   describe('attachToInlineBuffer', () => {

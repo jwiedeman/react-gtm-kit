@@ -75,17 +75,23 @@ export const requireGtmClient = (): GtmClient => {
  * Push a value to the GTM dataLayer.
  * This is a convenience function that handles the case where GTM isn't initialized.
  *
+ * @returns true if the value was pushed successfully, false otherwise
+ *
  * @example
  * ```ts
  * import { push } from '@jwiedeman/gtm-kit-astro';
  *
- * push({ event: 'button_click', button_name: 'hero_cta' });
+ * const success = push({ event: 'button_click', button_name: 'hero_cta' });
+ * if (!success) {
+ *   console.warn('GTM not ready');
+ * }
  * ```
  */
-export const push = (value: DataLayerValue): void => {
+export const push = (value: DataLayerValue): boolean => {
   const client = getGtmClient();
   if (client) {
     client.push(value);
+    return true;
   } else if (typeof window !== 'undefined') {
     // Fallback: push directly to dataLayer if it exists
     const dataLayerName = clientConfig?.dataLayerName ?? 'dataLayer';
@@ -93,43 +99,52 @@ export const push = (value: DataLayerValue): void => {
     const dataLayer = win[dataLayerName] as DataLayerValue[] | undefined;
     if (Array.isArray(dataLayer)) {
       dataLayer.push(value);
+      return true;
     } else {
       console.warn('[gtm-kit/astro] GTM not initialized and dataLayer not found.');
+      return false;
     }
   }
+  return false;
 };
 
 /**
  * Set consent defaults (must be called before GTM loads).
  *
+ * @returns true if consent defaults were set, false if GTM not initialized
+ *
  * @example
  * ```ts
  * import { setConsentDefaults } from '@jwiedeman/gtm-kit-astro';
  *
- * setConsentDefaults({
+ * const success = setConsentDefaults({
  *   ad_storage: 'denied',
  *   analytics_storage: 'denied'
  * });
  * ```
  */
-export const setConsentDefaults = (state: ConsentState, options?: ConsentRegionOptions): void => {
+export const setConsentDefaults = (state: ConsentState, options?: ConsentRegionOptions): boolean => {
   const client = getGtmClient();
   if (client) {
     client.setConsentDefaults(state, options);
+    return true;
   } else {
     console.warn('[gtm-kit/astro] GTM not initialized. Consent defaults should be set before init.');
+    return false;
   }
 };
 
 /**
  * Update consent state after user interaction.
  *
+ * @returns true if consent was updated, false if GTM not initialized
+ *
  * @example
  * ```ts
  * import { updateConsent } from '@jwiedeman/gtm-kit-astro';
  *
  * // When user accepts cookies
- * updateConsent({
+ * const success = updateConsent({
  *   ad_storage: 'granted',
  *   analytics_storage: 'granted',
  *   ad_user_data: 'granted',
@@ -137,12 +152,14 @@ export const setConsentDefaults = (state: ConsentState, options?: ConsentRegionO
  * });
  * ```
  */
-export const updateConsent = (state: ConsentState, options?: ConsentRegionOptions): void => {
+export const updateConsent = (state: ConsentState, options?: ConsentRegionOptions): boolean => {
   const client = getGtmClient();
   if (client) {
     client.updateConsent(state, options);
+    return true;
   } else {
     console.warn('[gtm-kit/astro] GTM not initialized. Cannot update consent.');
+    return false;
   }
 };
 
