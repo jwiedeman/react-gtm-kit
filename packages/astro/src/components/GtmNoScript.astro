@@ -1,0 +1,56 @@
+---
+/**
+ * GTM NoScript Component
+ *
+ * Renders the GTM noscript fallback iframe(s).
+ * Use this immediately after the opening <body> tag.
+ *
+ * @example
+ * ```astro
+ * ---
+ * import { GtmNoScript } from '@jwiedeman/gtm-kit-astro/components';
+ * ---
+ * <body>
+ *   <GtmNoScript containers="GTM-XXXXXX" />
+ *   <!-- rest of body -->
+ * </body>
+ * ```
+ */
+import type { ContainerConfigInput } from '@jwiedeman/gtm-kit';
+import { generateNoscriptTags, DEFAULT_GTM_HOST } from './helpers';
+
+export interface Props {
+  /** GTM container ID(s) - single string or array */
+  containers: ContainerConfigInput | ContainerConfigInput[];
+  /** GTM host URL */
+  host?: string;
+  /** Query parameters to add to all containers */
+  defaultQueryParams?: Record<string, string | number | boolean>;
+  /** Custom iframe attributes */
+  iframeAttributes?: Record<string, string | number | boolean>;
+  /** Custom dataLayer name */
+  dataLayerName?: string;
+}
+
+const {
+  containers,
+  host = DEFAULT_GTM_HOST,
+  defaultQueryParams,
+  iframeAttributes,
+  dataLayerName = 'dataLayer'
+} = Astro.props;
+
+const noscripts = generateNoscriptTags({
+  containers,
+  host,
+  defaultQueryParams,
+  iframeAttributes,
+  dataLayerName
+});
+---
+
+{noscripts.map((ns) => (
+  <noscript>
+    <iframe src={ns.src} {...ns.attributes} />
+  </noscript>
+))}

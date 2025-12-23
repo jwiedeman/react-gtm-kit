@@ -1,0 +1,109 @@
+---
+/**
+ * GTM Head Component
+ *
+ * A convenience component that sets up GTM in the document head
+ * with optional consent mode and auto page tracking.
+ *
+ * @example
+ * ```astro
+ * ---
+ * import { GtmHead } from '@jwiedeman/gtm-kit-astro/components';
+ * ---
+ * <head>
+ *   <GtmHead
+ *     containers="GTM-XXXXXX"
+ *     enablePageTracking
+ *     defaultConsent={{
+ *       ad_storage: 'denied',
+ *       analytics_storage: 'denied'
+ *     }}
+ *   />
+ * </head>
+ * ```
+ */
+import type { ContainerConfigInput, ScriptAttributes, ConsentState } from '@jwiedeman/gtm-kit';
+import {
+  generateScriptTags,
+  generateDataLayerScript,
+  DEFAULT_GTM_HOST
+} from './helpers';
+
+export interface Props {
+  /** GTM container ID(s) - single string or array */
+  containers: ContainerConfigInput | ContainerConfigInput[];
+  /** GTM host URL */
+  host?: string;
+  /** Query parameters to add to all containers */
+  defaultQueryParams?: Record<string, string | number | boolean>;
+  /** Script tag attributes (async, defer, nonce, etc.) */
+  scriptAttributes?: ScriptAttributes;
+  /** Custom dataLayer name */
+  dataLayerName?: string;
+  /** Default consent state (set before GTM loads) */
+  defaultConsent?: ConsentState;
+  /** Enable automatic page view tracking with View Transitions */
+  enablePageTracking?: boolean;
+  /** Custom page view event name */
+  pageViewEventName?: string;
+}
+
+const {
+  containers,
+  host = DEFAULT_GTM_HOST,
+  defaultQueryParams,
+  scriptAttributes,
+  dataLayerName = 'dataLayer',
+  defaultConsent,
+  enablePageTracking = false,
+  pageViewEventName = 'page_view'
+} = Astro.props;
+
+const scripts = generateScriptTags({
+  containers,
+  host,
+  defaultQueryParams,
+  scriptAttributes,
+  dataLayerName
+});
+
+// Build initialization script
+let initScript = generateDataLayerScript(dataLayerName);
+
+// Add consent defaults if provided
+if (defaultConsent) {
+  const consentEntries = Object.entries(defaultConsent)
+    .map(([key, value]) => `'${key}':'${value}'`)
+    .join(',');
+  initScript += `${dataLayerName}.push(['consent','default',{${consentEntries}}]);`;
+}
+
+// Generate the containers config for client-side initialization
+const containersArray = Array.isArray(containers) ? containers : [containers];
+const containersJson = JSON.stringify(containersArray);
+---
+
+<script is:inline set:html={initScript} />
+{scripts.map((script) => (
+  <script
+    src={script.src}
+    async={script.async}
+    defer={script.defer}
+    nonce={script.nonce}
+    data-gtm-container-id={script.id}
+    {...script.attributes}
+  />
+))}
+
+{enablePageTracking && (
+  <script
+    define:vars={{ containersJson, dataLayerName, pageViewEventName }}
+  >
+    // Initialize GTM client and set up page tracking
+    import('@jwiedeman/gtm-kit-astro').then(({ initGtm, setupViewTransitions }) => {
+      const containers = JSON.parse(containersJson);
+      initGtm({ containers, dataLayerName });
+      setupViewTransitions({ eventName: pageViewEventName });
+    });
+  </script>
+)}

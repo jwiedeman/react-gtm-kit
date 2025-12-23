@@ -1,0 +1,70 @@
+---
+/**
+ * GTM Script Component
+ *
+ * Renders the GTM script tag(s) in the document head.
+ * Use this in your <head> section.
+ *
+ * @example
+ * ```astro
+ * ---
+ * import { GtmScript } from '@jwiedeman/gtm-kit-astro/components';
+ * ---
+ * <head>
+ *   <GtmScript containers="GTM-XXXXXX" />
+ * </head>
+ * ```
+ */
+import type { ContainerConfigInput, ScriptAttributes } from '@jwiedeman/gtm-kit';
+import {
+  generateScriptTags,
+  generateDataLayerScript,
+  DEFAULT_GTM_HOST
+} from './helpers';
+
+export interface Props {
+  /** GTM container ID(s) - single string or array */
+  containers: ContainerConfigInput | ContainerConfigInput[];
+  /** GTM host URL */
+  host?: string;
+  /** Query parameters to add to all containers */
+  defaultQueryParams?: Record<string, string | number | boolean>;
+  /** Script tag attributes (async, defer, nonce, etc.) */
+  scriptAttributes?: ScriptAttributes;
+  /** Custom dataLayer name */
+  dataLayerName?: string;
+  /** Whether to include dataLayer initialization script */
+  initDataLayer?: boolean;
+}
+
+const {
+  containers,
+  host = DEFAULT_GTM_HOST,
+  defaultQueryParams,
+  scriptAttributes,
+  dataLayerName = 'dataLayer',
+  initDataLayer = true
+} = Astro.props;
+
+const scripts = generateScriptTags({
+  containers,
+  host,
+  defaultQueryParams,
+  scriptAttributes,
+  dataLayerName
+});
+
+const dataLayerInit = initDataLayer ? generateDataLayerScript(dataLayerName) : null;
+---
+
+{dataLayerInit && <script is:inline set:html={dataLayerInit} />}
+{scripts.map((script) => (
+  <script
+    src={script.src}
+    async={script.async}
+    defer={script.defer}
+    nonce={script.nonce}
+    data-gtm-container-id={script.id}
+    {...script.attributes}
+  />
+))}
