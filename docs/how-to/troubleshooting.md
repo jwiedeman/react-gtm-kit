@@ -62,7 +62,7 @@ symptom, confirm the likely cause, and apply the recommended fix.
 
 **Resolution**
 
-- Use the `setConsent` helpers from `@react-gtm-kit/core` or the React adapters to
+- Use the `setConsent` helpers from `@jwiedeman/gtm-kit` or the React adapters to
   ensure canonical key casing and queue flushing.
 - Confirm the consent handler executes after the provider mounts. In React, wrap
   consent updates in `useEffect` hooks rather than calling them during render.

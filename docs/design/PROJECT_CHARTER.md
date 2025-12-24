@@ -43,6 +43,7 @@ Ship a dead-simple, production-grade GTM client that works in any React era (leg
 ### Packages
 
 **Core (framework-agnostic)**
+
 - Create/claim the data layer
 - Load one or more GTM containers exactly once
 - Queue and flush pre-init pushes
@@ -51,10 +52,12 @@ Ship a dead-simple, production-grade GTM client that works in any React era (leg
 - Optional noscript string builder
 
 **React Adapters (optional)**
-- Modern (`@react-gtm-kit/react-modern`): Hook-based, StrictMode-safe
-- Legacy (`@react-gtm-kit/react-legacy`): Class component HOC wrapper
+
+- Modern (`@jwiedeman/gtm-kit-react`): Hook-based, StrictMode-safe
+- Legacy (`@jwiedeman/gtm-kit-react-legacy`): Class component HOC wrapper
 
 **Next.js Helpers (optional)**
+
 - Pageview bridge for App Router
 - Server utility for CSP nonce
 - Noscript iframe markup helper
@@ -69,31 +72,31 @@ Ship a dead-simple, production-grade GTM client that works in any React era (leg
 
 ## 5. Functional Requirements
 
-| ID | Requirement |
-|----|-------------|
+| ID   | Requirement                                                                 |
+| ---- | --------------------------------------------------------------------------- |
 | FR-1 | **Initialization** - Accept container IDs, create dataLayer, inject scripts |
-| FR-2 | **Data Pushes** - Safe pre/post-init with FIFO queue |
-| FR-3 | **Consent Mode v2** - Minimal API for consent signals |
-| FR-4 | **Environment & Preview** - Support gtm_auth, gtm_preview params |
-| FR-5 | **Noscript Support** - Pure function returning iframe markup |
-| FR-6 | **Teardown** - Remove scripts, restore global state |
-| FR-7 | **Observability** - Pluggable logger interface |
-| FR-8 | **React Adapter** - Modern (hooks) + Legacy (HOC) |
-| FR-9 | **Next.js Helpers** - Page tracking, CSP nonce, noscript |
+| FR-2 | **Data Pushes** - Safe pre/post-init with FIFO queue                        |
+| FR-3 | **Consent Mode v2** - Minimal API for consent signals                       |
+| FR-4 | **Environment & Preview** - Support gtm_auth, gtm_preview params            |
+| FR-5 | **Noscript Support** - Pure function returning iframe markup                |
+| FR-6 | **Teardown** - Remove scripts, restore global state                         |
+| FR-7 | **Observability** - Pluggable logger interface                              |
+| FR-8 | **React Adapter** - Modern (hooks) + Legacy (HOC)                           |
+| FR-9 | **Next.js Helpers** - Page tracking, CSP nonce, noscript                    |
 
 ---
 
 ## 6. Non-Functional Requirements
 
-| Requirement | Target |
-|-------------|--------|
-| Bundle size (core) | ≤ 4 KB gzip |
-| Dependencies (core) | Zero |
-| Init performance | Non-blocking |
-| Push performance | O(1) |
-| Security | CSP nonce support, no eval |
-| React compatibility | 16.x - 19+ |
-| Next.js compatibility | 13.4+ App Router |
+| Requirement           | Target                     |
+| --------------------- | -------------------------- |
+| Bundle size (core)    | ≤ 4 KB gzip                |
+| Dependencies (core)   | Zero                       |
+| Init performance      | Non-blocking               |
+| Push performance      | O(1)                       |
+| Security              | CSP nonce support, no eval |
+| React compatibility   | 16.x - 19+                 |
+| Next.js compatibility | 13.4+ App Router           |
 
 ---
 
@@ -113,21 +116,25 @@ Ship a dead-simple, production-grade GTM client that works in any React era (leg
 ## 8. Testing Strategy
 
 **Unit (headless DOM)**
+
 - State machine: init → queue → flush; re-init dedupe; teardown resets
 - URL composition for containers and environment params
 - CSP nonce attribute applied
 
 **Integration (DOM)**
+
 - StrictMode double-mount = one script per container
 - Hot reload doesn't duplicate scripts
 - Multi-container order is deterministic
 
 **E2E (browser)**
+
 - Next.js: initial pageview + client navigation events
 - JS disabled: noscript iframe loads GTM
 - Consent Mode: network behavior matches Google docs
 
 **Type Tests**
+
 - Lock public API through compile-time tests
 
 ---
@@ -144,29 +151,29 @@ Ship a dead-simple, production-grade GTM client that works in any React era (leg
 
 ## 10. Milestones
 
-| Milestone | Description |
-|-----------|-------------|
-| M0 | Design sign-off: API, docs outline, acceptance criteria |
-| M1 | Core alpha: init/queue/flush, multi-container, teardown |
-| M2 | Consent Mode v2: consent API and tests |
-| M3 | Noscript & CSP: SSR string, nonce handling |
-| M4 | React adapter: modern + legacy, integration tests |
-| M5 | Next helpers: pageview bridge, E2E |
-| M6 | Docs & examples: CSR, SSR, consent, troubleshooting |
-| M7 | 1.0 hardening: size budgets, coverage, semantic-release |
+| Milestone | Description                                             |
+| --------- | ------------------------------------------------------- |
+| M0        | Design sign-off: API, docs outline, acceptance criteria |
+| M1        | Core alpha: init/queue/flush, multi-container, teardown |
+| M2        | Consent Mode v2: consent API and tests                  |
+| M3        | Noscript & CSP: SSR string, nonce handling              |
+| M4        | React adapter: modern + legacy, integration tests       |
+| M5        | Next helpers: pageview bridge, E2E                      |
+| M6        | Docs & examples: CSR, SSR, consent, troubleshooting     |
+| M7        | 1.0 hardening: size budgets, coverage, semantic-release |
 
 ---
 
 ## 11. Risks & Mitigations
 
-| Risk | Mitigation |
-|------|------------|
-| Duplicate script injection | Idempotent init, DOM markers, E2E tests |
-| CSP failures in prod | Mandatory E2E with nonce enforcement |
-| Event loss before init | FIFO queue with order validation tests |
-| Multiple dataLayers | Default to one, document multi as advanced |
-| Custom host misuse | Document server-side tagging path |
-| React changes | Tiny adapter, monitor official blog |
+| Risk                       | Mitigation                                 |
+| -------------------------- | ------------------------------------------ |
+| Duplicate script injection | Idempotent init, DOM markers, E2E tests    |
+| CSP failures in prod       | Mandatory E2E with nonce enforcement       |
+| Event loss before init     | FIFO queue with order validation tests     |
+| Multiple dataLayers        | Default to one, document multi as advanced |
+| Custom host misuse         | Document server-side tagging path          |
+| React changes              | Tiny adapter, monitor official blog        |
 
 ---
 

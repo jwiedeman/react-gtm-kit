@@ -1,9 +1,9 @@
-# @react-gtm-kit/react-modern
+# @jwiedeman/gtm-kit-react
 
-[![CI](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml)
-[![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=react-modern)](https://codecov.io/gh/jwiedeman/react-gtm-kit)
-[![npm version](https://img.shields.io/npm/v/@react-gtm-kit/react-modern.svg)](https://www.npmjs.com/package/@react-gtm-kit/react-modern)
-[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@react-gtm-kit/react-modern)](https://bundlephobia.com/package/@react-gtm-kit/react-modern)
+[![CI](https://github.com/jwiedeman/GTM-Kit/actions/workflows/ci.yml/badge.svg)](https://github.com/jwiedeman/GTM-Kit/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/jwiedeman/GTM-Kit/graph/badge.svg?flag=react-modern)](https://codecov.io/gh/jwiedeman/GTM-Kit)
+[![npm version](https://img.shields.io/npm/v/@jwiedeman/gtm-kit-react.svg)](https://www.npmjs.com/package/@jwiedeman/gtm-kit-react)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@jwiedeman/gtm-kit-react)](https://bundlephobia.com/package/@jwiedeman/gtm-kit-react)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![React](https://img.shields.io/badge/React-16.8+-61DAFB.svg?logo=react)](https://reactjs.org/)
@@ -17,15 +17,15 @@ The modern React adapter for GTM Kit - uses hooks and Context API for clean, idi
 ## Installation
 
 ```bash
-npm install @react-gtm-kit/core @react-gtm-kit/react-modern
+npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-react
 ```
 
 ```bash
-yarn add @react-gtm-kit/core @react-gtm-kit/react-modern
+yarn add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-react
 ```
 
 ```bash
-pnpm add @react-gtm-kit/core @react-gtm-kit/react-modern
+pnpm add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-react
 ```
 
 ---
@@ -36,7 +36,7 @@ pnpm add @react-gtm-kit/core @react-gtm-kit/react-modern
 
 ```tsx
 // App.tsx or index.tsx
-import { GtmProvider } from '@react-gtm-kit/react-modern';
+import { GtmProvider } from '@jwiedeman/gtm-kit-react';
 
 function App() {
   return (
@@ -50,7 +50,7 @@ function App() {
 ### Step 2: Push Events
 
 ```tsx
-import { useGtmPush } from '@react-gtm-kit/react-modern';
+import { useGtmPush } from '@jwiedeman/gtm-kit-react';
 
 function BuyButton() {
   const push = useGtmPush();
@@ -140,21 +140,43 @@ useEffect(() => {
 
 ## Consent Mode v2 (GDPR)
 
+### Setting Consent Defaults Before GTM Loads
+
+To set consent defaults before GTM initializes, use `useGtmConsent` in a component that renders early:
+
 ```tsx
-import { GtmProvider, useGtmConsent } from '@react-gtm-kit/react-modern';
-import { consentPresets } from '@react-gtm-kit/core';
+import { GtmProvider, useGtmConsent } from '@jwiedeman/gtm-kit-react';
+import { consentPresets } from '@jwiedeman/gtm-kit';
 
-// Set defaults BEFORE GTM loads
-<GtmProvider
-  config={{ containers: 'GTM-XXXXXX' }}
-  onBeforeInit={(client) => {
-    client.setConsentDefaults(consentPresets.eeaDefault, { region: ['EEA'] });
-  }}
->
-  <App />
-</GtmProvider>;
+// Component that sets consent defaults on mount
+function ConsentInitializer({ children }) {
+  const { setConsentDefaults } = useGtmConsent();
 
-// In your cookie banner
+  useEffect(() => {
+    setConsentDefaults(consentPresets.eeaDefault, { region: ['EEA'] });
+  }, [setConsentDefaults]);
+
+  return <>{children}</>;
+}
+
+// App wrapper
+function App() {
+  return (
+    <GtmProvider config={{ containers: 'GTM-XXXXXX' }}>
+      <ConsentInitializer>
+        <YourApp />
+      </ConsentInitializer>
+    </GtmProvider>
+  );
+}
+```
+
+### Cookie Banner Component
+
+```tsx
+import { useGtmConsent } from '@jwiedeman/gtm-kit-react';
+import { consentPresets } from '@jwiedeman/gtm-kit';
+
 function CookieBanner() {
   const { updateConsent } = useGtmConsent();
 
@@ -206,13 +228,6 @@ updateConsent({ ad_storage: 'granted', ad_user_data: 'granted' });
     host: 'https://custom.host.com', // Optional
     scriptAttributes: { nonce: '...' } // Optional: CSP
   }}
-  onBeforeInit={(client) => {
-    // Called before GTM initializes
-    // Perfect for consent defaults
-  }}
-  onAfterInit={(client) => {
-    // Called after GTM initializes
-  }}
 >
   {children}
 </GtmProvider>
@@ -224,7 +239,7 @@ updateConsent({ ad_storage: 'granted', ad_user_data: 'granted' });
 
 ```tsx
 import { useLocation } from 'react-router-dom';
-import { useGtmPush } from '@react-gtm-kit/react-modern';
+import { useGtmPush } from '@jwiedeman/gtm-kit-react';
 import { useEffect, useRef } from 'react';
 
 function PageTracker() {
@@ -267,7 +282,7 @@ In React development mode with StrictMode, components mount twice. This causes m
 ## Requirements
 
 - React 16.8+ (hooks support)
-- `@react-gtm-kit/core` (peer dependency)
+- `@jwiedeman/gtm-kit` (peer dependency)
 
 ---
 

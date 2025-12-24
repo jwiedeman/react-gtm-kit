@@ -12,7 +12,7 @@ is recorded. Call `setConsentDefaults` immediately after creating your GTM clien
 decision.
 
 ```ts
-import { createGtmClient, consentPresets } from '@react-gtm-kit/core';
+import { createGtmClient, consentPresets } from '@jwiedeman/gtm-kit';
 
 const gtm = createGtmClient({ containers: ['GTM-XXXXXXX'] });
 
@@ -35,8 +35,8 @@ extra commands. The provider exposes a consent hook that proxies to the underlyi
 
 ```tsx
 import * as React from 'react';
-import { consentPresets } from '@react-gtm-kit/core';
-import { GtmProvider, useGtmConsent } from '@react-gtm-kit/react-modern';
+import { consentPresets } from '@jwiedeman/gtm-kit';
+import { GtmProvider, useGtmConsent } from '@jwiedeman/gtm-kit-react';
 
 function App(): JSX.Element {
   return (
@@ -89,7 +89,7 @@ Enterprises often need consistent consent mapping across many sites. Create a sm
 four Consent Mode keys and reuse it wherever you instantiate the GTM client.
 
 ```ts
-import type { ConsentState } from '@react-gtm-kit/core';
+import type { ConsentState } from '@jwiedeman/gtm-kit';
 
 interface CmpConsentState {
   advertising: boolean;

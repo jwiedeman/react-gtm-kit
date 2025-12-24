@@ -90,6 +90,13 @@ module.exports = {
         pkgRoot: 'packages/cli'
       }
     ],
+    // Astro integration
+    [
+      '@semantic-release/npm',
+      {
+        pkgRoot: 'packages/astro'
+      }
+    ],
     [
       '@semantic-release/git',
       {

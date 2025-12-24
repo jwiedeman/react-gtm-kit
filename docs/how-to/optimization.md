@@ -14,14 +14,14 @@ pnpm run verify:lightweight
 ```
 
 The script first validates that runtime dependency lists contain only the approved
-packages (React adapters may depend on `@react-gtm-kit/core`, but nothing else). It then
+packages (React adapters may depend on `@jwiedeman/gtm-kit`, but nothing else). It then
 runs [Size Limit](https://github.com/ai/size-limit) against the main entry point for each
 package using minified **gzip** output. Budgets currently stand at:
 
-- `@react-gtm-kit/core`: **3.5 kB**
-- `@react-gtm-kit/react-modern`: **6.5 kB**
-- `@react-gtm-kit/react-legacy`: **6.5 kB**
-- `@react-gtm-kit/next`: **14.5 kB**
+- `@jwiedeman/gtm-kit`: **3.5 kB**
+- `@jwiedeman/gtm-kit-react`: **6.5 kB**
+- `@jwiedeman/gtm-kit-react-legacy`: **6.5 kB**
+- `@jwiedeman/gtm-kit-next`: **14.5 kB**
 
 The CI pipeline executes the same script, so any regression will block the build.
 
@@ -36,7 +36,7 @@ When Size Limit reports a failure:
 2. Look for large additions (new polyfills, helper libraries, or expanded type exports).
 3. Confirm that tree-shaking is working. All packages compile to ESM, so unused exports
    should be dropped—verify that new utilities do not execute side effects on import.
-4. Audit dependency additions. Prefer sharing helpers within `@react-gtm-kit/core` over
+4. Audit dependency additions. Prefer sharing helpers within `@jwiedeman/gtm-kit` over
    adding new third-party packages.
 
 ## Reducing bundle size

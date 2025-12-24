@@ -9,13 +9,13 @@ This guide covers how to run and write tests for GTM Kit. We aim for <1% bug rat
 pnpm test
 
 # Run tests for a specific package
-pnpm --filter @react-gtm-kit/core test
+pnpm --filter @jwiedeman/gtm-kit test
 
 # Run E2E tests
 pnpm e2e:test
 
 # Run tests in watch mode (during development)
-pnpm --filter @react-gtm-kit/core test -- --watch
+pnpm --filter @jwiedeman/gtm-kit test -- --watch
 ```
 
 ## Testing Philosophy
@@ -42,20 +42,20 @@ GTM Kit follows a testing pyramid approach:
 pnpm test
 
 # Specific package
-pnpm --filter @react-gtm-kit/core test
-pnpm --filter @react-gtm-kit/react-modern test
-pnpm --filter @react-gtm-kit/vue test
-pnpm --filter @react-gtm-kit/nuxt test
-pnpm --filter @react-gtm-kit/cli test
+pnpm --filter @jwiedeman/gtm-kit test
+pnpm --filter @jwiedeman/gtm-kit-react test
+pnpm --filter @jwiedeman/gtm-kit-vue test
+pnpm --filter @jwiedeman/gtm-kit-nuxt test
+pnpm --filter @jwiedeman/gtm-kit-cli test
 
 # With coverage report
-pnpm --filter @react-gtm-kit/core test -- --coverage
+pnpm --filter @jwiedeman/gtm-kit test -- --coverage
 
 # Watch mode for development
-pnpm --filter @react-gtm-kit/core test -- --watch
+pnpm --filter @jwiedeman/gtm-kit test -- --watch
 
 # Run specific test file
-pnpm --filter @react-gtm-kit/core test -- client.spec.ts
+pnpm --filter @jwiedeman/gtm-kit test -- client.spec.ts
 ```
 
 ### E2E Tests
@@ -102,8 +102,7 @@ describe('createGtmClient', () => {
     });
 
     it('throws when no containers provided', () => {
-      expect(() => createGtmClient({ containers: [] }))
-        .toThrow(/At least one GTM container/);
+      expect(() => createGtmClient({ containers: [] })).toThrow(/At least one GTM container/);
     });
   });
 
@@ -182,9 +181,7 @@ describe('GtmPlugin', () => {
     });
 
     wrapper.find('button').trigger('click');
-    expect((globalThis as any).dataLayer).toContainEqual(
-      expect.objectContaining({ event: 'test' })
-    );
+    expect((globalThis as any).dataLayer).toContainEqual(expect.objectContaining({ event: 'test' }));
   });
 });
 ```
@@ -241,19 +238,19 @@ test.describe('Example App', () => {
 
 ### Coverage Thresholds
 
-| Package | Statements | Branches | Functions | Lines |
-|---------|-----------|----------|-----------|-------|
-| core | 80% | 75% | 90% | 80% |
-| react-modern | 75% | 65% | 70% | 75% |
-| vue | 75% | 65% | 70% | 75% |
-| nuxt | 75% | 65% | 70% | 75% |
-| cli | 85% | 80% | 85% | 85% |
+| Package      | Statements | Branches | Functions | Lines |
+| ------------ | ---------- | -------- | --------- | ----- |
+| core         | 80%        | 75%      | 90%       | 80%   |
+| react-modern | 75%        | 65%      | 70%       | 75%   |
+| vue          | 75%        | 65%      | 70%       | 75%   |
+| nuxt         | 75%        | 65%      | 70%       | 75%   |
+| cli          | 85%        | 80%      | 85%       | 85%   |
 
 ### Viewing Coverage Reports
 
 ```bash
 # Generate coverage
-pnpm --filter @react-gtm-kit/core test -- --coverage
+pnpm --filter @jwiedeman/gtm-kit test -- --coverage
 
 # Open HTML report
 open packages/core/coverage/unit/lcov-report/index.html
@@ -295,9 +292,7 @@ it('pushes event to data layer', () => {
   client.push({ event: 'test_event', value: 123 });
 
   const dataLayer = (globalThis as any).dataLayer;
-  expect(dataLayer).toContainEqual(
-    expect.objectContaining({ event: 'test_event', value: 123 })
-  );
+  expect(dataLayer).toContainEqual(expect.objectContaining({ event: 'test_event', value: 123 }));
 });
 ```
 
@@ -323,9 +318,7 @@ it('applies consent defaults', () => {
   client.init();
 
   const dataLayer = (globalThis as any).dataLayer;
-  expect(dataLayer).toContainEqual(
-    ['consent', 'default', { ad_storage: 'denied' }]
-  );
+  expect(dataLayer).toContainEqual(['consent', 'default', { ad_storage: 'denied' }]);
 });
 ```
 
@@ -348,10 +341,10 @@ it('throws descriptive error for invalid consent value', () => {
 
 ```bash
 # Run with verbose output
-pnpm --filter @react-gtm-kit/core test -- --verbose
+pnpm --filter @jwiedeman/gtm-kit test -- --verbose
 
 # Run single test
-pnpm --filter @react-gtm-kit/core test -- -t "initializes data layer"
+pnpm --filter @jwiedeman/gtm-kit test -- -t "initializes data layer"
 
 # Debug in VS Code
 # Add this to .vscode/launch.json and set breakpoints:

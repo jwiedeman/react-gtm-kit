@@ -7,7 +7,7 @@ The examples below assume you have already created and initialized a client via
 ## Pageviews
 
 ```ts
-import { pushEvent } from '@react-gtm-kit/core';
+import { pushEvent } from '@jwiedeman/gtm-kit';
 
 pushEvent(client, 'page_view', {
   page_path: window.location.pathname,

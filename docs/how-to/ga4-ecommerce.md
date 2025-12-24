@@ -7,7 +7,7 @@ Use the `pushEcommerce` helper to send GA4-compliant ecommerce payloads without 
 Define a reusable shape for items and include pricing, quantity, and attribution fields that GA4 expects. The helper enforces that `ecommerce` stays a plain object and will throw if the payload is `null` or malformed.
 
 ```ts
-import { pushEcommerce } from '@react-gtm-kit/core';
+import { pushEcommerce } from '@jwiedeman/gtm-kit';
 
 const items = [
   { item_id: 'SKU-123', item_name: 'Tote bag', price: 49, quantity: 2 },
@@ -41,8 +41,8 @@ pushEcommerce(
 Combine `pushEcommerce` with the React adapter to fire ecommerce events from components while keeping StrictMode-safe behavior.
 
 ```tsx
-import { useGtmPush } from '@react-gtm-kit/react-modern';
-import { pushEcommerce } from '@react-gtm-kit/core';
+import { useGtmPush } from '@jwiedeman/gtm-kit-react';
+import { pushEcommerce } from '@jwiedeman/gtm-kit';
 
 export function PurchaseButton() {
   const push = useGtmPush();
@@ -53,7 +53,11 @@ export function PurchaseButton() {
         pushEcommerce(
           { push },
           'add_to_cart',
-          { value: 54, currency: 'USD', items: [{ item_id: 'SKU-123', item_name: 'Tote bag', price: 54, quantity: 1 }] },
+          {
+            value: 54,
+            currency: 'USD',
+            items: [{ item_id: 'SKU-123', item_name: 'Tote bag', price: 54, quantity: 1 }]
+          },
           { extras: { coupon: 'WELCOME10' } }
         )
       }

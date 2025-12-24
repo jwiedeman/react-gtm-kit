@@ -8,7 +8,7 @@ can verify builds stay healthy without launching full end-to-end browsers.
 
 | Package                                    | Description                                                              | Key features                                                    |
 | ------------------------------------------ | ------------------------------------------------------------------------ | --------------------------------------------------------------- |
-| `@react-gtm-kit/example-vanilla-csr`       | Framework-agnostic Vite setup using only `@react-gtm-kit/core`.          | Consent defaults, manual event pushes, live data layer viewer.  |
+| `@react-gtm-kit/example-vanilla-csr`       | Framework-agnostic Vite setup using only `@jwiedeman/gtm-kit`.           | Consent defaults, manual event pushes, live data layer viewer.  |
 | `@react-gtm-kit/example-react-strict-mode` | React Router SPA running in Strict Mode.                                 | Modern adapter provider + hooks, router-driven page views.      |
 | `@react-gtm-kit/example-react-legacy`      | Class component demo using the legacy adapter.                           | `withGtm` HOC lifecycle integration.                            |
 | `@react-gtm-kit/example-next-app`          | Next.js App Router sample with consent banner and CSP nonce propagation. | Server helpers, route analytics, consent persistence.           |

@@ -4,22 +4,22 @@ _Status: Proposed_
 _Owner: Core engineering_  
 _Reviewers: DX, Architecture_
 
-This document freezes the public API surface for the `@react-gtm-kit/core` package ahead of milestone M1. The goal is to provide
+This document freezes the public API surface for the `@jwiedeman/gtm-kit` package ahead of milestone M1. The goal is to provide
 clear signatures, lifecycle expectations, and guardrails so adapters and documentation can rely on a stable contract.
 
 ## 1. Entry points
 
 The package exposes the following named exports:
 
-| Export | Type | Purpose |
-| --- | --- | --- |
-| `createGtmClient` | `(options: CreateGtmClientOptions) => GtmClient` | Factory that returns an idempotent GTM client instance. |
-| `createNoscriptMarkup` | `(container: ContainerConfigInput \| ContainerConfigInput[], options?: NoscriptOptions) => string` | Generates standards-compliant `<noscript>` iframe markup for SSR. |
-| `DEFAULT_NOSCRIPT_IFRAME_ATTRIBUTES` | `Record<string, string>` | Baseline iframe attributes (height/width/style) used by the helper. |
-| `consent` | Namespace of typed consent helpers | Convenience entry point to call `default` and `update` commands. |
-| `buildConsentCommand` | Factory used internally by adapters | Builds a `{ command, state, options }` payload for advanced scenarios. |
-| `consentPresets` / `getConsentPreset` | Typed lookup for common regional defaults | Allows downstreams to seed consent state. |
-| Type exports | `ContainerConfigInput`, `CreateGtmClientOptions`, `GtmClient`, `ConsentState`, etc. | Compile-time surface area relied upon by adapters and apps. |
+| Export                                | Type                                                                                               | Purpose                                                                |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `createGtmClient`                     | `(options: CreateGtmClientOptions) => GtmClient`                                                   | Factory that returns an idempotent GTM client instance.                |
+| `createNoscriptMarkup`                | `(container: ContainerConfigInput \| ContainerConfigInput[], options?: NoscriptOptions) => string` | Generates standards-compliant `<noscript>` iframe markup for SSR.      |
+| `DEFAULT_NOSCRIPT_IFRAME_ATTRIBUTES`  | `Record<string, string>`                                                                           | Baseline iframe attributes (height/width/style) used by the helper.    |
+| `consent`                             | Namespace of typed consent helpers                                                                 | Convenience entry point to call `default` and `update` commands.       |
+| `buildConsentCommand`                 | Factory used internally by adapters                                                                | Builds a `{ command, state, options }` payload for advanced scenarios. |
+| `consentPresets` / `getConsentPreset` | Typed lookup for common regional defaults                                                          | Allows downstreams to seed consent state.                              |
+| Type exports                          | `ContainerConfigInput`, `CreateGtmClientOptions`, `GtmClient`, `ConsentState`, etc.                | Compile-time surface area relied upon by adapters and apps.            |
 
 No additional exports will be added without a new design review. Internal utilities (`script-manager`, `data-layer`, etc.) remain
 private to allow refactors without API churn.

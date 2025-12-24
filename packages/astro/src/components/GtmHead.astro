@@ -100,10 +100,18 @@ const containersJson = JSON.stringify(containersArray);
     define:vars={{ containersJson, dataLayerName, pageViewEventName }}
   >
     // Initialize GTM client and set up page tracking
-    import('@jwiedeman/gtm-kit-astro').then(({ initGtm, setupViewTransitions }) => {
-      const containers = JSON.parse(containersJson);
-      initGtm({ containers, dataLayerName });
-      setupViewTransitions({ eventName: pageViewEventName });
-    });
+    import('@jwiedeman/gtm-kit-astro')
+      .then(({ initGtm, setupViewTransitions }) => {
+        try {
+          const containers = JSON.parse(containersJson);
+          initGtm({ containers, dataLayerName });
+          setupViewTransitions({ eventName: pageViewEventName });
+        } catch (error) {
+          console.error('[gtm-kit/astro] Failed to initialize GTM:', error);
+        }
+      })
+      .catch((error) => {
+        console.error('[gtm-kit/astro] Failed to load GTM module:', error);
+      });
   </script>
 )}

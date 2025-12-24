@@ -302,22 +302,27 @@ const runInit = async (
         const filePath = path.join(process.cwd(), file.filename);
         const dir = path.dirname(filePath);
 
-        // Create directory if needed
-        if (!fs.existsSync(dir)) {
-          fs.mkdirSync(dir, { recursive: true });
-        }
-
-        // Check if file exists
-        if (fs.existsSync(filePath)) {
-          const overwrite = await confirm(`  ${file.filename} exists. Overwrite?`, false);
-          if (!overwrite) {
-            print.info(`Skipped: ${file.filename}`);
-            continue;
+        try {
+          // Create directory if needed
+          if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
           }
-        }
 
-        fs.writeFileSync(filePath, file.content);
-        print.success(`Created: ${file.filename}`);
+          // Check if file exists
+          if (fs.existsSync(filePath)) {
+            const overwrite = await confirm(`  ${file.filename} exists. Overwrite?`, false);
+            if (!overwrite) {
+              print.info(`Skipped: ${file.filename}`);
+              continue;
+            }
+          }
+
+          fs.writeFileSync(filePath, file.content);
+          print.success(`Created: ${file.filename}`);
+        } catch (error) {
+          const message = error instanceof Error ? error.message : String(error);
+          print.error(`Failed to create ${file.filename}: ${message}`);
+        }
       }
     } else {
       print.info('Files not created. Copy the code above manually.');

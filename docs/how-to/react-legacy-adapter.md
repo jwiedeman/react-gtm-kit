@@ -3,14 +3,14 @@
 The legacy adapter wraps class components and other pre-hooks React code with a higher-order component (HOC) that manages the GTM client lifecycle for you. Install the package alongside the core kit:
 
 ```bash
-pnpm add @react-gtm-kit/core @react-gtm-kit/react-legacy
+pnpm add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-react-legacy
 ```
 
 ## Wrap a class component
 
 ```tsx
-import type { LegacyGtmProps } from '@react-gtm-kit/react-legacy';
-import { withGtm } from '@react-gtm-kit/react-legacy';
+import type { LegacyGtmProps } from '@jwiedeman/gtm-kit-react-legacy';
+import { withGtm } from '@jwiedeman/gtm-kit-react-legacy';
 
 class LegacyApp extends React.Component<LegacyGtmProps> {
   componentDidMount(): void {

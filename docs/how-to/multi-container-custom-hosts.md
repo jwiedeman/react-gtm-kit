@@ -7,7 +7,7 @@ Use this guide when you need to load multiple GTM containers from a first-party 
 Pass an array of container descriptors into `createGtmClient`. This allows you to mix default containers with host overrides and environment parameters while keeping one shared data layer.
 
 ```ts
-import { createGtmClient } from '@react-gtm-kit/core';
+import { createGtmClient } from '@jwiedeman/gtm-kit';
 
 const client = createGtmClient({
   containers: [
@@ -34,17 +34,13 @@ Key behaviors:
 All pushes flow through the same data layer regardless of host or container. Pair the client with the React adapters to keep StrictMode-safe semantics.
 
 ```tsx
-import { GtmProvider, useGtmPush } from '@react-gtm-kit/react-modern';
+import { GtmProvider, useGtmPush } from '@jwiedeman/gtm-kit-react';
 
 function CheckoutTracker() {
   const push = useGtmPush();
 
   return (
-    <button
-      onClick={() =>
-        push({ event: 'begin_checkout', items: [{ item_id: 'SKU-123', price: 49, quantity: 1 }] })
-      }
-    >
+    <button onClick={() => push({ event: 'begin_checkout', items: [{ item_id: 'SKU-123', price: 49, quantity: 1 }] })}>
       Start checkout
     </button>
   );
@@ -54,10 +50,7 @@ export function App() {
   return (
     <GtmProvider
       config={{
-        containers: [
-          { id: 'GTM-PRIMARY', queryParams: { gtm_auth: 'auth1' } },
-          { id: 'GTM-SECONDARY' }
-        ],
+        containers: [{ id: 'GTM-PRIMARY', queryParams: { gtm_auth: 'auth1' } }, { id: 'GTM-SECONDARY' }],
         host: 'https://tag.example.com'
       }}
     >

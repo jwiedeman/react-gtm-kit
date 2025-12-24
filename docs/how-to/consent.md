@@ -5,7 +5,7 @@ Consent Mode v2 ensures Google Tag Manager tags respect the choices surfaced by 
 ## Quickstart
 
 ```ts
-import { consentPresets, createGtmClient } from '@react-gtm-kit/core';
+import { consentPresets, createGtmClient } from '@jwiedeman/gtm-kit';
 
 const gtm = createGtmClient({ containers: ['GTM-XXXXXXX'] });
 
@@ -105,7 +105,7 @@ This is critical for CMPs with preference centers where users update individual 
 When you need to seed consent commands outside the client (for example, serialising defaults during SSR or pushing directly into a shared data layer), use the low-level helpers:
 
 ```ts
-import { consentPresets, createConsentDefaultsCommand, createConsentUpdateCommand } from '@react-gtm-kit/core';
+import { consentPresets, createConsentDefaultsCommand, createConsentUpdateCommand } from '@jwiedeman/gtm-kit';
 
 window.dataLayer.push(createConsentDefaultsCommand(consentPresets.eeaDefault, { region: ['EEA'] }));
 
@@ -130,8 +130,8 @@ These semantics prevent accidental data pushes before consent is established, ev
 The React adapter exposes a `useGtmConsent` hook that proxies to the core client. Pair it with your CMP emitter to keep updates in sync:
 
 ```tsx
-import { GtmProvider, useGtmConsent } from '@react-gtm-kit/react-modern';
-import { consentPresets } from '@react-gtm-kit/core';
+import { GtmProvider, useGtmConsent } from '@jwiedeman/gtm-kit-react';
+import { consentPresets } from '@jwiedeman/gtm-kit';
 
 // Example CMP payload - yours may differ
 interface CmpPayload {

@@ -18,7 +18,7 @@ are finalised. Metrics should be tracked via UTM parameters aligned with the KPI
    helpers. Example app walks you through it.
 7. 🧪 Smoke-tested examples + governance docs prove we sweat the details: coverage gates, size
    budgets, release automation.
-8. 🔗 Ready to instrument confidently? Install `@react-gtm-kit/core` and follow the task-based guides
+8. 🔗 Ready to instrument confidently? Install `@jwiedeman/gtm-kit` and follow the task-based guides
    at {{url}}. Join the community to share feedback!
 
 ## LinkedIn Post

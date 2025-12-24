@@ -6,15 +6,15 @@ adapters.
 ## 1. Install dependencies
 
 ```bash
-pnpm add @react-gtm-kit/core
+pnpm add @jwiedeman/gtm-kit
 # Optional adapters:
-pnpm add @react-gtm-kit/react-modern
+pnpm add @jwiedeman/gtm-kit-react
 ```
 
 ## 2. Configure GTM containers
 
 ```ts
-import { createGtmClient } from '@react-gtm-kit/core';
+import { createGtmClient } from '@jwiedeman/gtm-kit';
 
 const gtmClient = createGtmClient({
   containers: ['GTM-XXXXXXX'],
@@ -42,7 +42,7 @@ Wrap your app with the provider to ensure initialization runs once even in Stric
 
 ```tsx
 import { useEffect } from 'react';
-import { GtmProvider, useGtmConsent, useGtmPush } from '@react-gtm-kit/react-modern';
+import { GtmProvider, useGtmConsent, useGtmPush } from '@jwiedeman/gtm-kit-react';
 
 function ConsentDefaults() {
   const { setConsentDefaults } = useGtmConsent();
