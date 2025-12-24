@@ -336,6 +336,20 @@ function MyComponent() {
 
 ---
 
+## Related Packages
+
+- **Core**: [@jwiedeman/gtm-kit](https://www.npmjs.com/package/@jwiedeman/gtm-kit) (required)
+
+---
+
+## Support
+
+**Have a question, found a bug, or need help?**
+
+[Open an issue on GitHub](https://github.com/jwiedeman/GTM-Kit/issues) — we're actively maintaining this project and respond quickly.
+
+---
+
 ## License
 
 MIT

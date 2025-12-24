@@ -1,11 +1,15 @@
 {
   "name": "@jwiedeman/gtm-kit-vue",
   "version": "1.0.0",
-  "description": "Vue 3 composables and plugin for GTM Kit - Google Tag Manager integration.",
+  "description": "Vue 3 composables and plugin for GTM Kit - Google Tag Manager integration with Vue Router support.",
   "repository": {
     "type": "git",
     "url": "https://github.com/jwiedeman/GTM-Kit.git",
     "directory": "packages/vue"
+  },
+  "homepage": "https://github.com/jwiedeman/GTM-Kit/tree/main/packages/vue#readme",
+  "bugs": {
+    "url": "https://github.com/jwiedeman/GTM-Kit/issues"
   },
   "author": "jwiedeman",
   "keywords": [
@@ -13,9 +17,13 @@
     "google-tag-manager",
     "vue",
     "vue3",
-    "composables"
+    "composables",
+    "plugin",
+    "analytics",
+    "tracking"
   ],
   "license": "MIT",
+  "sideEffects": false,
   "publishConfig": {
     "access": "public"
   },

@@ -330,6 +330,21 @@ For Nuxt 3 projects, use [`@jwiedeman/gtm-kit-nuxt`](https://www.npmjs.com/packa
 
 ---
 
+## Related Packages
+
+- **Core**: [@jwiedeman/gtm-kit](https://www.npmjs.com/package/@jwiedeman/gtm-kit) (required)
+- **Nuxt 3**: [@jwiedeman/gtm-kit-nuxt](https://www.npmjs.com/package/@jwiedeman/gtm-kit-nuxt)
+
+---
+
+## Support
+
+**Have a question, found a bug, or need help?**
+
+[Open an issue on GitHub](https://github.com/jwiedeman/GTM-Kit/issues) — we're actively maintaining this project and respond quickly.
+
+---
+
 ## License
 
 MIT

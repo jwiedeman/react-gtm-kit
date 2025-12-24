@@ -286,6 +286,22 @@ In React development mode with StrictMode, components mount twice. This causes m
 
 ---
 
+## Related Packages
+
+- **Core**: [@jwiedeman/gtm-kit](https://www.npmjs.com/package/@jwiedeman/gtm-kit) (required)
+- **Legacy React**: [@jwiedeman/gtm-kit-react-legacy](https://www.npmjs.com/package/@jwiedeman/gtm-kit-react-legacy) (for class components)
+- **Next.js**: [@jwiedeman/gtm-kit-next](https://www.npmjs.com/package/@jwiedeman/gtm-kit-next)
+
+---
+
+## Support
+
+**Have a question, found a bug, or need help?**
+
+[Open an issue on GitHub](https://github.com/jwiedeman/GTM-Kit/issues) — we're actively maintaining this project and respond quickly.
+
+---
+
 ## License
 
 MIT

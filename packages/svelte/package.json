@@ -1,20 +1,29 @@
 {
   "name": "@jwiedeman/gtm-kit-svelte",
   "version": "1.0.0",
-  "description": "Svelte stores and actions for GTM Kit - Google Tag Manager integration.",
+  "description": "Svelte stores and actions for GTM Kit - Google Tag Manager integration with SvelteKit SSR support.",
   "repository": {
     "type": "git",
     "url": "https://github.com/jwiedeman/GTM-Kit.git",
     "directory": "packages/svelte"
+  },
+  "homepage": "https://github.com/jwiedeman/GTM-Kit/tree/main/packages/svelte#readme",
+  "bugs": {
+    "url": "https://github.com/jwiedeman/GTM-Kit/issues"
   },
   "author": "jwiedeman",
   "keywords": [
     "gtm",
     "google-tag-manager",
     "svelte",
-    "stores"
+    "sveltekit",
+    "stores",
+    "actions",
+    "analytics",
+    "tracking"
   ],
   "license": "MIT",
+  "sideEffects": false,
   "publishConfig": {
     "access": "public"
   },

@@ -7,14 +7,23 @@
     "url": "https://github.com/jwiedeman/GTM-Kit.git",
     "directory": "packages/cli"
   },
+  "homepage": "https://github.com/jwiedeman/GTM-Kit/tree/main/packages/cli#readme",
+  "bugs": {
+    "url": "https://github.com/jwiedeman/GTM-Kit/issues"
+  },
   "author": "jwiedeman",
   "keywords": [
     "gtm",
     "google-tag-manager",
     "cli",
-    "setup"
+    "setup",
+    "scaffold",
+    "init",
+    "auto-detect",
+    "framework-detection"
   ],
   "license": "MIT",
+  "sideEffects": false,
   "publishConfig": {
     "access": "public"
   },

@@ -1,20 +1,29 @@
 {
   "name": "@jwiedeman/gtm-kit-react-legacy",
   "version": "1.0.0",
-  "description": "Legacy React HOC adapter for GTM Kit - Google Tag Manager integration.",
+  "description": "Legacy React HOC adapter for GTM Kit - Google Tag Manager integration. For class components, supports React 16+.",
   "repository": {
     "type": "git",
     "url": "https://github.com/jwiedeman/GTM-Kit.git",
     "directory": "packages/react-legacy"
+  },
+  "homepage": "https://github.com/jwiedeman/GTM-Kit/tree/main/packages/react-legacy#readme",
+  "bugs": {
+    "url": "https://github.com/jwiedeman/GTM-Kit/issues"
   },
   "author": "jwiedeman",
   "keywords": [
     "gtm",
     "google-tag-manager",
     "react",
-    "hoc"
+    "hoc",
+    "higher-order-component",
+    "class-components",
+    "legacy",
+    "analytics"
   ],
   "license": "MIT",
+  "sideEffects": false,
   "publishConfig": {
     "access": "public"
   },

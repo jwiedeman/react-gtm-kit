@@ -1,20 +1,29 @@
 {
   "name": "@jwiedeman/gtm-kit-remix",
   "version": "1.0.0",
-  "description": "Remix adapter for GTM Kit - Google Tag Manager integration with route tracking.",
+  "description": "Remix adapter for GTM Kit - Google Tag Manager integration with route tracking and streaming SSR.",
   "repository": {
     "type": "git",
     "url": "https://github.com/jwiedeman/GTM-Kit.git",
     "directory": "packages/remix"
+  },
+  "homepage": "https://github.com/jwiedeman/GTM-Kit/tree/main/packages/remix#readme",
+  "bugs": {
+    "url": "https://github.com/jwiedeman/GTM-Kit/issues"
   },
   "author": "jwiedeman",
   "keywords": [
     "gtm",
     "google-tag-manager",
     "remix",
-    "routes"
+    "routes",
+    "route-tracking",
+    "streaming-ssr",
+    "analytics",
+    "tracking"
   ],
   "license": "MIT",
+  "sideEffects": false,
   "publishConfig": {
     "access": "public"
   },

@@ -1,11 +1,15 @@
 {
   "name": "@jwiedeman/gtm-kit-astro",
   "version": "1.0.0",
-  "description": "Astro components and helpers for GTM Kit - Google Tag Manager integration.",
+  "description": "Astro components and helpers for GTM Kit - Google Tag Manager integration with View Transitions support.",
   "repository": {
     "type": "git",
     "url": "https://github.com/jwiedeman/GTM-Kit.git",
     "directory": "packages/astro"
+  },
+  "homepage": "https://github.com/jwiedeman/GTM-Kit/tree/main/packages/astro#readme",
+  "bugs": {
+    "url": "https://github.com/jwiedeman/GTM-Kit/issues"
   },
   "author": "jwiedeman",
   "keywords": [
@@ -13,9 +17,13 @@
     "google-tag-manager",
     "astro",
     "astrojs",
-    "view-transitions"
+    "view-transitions",
+    "static-site",
+    "analytics",
+    "tracking"
   ],
   "license": "MIT",
+  "sideEffects": false,
   "publishConfig": {
     "access": "public"
   },

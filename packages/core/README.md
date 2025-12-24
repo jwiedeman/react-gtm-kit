@@ -165,10 +165,10 @@ const client = createGtmClient({
 ## SSR / Server-Side Rendering
 
 ```ts
-import { generateNoscriptHtml } from '@jwiedeman/gtm-kit';
+import { createNoscriptMarkup } from '@jwiedeman/gtm-kit';
 
 // Generate noscript HTML for server-side rendering
-const noscriptHtml = generateNoscriptHtml('GTM-XXXXXX');
+const noscriptHtml = createNoscriptMarkup('GTM-XXXXXX');
 // Returns: '<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXX" ...></iframe></noscript>'
 ```
 
@@ -227,6 +227,30 @@ While `@jwiedeman/gtm-kit` works standalone, we provide framework-specific adapt
 | Vue 3         | `@jwiedeman/gtm-kit-vue`          | `npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-vue`          |
 | Nuxt 3        | `@jwiedeman/gtm-kit-nuxt`         | `npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-nuxt`         |
 | Next.js       | `@jwiedeman/gtm-kit-next`         | `npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-next`         |
+
+---
+
+## Related Packages
+
+| Framework | Package                                                                              |
+| --------- | ------------------------------------------------------------------------------------ |
+| React     | [@jwiedeman/gtm-kit-react](https://www.npmjs.com/package/@jwiedeman/gtm-kit-react)   |
+| Vue 3     | [@jwiedeman/gtm-kit-vue](https://www.npmjs.com/package/@jwiedeman/gtm-kit-vue)       |
+| Next.js   | [@jwiedeman/gtm-kit-next](https://www.npmjs.com/package/@jwiedeman/gtm-kit-next)     |
+| Nuxt 3    | [@jwiedeman/gtm-kit-nuxt](https://www.npmjs.com/package/@jwiedeman/gtm-kit-nuxt)     |
+| Svelte    | [@jwiedeman/gtm-kit-svelte](https://www.npmjs.com/package/@jwiedeman/gtm-kit-svelte) |
+| SolidJS   | [@jwiedeman/gtm-kit-solid](https://www.npmjs.com/package/@jwiedeman/gtm-kit-solid)   |
+| Remix     | [@jwiedeman/gtm-kit-remix](https://www.npmjs.com/package/@jwiedeman/gtm-kit-remix)   |
+| Astro     | [@jwiedeman/gtm-kit-astro](https://www.npmjs.com/package/@jwiedeman/gtm-kit-astro)   |
+| CLI       | [@jwiedeman/gtm-kit-cli](https://www.npmjs.com/package/@jwiedeman/gtm-kit-cli)       |
+
+---
+
+## Support
+
+**Have a question, found a bug, or need help?**
+
+[Open an issue on GitHub](https://github.com/jwiedeman/GTM-Kit/issues) — we're actively maintaining this project and respond quickly.
 
 ---
 

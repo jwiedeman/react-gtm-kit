@@ -6,6 +6,8 @@ import {
   generateScriptTags,
   generateNoscriptTags,
   generateDataLayerScript,
+  isValidJsIdentifier,
+  escapeJsString,
   DEFAULT_GTM_HOST
 } from '../components/helpers';
 
@@ -152,6 +154,83 @@ describe('Component Helpers', () => {
     it('should use custom dataLayer name', () => {
       const script = generateDataLayerScript('customDataLayer');
       expect(script).toBe('window.customDataLayer=window.customDataLayer||[];');
+    });
+
+    it('should throw for invalid dataLayerName (XSS prevention)', () => {
+      expect(() => generateDataLayerScript("test'Layer")).toThrow('Invalid dataLayerName');
+      expect(() => generateDataLayerScript('test-layer')).toThrow('Invalid dataLayerName');
+      expect(() => generateDataLayerScript('1invalid')).toThrow('Invalid dataLayerName');
+      expect(() => generateDataLayerScript("'; alert('XSS'); //")).toThrow('Invalid dataLayerName');
+      expect(() => generateDataLayerScript('x]; alert(1); var y=[')).toThrow('Invalid dataLayerName');
+    });
+
+    it('should accept valid JavaScript identifiers', () => {
+      expect(() => generateDataLayerScript('dataLayer')).not.toThrow();
+      expect(() => generateDataLayerScript('myDataLayer')).not.toThrow();
+      expect(() => generateDataLayerScript('_privateLayer')).not.toThrow();
+      expect(() => generateDataLayerScript('$layer')).not.toThrow();
+      expect(() => generateDataLayerScript('layer123')).not.toThrow();
+    });
+  });
+
+  describe('isValidJsIdentifier', () => {
+    it('should accept valid identifiers', () => {
+      expect(isValidJsIdentifier('dataLayer')).toBe(true);
+      expect(isValidJsIdentifier('myVar')).toBe(true);
+      expect(isValidJsIdentifier('_private')).toBe(true);
+      expect(isValidJsIdentifier('$dollar')).toBe(true);
+      expect(isValidJsIdentifier('camelCase')).toBe(true);
+      expect(isValidJsIdentifier('with123numbers')).toBe(true);
+    });
+
+    it('should reject invalid identifiers', () => {
+      expect(isValidJsIdentifier('123invalid')).toBe(false);
+      expect(isValidJsIdentifier('has-dash')).toBe(false);
+      expect(isValidJsIdentifier('has space')).toBe(false);
+      expect(isValidJsIdentifier("has'quote")).toBe(false);
+      expect(isValidJsIdentifier('has.dot')).toBe(false);
+      expect(isValidJsIdentifier('')).toBe(false);
+    });
+
+    it('should reject XSS attempts', () => {
+      expect(isValidJsIdentifier("'; alert('XSS'); //")).toBe(false);
+      expect(isValidJsIdentifier('x]; alert(1); var y=[')).toBe(false);
+      expect(isValidJsIdentifier('<script>alert(1)</script>')).toBe(false);
+    });
+  });
+
+  describe('escapeJsString', () => {
+    it('should escape single quotes', () => {
+      expect(escapeJsString("test'value")).toBe("test\\'value");
+    });
+
+    it('should escape double quotes', () => {
+      expect(escapeJsString('test"value')).toBe('test\\"value');
+    });
+
+    it('should escape backslashes', () => {
+      expect(escapeJsString('test\\value')).toBe('test\\\\value');
+    });
+
+    it('should escape newlines', () => {
+      expect(escapeJsString('test\nvalue')).toBe('test\\nvalue');
+      expect(escapeJsString('test\rvalue')).toBe('test\\rvalue');
+    });
+
+    it('should escape angle brackets', () => {
+      expect(escapeJsString('<script>')).toBe('\\x3cscript\\x3e');
+    });
+
+    it('should escape Unicode line terminators', () => {
+      expect(escapeJsString('test\u2028value')).toBe('test\\u2028value');
+      expect(escapeJsString('test\u2029value')).toBe('test\\u2029value');
+    });
+
+    it('should handle XSS attempts', () => {
+      const xssAttempt = "granted', }); alert('XSS'); //";
+      const escaped = escapeJsString(xssAttempt);
+      expect(escaped).not.toContain("'XSS'");
+      expect(escaped).toContain("\\'XSS\\'");
     });
   });
 });
