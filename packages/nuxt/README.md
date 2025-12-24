@@ -1,9 +1,9 @@
-# @react-gtm-kit/nuxt
+# @jwiedeman/gtm-kit-nuxt
 
 [![CI](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml)
 [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=nuxt)](https://codecov.io/gh/jwiedeman/react-gtm-kit)
-[![npm version](https://img.shields.io/npm/v/@react-gtm-kit/nuxt.svg)](https://www.npmjs.com/package/@react-gtm-kit/nuxt)
-[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@react-gtm-kit/nuxt)](https://bundlephobia.com/package/@react-gtm-kit/nuxt)
+[![npm version](https://img.shields.io/npm/v/@jwiedeman/gtm-kit-nuxt.svg)](https://www.npmjs.com/package/@jwiedeman/gtm-kit-nuxt)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@jwiedeman/gtm-kit-nuxt)](https://bundlephobia.com/package/@jwiedeman/gtm-kit-nuxt)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Nuxt 3](https://img.shields.io/badge/Nuxt-3.0+-00DC82.svg?logo=nuxt.js)](https://nuxt.com/)
@@ -17,15 +17,15 @@ The Nuxt adapter for GTM Kit - native module with automatic page tracking and SS
 ## Installation
 
 ```bash
-npm install @react-gtm-kit/core @react-gtm-kit/nuxt
+npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-nuxt
 ```
 
 ```bash
-yarn add @react-gtm-kit/core @react-gtm-kit/nuxt
+yarn add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-nuxt
 ```
 
 ```bash
-pnpm add @react-gtm-kit/core @react-gtm-kit/nuxt
+pnpm add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-nuxt
 ```
 
 ---
@@ -36,7 +36,7 @@ pnpm add @react-gtm-kit/core @react-gtm-kit/nuxt
 
 ```ts
 // plugins/gtm.client.ts
-import { GtmPlugin } from '@react-gtm-kit/nuxt';
+import { GtmPlugin } from '@jwiedeman/gtm-kit-nuxt';
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(GtmPlugin, { containers: 'GTM-XXXXXX' });
@@ -47,7 +47,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
 ```vue
 <script setup>
-import { useGtm } from '@react-gtm-kit/vue';
+import { useGtm } from '@jwiedeman/gtm-kit-vue';
 
 const { push } = useGtm();
 
@@ -76,8 +76,8 @@ push({ event: 'page_view' });
 
 ```ts
 // plugins/gtm.client.ts
-import { GtmPlugin } from '@react-gtm-kit/nuxt';
-import { consentPresets } from '@react-gtm-kit/core';
+import { GtmPlugin } from '@jwiedeman/gtm-kit-nuxt';
+import { consentPresets } from '@jwiedeman/gtm-kit';
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(GtmPlugin, {
@@ -95,13 +95,13 @@ export default defineNuxtPlugin((nuxtApp) => {
 
 ## Available Composables
 
-All composables from `@react-gtm-kit/vue` are available:
+All composables from `@jwiedeman/gtm-kit-vue` are available:
 
 ### `useGtm()`
 
 ```vue
 <script setup>
-import { useGtm } from '@react-gtm-kit/vue';
+import { useGtm } from '@jwiedeman/gtm-kit-vue';
 
 const { push, updateConsent } = useGtm();
 </script>
@@ -111,7 +111,7 @@ const { push, updateConsent } = useGtm();
 
 ```vue
 <script setup>
-import { useGtmPush } from '@react-gtm-kit/vue';
+import { useGtmPush } from '@jwiedeman/gtm-kit-vue';
 
 const push = useGtmPush();
 
@@ -123,7 +123,7 @@ push({ event: 'purchase', value: 99.99 });
 
 ```vue
 <script setup>
-import { useGtmConsent } from '@react-gtm-kit/vue';
+import { useGtmConsent } from '@jwiedeman/gtm-kit-vue';
 
 const { updateConsent } = useGtmConsent();
 </script>
@@ -139,7 +139,7 @@ If you need custom page tracking:
 
 ```vue
 <script setup>
-import { useGtm } from '@react-gtm-kit/vue';
+import { useGtm } from '@jwiedeman/gtm-kit-vue';
 import { useRoute } from 'vue-router';
 import { watch } from 'vue';
 
@@ -167,8 +167,8 @@ watch(
 
 ```ts
 // plugins/gtm.client.ts
-import { GtmPlugin } from '@react-gtm-kit/nuxt';
-import { consentPresets } from '@react-gtm-kit/core';
+import { GtmPlugin } from '@jwiedeman/gtm-kit-nuxt';
+import { consentPresets } from '@jwiedeman/gtm-kit';
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(GtmPlugin, {
@@ -184,8 +184,8 @@ export default defineNuxtPlugin((nuxtApp) => {
 ```vue
 <!-- components/CookieBanner.vue -->
 <script setup>
-import { useGtmConsent } from '@react-gtm-kit/vue';
-import { consentPresets } from '@react-gtm-kit/core';
+import { useGtmConsent } from '@jwiedeman/gtm-kit-vue';
+import { consentPresets } from '@jwiedeman/gtm-kit';
 
 const { updateConsent } = useGtmConsent();
 
@@ -304,7 +304,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
 - Nuxt 3.0+
 - Vue 3.3+
-- `@react-gtm-kit/core` (peer dependency)
+- `@jwiedeman/gtm-kit` (peer dependency)
 
 ---
 

@@ -1,9 +1,9 @@
-# @react-gtm-kit/svelte
+# @jwiedeman/gtm-kit-svelte
 
 [![CI](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml)
 [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=svelte)](https://codecov.io/gh/jwiedeman/react-gtm-kit)
-[![npm version](https://img.shields.io/npm/v/@react-gtm-kit/svelte.svg)](https://www.npmjs.com/package/@react-gtm-kit/svelte)
-[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@react-gtm-kit/svelte)](https://bundlephobia.com/package/@react-gtm-kit/svelte)
+[![npm version](https://img.shields.io/npm/v/@jwiedeman/gtm-kit-svelte.svg)](https://www.npmjs.com/package/@jwiedeman/gtm-kit-svelte)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@jwiedeman/gtm-kit-svelte)](https://bundlephobia.com/package/@jwiedeman/gtm-kit-svelte)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Svelte](https://img.shields.io/badge/Svelte-4.0+-FF3E00.svg?logo=svelte)](https://svelte.dev/)
@@ -17,15 +17,15 @@ The Svelte adapter for GTM Kit - provides stores and context for idiomatic Svelt
 ## Installation
 
 ```bash
-npm install @react-gtm-kit/core @react-gtm-kit/svelte
+npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-svelte
 ```
 
 ```bash
-yarn add @react-gtm-kit/core @react-gtm-kit/svelte
+yarn add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-svelte
 ```
 
 ```bash
-pnpm add @react-gtm-kit/core @react-gtm-kit/svelte
+pnpm add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-svelte
 ```
 
 ---
@@ -37,7 +37,7 @@ pnpm add @react-gtm-kit/core @react-gtm-kit/svelte
 ```svelte
 <!-- src/routes/+layout.svelte -->
 <script>
-  import { createGtmStore, setGtmContext } from '@react-gtm-kit/svelte';
+  import { createGtmStore, setGtmContext } from '@jwiedeman/gtm-kit-svelte';
 
   const gtm = createGtmStore({ containers: 'GTM-XXXXXX' });
   setGtmContext(gtm);
@@ -51,7 +51,7 @@ pnpm add @react-gtm-kit/core @react-gtm-kit/svelte
 ```svelte
 <!-- src/routes/+page.svelte -->
 <script>
-  import { getGtmContext } from '@react-gtm-kit/svelte';
+  import { getGtmContext } from '@jwiedeman/gtm-kit-svelte';
 
   const gtm = getGtmContext();
 
@@ -69,14 +69,14 @@ pnpm add @react-gtm-kit/core @react-gtm-kit/svelte
 
 ## Features
 
-| Feature | Description |
-|---------|-------------|
-| **Svelte Stores** | Native Svelte store integration |
-| **Context API** | Uses Svelte context for DI |
-| **Reactive** | Fully reactive with `$` syntax |
-| **TypeScript** | Full type definitions included |
-| **Consent Mode v2** | Built-in GDPR compliance |
-| **SSR Compatible** | Safe for SvelteKit SSR |
+| Feature             | Description                     |
+| ------------------- | ------------------------------- |
+| **Svelte Stores**   | Native Svelte store integration |
+| **Context API**     | Uses Svelte context for DI      |
+| **Reactive**        | Fully reactive with `$` syntax  |
+| **TypeScript**      | Full type definitions included  |
+| **Consent Mode v2** | Built-in GDPR compliance        |
+| **SSR Compatible**  | Safe for SvelteKit SSR          |
 
 ---
 
@@ -88,7 +88,7 @@ Creates a new GTM store. Call this once in your root layout.
 
 ```svelte
 <script>
-  import { createGtmStore, setGtmContext } from '@react-gtm-kit/svelte';
+  import { createGtmStore, setGtmContext } from '@jwiedeman/gtm-kit-svelte';
 
   const gtm = createGtmStore({
     containers: 'GTM-XXXXXX',
@@ -108,7 +108,7 @@ Gets the GTM store from context. Use in child components.
 
 ```svelte
 <script>
-  import { getGtmContext } from '@react-gtm-kit/svelte';
+  import { getGtmContext } from '@jwiedeman/gtm-kit-svelte';
 
   const gtm = getGtmContext();
 
@@ -123,7 +123,7 @@ Get a derived store for just the push function.
 
 ```svelte
 <script>
-  import { gtmPush } from '@react-gtm-kit/svelte';
+  import { gtmPush } from '@jwiedeman/gtm-kit-svelte';
 
   const push = gtmPush();
 
@@ -139,7 +139,7 @@ Get a derived store for consent functions.
 
 ```svelte
 <script>
-  import { gtmConsent } from '@react-gtm-kit/svelte';
+  import { gtmConsent } from '@jwiedeman/gtm-kit-svelte';
 
   const consent = gtmConsent();
 
@@ -158,7 +158,7 @@ Get a derived store for the raw GTM client.
 
 ```svelte
 <script>
-  import { gtmClient } from '@react-gtm-kit/svelte';
+  import { gtmClient } from '@jwiedeman/gtm-kit-svelte';
 
   const client = gtmClient();
 </script>
@@ -170,7 +170,7 @@ Get a derived store for the whenReady function.
 
 ```svelte
 <script>
-  import { gtmReady } from '@react-gtm-kit/svelte';
+  import { gtmReady } from '@jwiedeman/gtm-kit-svelte';
   import { onMount } from 'svelte';
 
   const whenReady = gtmReady();
@@ -191,7 +191,7 @@ Get a derived store for the whenReady function.
 ```svelte
 <!-- src/routes/+layout.svelte -->
 <script>
-  import { createGtmStore, setGtmContext } from '@react-gtm-kit/svelte';
+  import { createGtmStore, setGtmContext } from '@jwiedeman/gtm-kit-svelte';
   import { browser } from '$app/environment';
 
   // Only create store in browser
@@ -209,7 +209,7 @@ Get a derived store for the whenReady function.
 ```svelte
 <!-- src/routes/+layout.svelte -->
 <script>
-  import { createGtmStore, setGtmContext } from '@react-gtm-kit/svelte';
+  import { createGtmStore, setGtmContext } from '@jwiedeman/gtm-kit-svelte';
   import { page } from '$app/stores';
   import { browser } from '$app/environment';
 
@@ -239,8 +239,8 @@ Get a derived store for the whenReady function.
 ```svelte
 <!-- src/routes/+layout.svelte -->
 <script>
-  import { createGtmStore, setGtmContext } from '@react-gtm-kit/svelte';
-  import { consentPresets } from '@react-gtm-kit/core';
+  import { createGtmStore, setGtmContext } from '@jwiedeman/gtm-kit-svelte';
+  import { consentPresets } from '@jwiedeman/gtm-kit';
   import { browser } from '$app/environment';
 
   if (browser) {
@@ -261,7 +261,7 @@ Get a derived store for the whenReady function.
 ```svelte
 <!-- src/lib/CookieBanner.svelte -->
 <script>
-  import { gtmConsent } from '@react-gtm-kit/svelte';
+  import { gtmConsent } from '@jwiedeman/gtm-kit-svelte';
 
   const consent = gtmConsent();
 
@@ -325,7 +325,7 @@ Full TypeScript support is included:
 
 ```svelte
 <script lang="ts">
-  import { getGtmContext, type GtmStoreValue } from '@react-gtm-kit/svelte';
+  import { getGtmContext, type GtmStoreValue } from '@jwiedeman/gtm-kit-svelte';
   import type { Writable } from 'svelte/store';
 
   const gtm: Writable<GtmStoreValue> = getGtmContext();
@@ -337,7 +337,7 @@ Full TypeScript support is included:
 ## Requirements
 
 - Svelte 4.0+ or 5.0+
-- `@react-gtm-kit/core` (peer dependency)
+- `@jwiedeman/gtm-kit` (peer dependency)
 
 ---
 

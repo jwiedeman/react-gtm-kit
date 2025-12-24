@@ -1,12 +1,12 @@
-# @react-gtm-kit/core
+# @jwiedeman/gtm-kit
 
 [![CI](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml)
 [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=core)](https://codecov.io/gh/jwiedeman/react-gtm-kit)
-[![npm version](https://img.shields.io/npm/v/@react-gtm-kit/core.svg)](https://www.npmjs.com/package/@react-gtm-kit/core)
-[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@react-gtm-kit/core)](https://bundlephobia.com/package/@react-gtm-kit/core)
+[![npm version](https://img.shields.io/npm/v/@jwiedeman/gtm-kit.svg)](https://www.npmjs.com/package/@jwiedeman/gtm-kit)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@jwiedeman/gtm-kit)](https://bundlephobia.com/package/@jwiedeman/gtm-kit)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](https://www.npmjs.com/package/@react-gtm-kit/core)
+[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](https://www.npmjs.com/package/@jwiedeman/gtm-kit)
 
 **Framework-agnostic Google Tag Manager client. Zero dependencies. 3.7KB gzipped.**
 
@@ -17,15 +17,15 @@ The foundation of GTM Kit - works with any JavaScript project, framework, or bui
 ## Installation
 
 ```bash
-npm install @react-gtm-kit/core
+npm install @jwiedeman/gtm-kit
 ```
 
 ```bash
-yarn add @react-gtm-kit/core
+yarn add @jwiedeman/gtm-kit
 ```
 
 ```bash
-pnpm add @react-gtm-kit/core
+pnpm add @jwiedeman/gtm-kit
 ```
 
 ---
@@ -33,7 +33,7 @@ pnpm add @react-gtm-kit/core
 ## Quick Start
 
 ```ts
-import { createGtmClient, pushEvent } from '@react-gtm-kit/core';
+import { createGtmClient, pushEvent } from '@jwiedeman/gtm-kit';
 
 // Create and initialize
 const gtm = createGtmClient({ containers: 'GTM-XXXXXX' });
@@ -91,7 +91,7 @@ await client.whenReady(); // Wait for scripts to load
 ### Event Helpers
 
 ```ts
-import { pushEvent, pushEcommerce } from '@react-gtm-kit/core';
+import { pushEvent, pushEcommerce } from '@jwiedeman/gtm-kit';
 
 // Generic event
 pushEvent(client, 'button_click', { button_id: 'cta-main' });
@@ -108,7 +108,7 @@ pushEcommerce(client, 'purchase', {
 ### Consent Mode v2
 
 ```ts
-import { consentPresets } from '@react-gtm-kit/core';
+import { consentPresets } from '@jwiedeman/gtm-kit';
 
 // Set defaults BEFORE init (required by Google)
 client.setConsentDefaults(consentPresets.eeaDefault, { region: ['EEA'] });
@@ -165,7 +165,7 @@ const client = createGtmClient({
 ## SSR / Server-Side Rendering
 
 ```ts
-import { generateNoscriptHtml } from '@react-gtm-kit/core';
+import { generateNoscriptHtml } from '@jwiedeman/gtm-kit';
 
 // Generate noscript HTML for server-side rendering
 const noscriptHtml = generateNoscriptHtml('GTM-XXXXXX');
@@ -179,7 +179,7 @@ const noscriptHtml = generateNoscriptHtml('GTM-XXXXXX');
 Automatically buffer events that fire before GTM loads, then replay them in order:
 
 ```ts
-import { installAutoQueue, createGtmClient } from '@react-gtm-kit/core';
+import { installAutoQueue, createGtmClient } from '@jwiedeman/gtm-kit';
 
 // Install FIRST - captures all dataLayer pushes
 installAutoQueue();
@@ -195,7 +195,7 @@ client.init(); // Buffer replays, GTM processes all events
 **For earliest possible protection**, embed in your HTML `<head>`:
 
 ```ts
-import { createAutoQueueScript } from '@react-gtm-kit/core';
+import { createAutoQueueScript } from '@jwiedeman/gtm-kit';
 
 // Returns minified inline script for SSR
 const script = createAutoQueueScript();
@@ -218,15 +218,15 @@ installAutoQueue({
 
 ## Framework Adapters
 
-While `@react-gtm-kit/core` works standalone, we provide framework-specific adapters for better ergonomics:
+While `@jwiedeman/gtm-kit` works standalone, we provide framework-specific adapters for better ergonomics:
 
-| Framework     | Package                       | Install                                                       |
-| ------------- | ----------------------------- | ------------------------------------------------------------- |
-| React (hooks) | `@react-gtm-kit/react-modern` | `npm install @react-gtm-kit/core @react-gtm-kit/react-modern` |
-| React (class) | `@react-gtm-kit/react-legacy` | `npm install @react-gtm-kit/core @react-gtm-kit/react-legacy` |
-| Vue 3         | `@react-gtm-kit/vue`          | `npm install @react-gtm-kit/core @react-gtm-kit/vue`          |
-| Nuxt 3        | `@react-gtm-kit/nuxt`         | `npm install @react-gtm-kit/core @react-gtm-kit/nuxt`         |
-| Next.js       | `@react-gtm-kit/next`         | `npm install @react-gtm-kit/core @react-gtm-kit/next`         |
+| Framework     | Package                           | Install                                                          |
+| ------------- | --------------------------------- | ---------------------------------------------------------------- |
+| React (hooks) | `@jwiedeman/gtm-kit-react`        | `npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-react`        |
+| React (class) | `@jwiedeman/gtm-kit-react-legacy` | `npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-react-legacy` |
+| Vue 3         | `@jwiedeman/gtm-kit-vue`          | `npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-vue`          |
+| Nuxt 3        | `@jwiedeman/gtm-kit-nuxt`         | `npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-nuxt`         |
+| Next.js       | `@jwiedeman/gtm-kit-next`         | `npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-next`         |
 
 ---
 

@@ -192,8 +192,11 @@ export const detectFramework = (dir: string = process.cwd()): FrameworkInfo => {
           reason: 'Found Vue plugin in vite.config'
         };
       }
-    } catch {
-      // Ignore read errors
+    } catch (error) {
+      // Debug: Log read errors for vite config (non-critical)
+      if (process.env.DEBUG) {
+        console.debug(`[gtm-kit] Could not read ${viteConfig}:`, error);
+      }
     }
   }
 
@@ -242,8 +245,11 @@ export const detectFramework = (dir: string = process.cwd()): FrameworkInfo => {
           reason: 'Found .jsx or .tsx files in src/'
         };
       }
-    } catch {
-      // Ignore read errors
+    } catch (error) {
+      // Debug: Log read errors for src directory (non-critical)
+      if (process.env.DEBUG) {
+        console.debug(`[gtm-kit] Could not read ${srcDir}:`, error);
+      }
     }
   }
 
