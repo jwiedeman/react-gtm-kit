@@ -9,11 +9,11 @@ Consent Mode updates, data layer pushes, and relay calls together in a single UI
 
 ## 1. Point the core client at your tagging server
 
-Configure `@react-gtm-kit/core` to load containers from the same origin that fronts your server
+Configure `@jwiedeman/gtm-kit` to load containers from the same origin that fronts your server
 container. Supply preview credentials when you need to target a specific workspace.
 
 ```ts
-import { createGtmClient } from '@react-gtm-kit/core';
+import { createGtmClient } from '@jwiedeman/gtm-kit';
 
 const gtm = createGtmClient({
   containers: 'GTM-XXXXXXX',
@@ -42,7 +42,7 @@ TAGGING_SERVER_URL="https://gtm.example.com" \
 GTM_MEASUREMENT_ID="G-1234567" \
 GTM_API_SECRET="shhh-secret" \
 ALLOWED_ORIGINS="https://app.example.com" \
-pnpm --filter @react-gtm-kit/example-server start
+pnpm --filter @gtm-kit/example-server start
 ```
 
 The response returns `202 Accepted` when the upstream call succeeds. Preview credentials
@@ -87,7 +87,7 @@ subscriptions, refunds). Keep the regular client-side data layer pushes in place
 container tags still fire.
 
 ```ts
-import { pushEvent } from '@react-gtm-kit/core';
+import { pushEvent } from '@jwiedeman/gtm-kit';
 
 const sendPurchase = async (details: PurchasePayload) => {
   // Still notify the client container so web tags run.

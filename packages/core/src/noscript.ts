@@ -1,53 +1,12 @@
 import type { ContainerConfigInput, ContainerDescriptor } from './types';
 import { DEFAULT_GTM_HOST } from './constants';
+import { normalizeContainer, buildGtmNoscriptUrl, escapeAttributeValue } from './url-utils';
+
 const DEFAULT_IFRAME_ATTRIBUTES: Record<string, string> = {
   height: '0',
   width: '0',
   style: 'display:none;visibility:hidden',
   title: 'Google Tag Manager'
-};
-
-const isString = (value: unknown): value is string => typeof value === 'string';
-
-const normalizeContainer = (input: ContainerConfigInput): ContainerDescriptor => {
-  if (isString(input)) {
-    return { id: input };
-  }
-
-  return input;
-};
-
-const toRecord = (params?: Record<string, string | number | boolean>): Record<string, string> => {
-  if (!params) {
-    return {};
-  }
-
-  return Object.entries(params).reduce<Record<string, string>>((acc, [key, value]) => {
-    acc[key] = String(value);
-    return acc;
-  }, {});
-};
-
-const escapeAttributeValue = (value: string): string =>
-  value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-const buildNoscriptUrl = (
-  host: string,
-  containerId: string,
-  queryParams?: Record<string, string | number | boolean>
-): string => {
-  const normalizedHost = host.endsWith('/') ? host.slice(0, -1) : host;
-  const searchParams = new URLSearchParams({ id: containerId });
-
-  const params = toRecord(queryParams);
-  for (const [key, value] of Object.entries(params)) {
-    if (key === 'id') {
-      continue;
-    }
-    searchParams.set(key, value);
-  }
-
-  return `${normalizedHost}/ns.html?${searchParams.toString()}`;
 };
 
 const buildAttributeString = (attributes: Record<string, string | number | boolean> | undefined): string => {
@@ -80,7 +39,7 @@ const buildNoscriptForContainer = (container: ContainerDescriptor, options: Nosc
     ...container.queryParams
   };
 
-  const src = buildNoscriptUrl(host, container.id, params);
+  const src = buildGtmNoscriptUrl(host, container.id, params);
   const iframeAttributes = {
     ...DEFAULT_IFRAME_ATTRIBUTES,
     ...options.iframeAttributes

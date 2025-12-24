@@ -13,7 +13,7 @@ stakeholders can quickly confirm coverage.
   extend instrumentation.
 - **Consent dependency** – Whether the scenario requires prior consent or may
   run under denied storage. Reference consent presets in
-  `@react-gtm-kit/core/consent` when wiring examples.
+  `@jwiedeman/gtm-kit/consent` when wiring examples.
 - **Surfaces** – Where the scenario is exercised (examples, adapters, server
   relay). Each surface should expose the same semantics even if the UI differs.
 - **Validation** – Manual or automated checks required for sign-off. Prefer

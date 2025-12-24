@@ -7,7 +7,7 @@ This guide outlines how to render Google Tag Manager noscript fallbacks and work
 The core package exposes a `createNoscriptMarkup` helper that produces the recommended `<noscript>` iframe string for each GTM container. Render the string near the opening `<body>` tag when doing SSR so that users without JavaScript can still trigger GTM tags.
 
 ```ts
-import { createNoscriptMarkup } from '@react-gtm-kit/core';
+import { createNoscriptMarkup } from '@jwiedeman/gtm-kit';
 
 const noscript = createNoscriptMarkup('GTM-XXXX');
 // Inject `noscript` into your server-rendered template near the opening <body>
@@ -55,7 +55,7 @@ res.locals.dataLayer = [
 ];
 
 // Client hydration
-import { createGtmClient } from '@react-gtm-kit/core';
+import { createGtmClient } from '@jwiedeman/gtm-kit';
 
 const client = createGtmClient({ containers: 'GTM-XXXX', dataLayerName: 'dataLayer' });
 client.setConsentDefaults({ analytics_storage: 'denied', ad_storage: 'denied' });
@@ -83,7 +83,7 @@ environments.
 Strict Content Security Policies typically require that inline scripts include a nonce that matches the one issued for the request. Pass that nonce through the GTM client options so every injected `<script>` tag carries the correct attribute:
 
 ```ts
-import { createGtmClient } from '@react-gtm-kit/core';
+import { createGtmClient } from '@jwiedeman/gtm-kit';
 
 const client = createGtmClient({
   containers: 'GTM-XXXX',

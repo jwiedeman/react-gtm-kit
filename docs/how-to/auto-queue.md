@@ -41,7 +41,7 @@ Timeline:
 ### Option 1: Call Before Client Creation
 
 ```ts
-import { installAutoQueue, createGtmClient } from '@react-gtm-kit/core';
+import { installAutoQueue, createGtmClient } from '@jwiedeman/gtm-kit';
 
 // Install auto-queue FIRST
 installAutoQueue();
@@ -93,7 +93,7 @@ For maximum protection, embed a minimal inline script in your HTML `<head>`:
 Or generate it programmatically for SSR:
 
 ```tsx
-import { createAutoQueueScript } from '@react-gtm-kit/core';
+import { createAutoQueueScript } from '@jwiedeman/gtm-kit';
 
 // In your SSR template
 const inlineScript = createAutoQueueScript();
@@ -157,7 +157,7 @@ queue.uninstall(); // Remove interceptor, stop buffering
 
 ```tsx
 // app/layout.tsx or _app.tsx
-import { installAutoQueue } from '@react-gtm-kit/core';
+import { installAutoQueue } from '@jwiedeman/gtm-kit';
 
 // Install immediately when module loads
 if (typeof window !== 'undefined') {
@@ -173,7 +173,7 @@ function App() {
 
 ```tsx
 // app/layout.tsx
-import { createAutoQueueScript } from '@react-gtm-kit/core';
+import { createAutoQueueScript } from '@jwiedeman/gtm-kit';
 import Script from 'next/script';
 
 export default function RootLayout({ children }) {
@@ -196,7 +196,7 @@ export default function RootLayout({ children }) {
 
 ```ts
 // plugins/gtm-auto-queue.client.ts
-import { installAutoQueue } from '@react-gtm-kit/core';
+import { installAutoQueue } from '@jwiedeman/gtm-kit';
 
 export default defineNuxtPlugin(() => {
   installAutoQueue();

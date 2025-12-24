@@ -34,3 +34,13 @@ export type {
 } from './events';
 export type { AutoQueueOptions, AutoQueueState } from './auto-queue';
 export { installAutoQueue, createAutoQueueScript, attachToInlineBuffer } from './auto-queue';
+export {
+  isString,
+  normalizeContainer,
+  normalizeContainers,
+  toRecord,
+  normalizeHost,
+  buildGtmScriptUrl,
+  buildGtmNoscriptUrl,
+  escapeAttributeValue
+} from './url-utils';

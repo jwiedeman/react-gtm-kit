@@ -31,7 +31,7 @@ jobs:
         run: pnpm install || pnpm install --ignore-scripts
       - name: Build packages (excluding nuxt-app due to oxc-parser native binding issues)
         if: ${{ matrix.task == 'test' || matrix.task == 'typecheck' || matrix.task == 'verify:lightweight' }}
-        run: pnpm -r --filter '!@react-gtm-kit/example-nuxt-app' build
+        run: pnpm -r --filter '!@gtm-kit/example-nuxt-app' build
       - name: Run ${{ matrix.task }}
         run: pnpm run ${{ matrix.task }}
       - name: Upload coverage to Codecov

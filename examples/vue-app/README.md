@@ -9,7 +9,7 @@ This example demonstrates how to integrate GTM Kit with a Vue 3 application usin
 pnpm install
 
 # Start the development server
-pnpm --filter @react-gtm-kit/example-vue-app dev
+pnpm --filter @gtm-kit/example-vue-app dev
 ```
 
 Open http://localhost:5173 to view the app.
@@ -46,15 +46,15 @@ vue-app/
 ### 1. Install Packages
 
 ```bash
-npm install @react-gtm-kit/core @react-gtm-kit/vue
+npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-vue
 ```
 
 ### 2. Configure GTM Plugin (src/main.ts)
 
 ```typescript
 import { createApp } from 'vue';
-import { GtmPlugin } from '@react-gtm-kit/vue';
-import { consentPresets } from '@react-gtm-kit/core';
+import { GtmPlugin } from '@jwiedeman/gtm-kit-vue';
+import { consentPresets } from '@jwiedeman/gtm-kit';
 import App from './App.vue';
 
 const app = createApp(App);
@@ -78,7 +78,7 @@ app.mount('#app');
 <script setup lang="ts">
 import { watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { useGtmPush } from '@react-gtm-kit/vue';
+import { useGtmPush } from '@jwiedeman/gtm-kit-vue';
 
 const route = useRoute();
 const push = useGtmPush();
@@ -102,7 +102,7 @@ watch(
 
 ```vue
 <script setup lang="ts">
-import { useGtmPush } from '@react-gtm-kit/vue';
+import { useGtmPush } from '@jwiedeman/gtm-kit-vue';
 
 const push = useGtmPush();
 
@@ -123,7 +123,7 @@ const handleClick = () => {
 
 ```vue
 <script setup lang="ts">
-import { useGtmConsent } from '@react-gtm-kit/vue';
+import { useGtmConsent } from '@jwiedeman/gtm-kit-vue';
 
 const { update } = useGtmConsent();
 
@@ -151,7 +151,7 @@ const rejectAll = () => {
 
 ```bash
 # Build the app
-pnpm --filter @react-gtm-kit/example-vue-app build
+pnpm --filter @gtm-kit/example-vue-app build
 
 # Run E2E tests
 pnpm e2e:test

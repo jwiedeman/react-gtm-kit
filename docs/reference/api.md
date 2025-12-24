@@ -3,7 +3,7 @@
 This page summarizes the exported surface area across the core package, React adapters, and Next.js
 helpers. Use it alongside the how-to guides for task-specific walkthroughs.
 
-## Core client (`@react-gtm-kit/core`)
+## Core client (`@jwiedeman/gtm-kit`)
 
 ### `createGtmClient(options)`
 
@@ -47,7 +47,7 @@ Returned client methods:
 - `host` defaults to Google; `defaultQueryParams` merge with per-container params.
 - `iframeAttributes` extend the default attributes (`height="0"`, `width="0"`, `style="display:none;visibility:hidden"`, `title="Google Tag Manager"`).
 
-## React (modern) adapter (`@react-gtm-kit/react-modern`)
+## React (modern) adapter (`@jwiedeman/gtm-kit-react`)
 
 `<GtmProvider config={...}>` initializes the core client exactly once (StrictMode-safe) and tears it down on unmount. The config matches `createGtmClient` options and is treated as immutable after the first render (development warns on changes).
 
@@ -66,7 +66,7 @@ Example:
 </GtmProvider>
 ```
 
-## React (legacy) adapter (`@react-gtm-kit/react-legacy`)
+## React (legacy) adapter (`@jwiedeman/gtm-kit-react-legacy`)
 
 `withGtm({ config, propName })` wraps class components and injects a `gtm` prop (customizable via `propName`, default `'gtm'`). The prop exposes `{ client, push, setConsentDefaults, updateConsent }`. Initialization occurs in `componentDidMount`; teardown runs on unmount.
 
@@ -81,7 +81,7 @@ class Dashboard extends React.Component<{ gtm: LegacyGtmApi }> {
 export default withGtm({ config: { containers: 'GTM-XXXX' } })(Dashboard);
 ```
 
-## Next.js helpers (`@react-gtm-kit/next`)
+## Next.js helpers (`@jwiedeman/gtm-kit-next`)
 
 - `useTrackPageViews({ client, eventName = 'page_view', buildPayload, includeSearchParams = true, trackHash = false, trackOnMount = true, skipSamePath = true, pushEventFn })` – Client-side hook for App Router that watches pathname/search (and optionally hash) changes and pushes pageview events via `pushEvent`.
 - `<GtmHeadScript>` – Server component that renders one `<script>` tag per container with optional `host`, `defaultQueryParams`, `dataLayerName`, and `scriptAttributes` (inherits CSP `nonce` and sets `async` true by default). When `dataLayerName` is provided, the `l=` query parameter is appended automatically, including under custom hosts.

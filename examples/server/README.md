@@ -33,7 +33,7 @@ without exposing Measurement Protocol secrets to the browser.
 TAGGING_SERVER_URL="https://gtm.example.com" \
 GTM_MEASUREMENT_ID="G-1234567" \
 GTM_API_SECRET="shhh-secret" \
-pnpm --filter @react-gtm-kit/example-server start
+pnpm --filter @gtm-kit/example-server start
 ```
 
 The server exposes two routes:
@@ -99,7 +99,7 @@ request.
 
 ## Architecture notes
 
-1. **First-party host** – Load `@react-gtm-kit/core` with the `host` option set to your server
+1. **First-party host** – Load `@jwiedeman/gtm-kit` with the `host` option set to your server
    container domain so the browser retrieves `gtm.js` from the same origin.
 2. **Secure secrets** – The Measurement Protocol `api_secret` stays on the server; the browser
    never sees it. Use HTTPS and production secrets for live traffic.

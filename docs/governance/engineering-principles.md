@@ -6,7 +6,7 @@ React GTM Kit keeps the core package lightweight and dependency-free so that tea
 
 - **Zero runtime dependencies in the core.** The core package ships only TypeScript output and relies on the platform primitives that exist in every browser. A repository script (`pnpm run verify:runtime-deps`) checks that no unintended dependencies slip into package manifests.
 - **Tight bundle budgets.** Size limits guard against regressions across packages. `pnpm run size` uses Size Limit with esbuild to calculate minified + gzip bundles for the most common entry points. Budgets start at 3.5 kB for the core library, 6.5 kB for the React adapters, and 14.5 kB for the Next helpers; adjust only with explicit approval and documented rationale.
-- **Shared primitives.** React adapters and Next helpers depend solely on `@react-gtm-kit/core` plus their framework peers via peer dependencies. Runtime behavior lives in the core so that adapters remain thin wrappers.
+- **Shared primitives.** React adapters and Next helpers depend solely on `@jwiedeman/gtm-kit` plus their framework peers via peer dependencies. Runtime behavior lives in the core so that adapters remain thin wrappers.
 
 ## Operational workflow
 

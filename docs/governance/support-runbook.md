@@ -22,10 +22,10 @@ change availability.
   reproduction steps and environment details.
 - **GitHub Discussions** – Q&A, roadmap feedback, and incident updates. Pin active incidents for
   visibility.
-- **Discord (`#react-gtm-kit`)** – Real-time community support. Moderated by Support Lead; move
+- **Discord (`#gtm-kit`)** – Real-time community support. Moderated by Support Lead; move
   actionable items into GitHub issues.
-- **Email (`support@react-gtm-kit.dev`)** – Reserved for enterprise adopters or privacy-sensitive
-  disclosures.
+- **GitHub Discussions** – Reserved for enterprise adopters or privacy-sensitive
+  disclosures via private threads.
 
 Monitor all channels during business hours and set up notifications for off-hours escalation triggers.
 

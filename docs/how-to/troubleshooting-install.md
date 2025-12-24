@@ -8,10 +8,10 @@ Run these commands to identify issues:
 
 ```bash
 # Check if packages are installed
-npm list @react-gtm-kit/core
+npm list @jwiedeman/gtm-kit
 
 # Verify GTM ID format
-npx @react-gtm-kit/cli validate GTM-XXXXXX
+npx @jwiedeman/gtm-kit-cli validate GTM-XXXXXX
 
 # Check for conflicting GTM scripts
 # Open browser console and run:
@@ -25,20 +25,20 @@ document.querySelectorAll('script[src*="googletagmanager"]')
 **Symptoms:**
 
 ```
-Error: Cannot find module '@react-gtm-kit/core'
+Error: Cannot find module '@jwiedeman/gtm-kit'
 ```
 
 **Solutions:**
 
 ```bash
 # 1. Ensure packages are installed
-npm install @react-gtm-kit/core
+npm install @jwiedeman/gtm-kit
 
 # 2. For framework-specific packages, install both
-npm install @react-gtm-kit/core @react-gtm-kit/react-modern  # React
-npm install @react-gtm-kit/core @react-gtm-kit/vue           # Vue
-npm install @react-gtm-kit/core @react-gtm-kit/next          # Next.js
-npm install @react-gtm-kit/core @react-gtm-kit/nuxt          # Nuxt
+npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-react  # React
+npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-vue           # Vue
+npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-next          # Next.js
+npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-nuxt          # Nuxt
 
 # 3. Clear node_modules and reinstall
 rm -rf node_modules package-lock.json
@@ -128,7 +128,7 @@ GTM IDs must follow the format `GTM-XXXXXX`:
 **Solutions:**
 
 ```typescript
-// 1. Set consent BEFORE init()
+// Set consent BEFORE init()
 const client = createGtmClient({ containers: 'GTM-XXXXXX' });
 
 // Set defaults first
@@ -139,14 +139,6 @@ client.setConsentDefaults({
 
 // Then initialize
 client.init();
-
-// 2. Use onBeforeInit callback
-const client = createGtmClient({
-  containers: 'GTM-XXXXXX',
-  onBeforeInit: (c) => {
-    c.setConsentDefaults({ analytics_storage: 'denied' });
-  }
-});
 ```
 
 ### 5. Multiple GTM Scripts Loading
@@ -196,7 +188,7 @@ Type '...' is not assignable to type...
 
 ```typescript
 // 1. Import types explicitly
-import type { GtmClient, ConsentState } from '@react-gtm-kit/core';
+import type { GtmClient, ConsentState } from '@jwiedeman/gtm-kit';
 
 // 2. Use proper typing for events
 interface CustomEvent {
@@ -270,7 +262,7 @@ Warning: Expected server HTML to contain a matching <script>
 // 1. For Next.js, use client components
 'use client';
 
-import { GtmProvider } from '@react-gtm-kit/react-modern';
+import { GtmProvider } from '@jwiedeman/gtm-kit-react';
 
 // 2. For Nuxt, use .client.ts plugin
 // plugins/gtm.client.ts
@@ -327,8 +319,8 @@ pnpm size
 
 ```typescript
 // Use tree-shaking friendly imports
-import { createGtmClient } from '@react-gtm-kit/core';
-// Not: import * as GtmKit from '@react-gtm-kit/core';
+import { createGtmClient } from '@jwiedeman/gtm-kit';
+// Not: import * as GtmKit from '@jwiedeman/gtm-kit';
 ```
 
 ## Framework-Specific Issues
@@ -350,7 +342,7 @@ import { createGtmClient } from '@react-gtm-kit/core';
 // Solution: Mark GTM components as client-only
 'use client';
 
-import { GtmProvider } from '@react-gtm-kit/react-modern';
+import { GtmProvider } from '@jwiedeman/gtm-kit-react';
 ```
 
 ### Vue
@@ -368,7 +360,7 @@ app.mount('#app'); // After plugin
 // Issue: Composables not available
 // Solution: Use inside setup() and ensure plugin is .client.ts
 <script setup>
-import { useNuxtGtmPush } from '@react-gtm-kit/nuxt';
+import { useNuxtGtmPush } from '@jwiedeman/gtm-kit-nuxt';
 
 const push = useNuxtGtmPush(); // Works
 </script>

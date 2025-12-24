@@ -1,5 +1,5 @@
 {
-  "name": "@react-gtm-kit/example-server",
+  "name": "@gtm-kit/example-server",
   "private": true,
   "version": "0.0.0",
   "type": "module",

@@ -4,11 +4,11 @@ Keep React GTM Kit healthy by pairing scheduled compatibility checks with clear 
 
 ## Compatibility matrix
 
-| Surface                          | Supported versions   | Validation strategy                                                                                             | Notes                                                                                                  |
-| -------------------------------- | -------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| React (modern + legacy adapters) | ^16.8, ^17, ^18, ^19 | Unit tests across adapters and shared core utilities; StrictMode + Suspense coverage in Testing Library suites. | Aligns with peer dependency ranges in `@react-gtm-kit/react-modern` and `@react-gtm-kit/react-legacy`. |
-| Next.js (App Router helpers)     | ^13.4, ^14, ^15      | Jest coverage for the App Router bridge plus Playwright SSR/CSP fixtures.                                       | Keep sample app dependencies within this window and validate against the latest patch each month.      |
-| Tooling (Node.js)                | Active LTS releases  | CI runs on `ubuntu-latest` with Node 20. Bump the workflow matrix alongside Node LTS rollouts.                  | Ensure size-limit and runtime dependency checks stay green after upgrades.                             |
+| Surface                          | Supported versions   | Validation strategy                                                                                             | Notes                                                                                                   |
+| -------------------------------- | -------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| React (modern + legacy adapters) | ^16.8, ^17, ^18, ^19 | Unit tests across adapters and shared core utilities; StrictMode + Suspense coverage in Testing Library suites. | Aligns with peer dependency ranges in `@jwiedeman/gtm-kit-react` and `@jwiedeman/gtm-kit-react-legacy`. |
+| Next.js (App Router helpers)     | ^13.4, ^14, ^15      | Jest coverage for the App Router bridge plus Playwright SSR/CSP fixtures.                                       | Keep sample app dependencies within this window and validate against the latest patch each month.       |
+| Tooling (Node.js)                | Active LTS releases  | CI runs on `ubuntu-latest` with Node 20. Bump the workflow matrix alongside Node LTS rollouts.                  | Ensure size-limit and runtime dependency checks stay green after upgrades.                              |
 
 Update the matrix when peer dependency ranges change or when a new runtime ships.
 

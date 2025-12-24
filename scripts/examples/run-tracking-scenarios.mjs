@@ -20,7 +20,7 @@ const SNAPSHOT_DIR = resolve(repoRoot, 'examples', '.snapshots');
 const scenarios = [
   {
     id: 'vanilla-csr',
-    packageName: '@react-gtm-kit/example-vanilla-csr',
+    packageName: '@gtm-kit/example-vanilla-csr',
     description:
       'Vanilla TypeScript control panel pushing page views, CTA events, and consent updates through the core client.',
     dataLayerName: 'dataLayer',
@@ -29,7 +29,7 @@ const scenarios = [
       label: 'vanilla-csr',
       args: [
         '--filter',
-        '@react-gtm-kit/example-vanilla-csr',
+        '@gtm-kit/example-vanilla-csr',
         'exec',
         'vite',
         'preview',
@@ -41,7 +41,7 @@ const scenarios = [
     }),
     buildCommand: {
       command: 'pnpm',
-      args: ['--filter', '@react-gtm-kit/example-vanilla-csr', 'run', 'build']
+      args: ['--filter', '@gtm-kit/example-vanilla-csr', 'run', 'build']
     },
     url: (port) => `http://${HOST}:${port}/`,
     interactions: async (page) => {
@@ -55,7 +55,7 @@ const scenarios = [
   },
   {
     id: 'react-strict-mode',
-    packageName: '@react-gtm-kit/example-react-strict-mode',
+    packageName: '@gtm-kit/example-react-strict-mode',
     description:
       'React StrictMode demo exercising router-driven page views, CTA events, conversion tracking, and consent flips.',
     dataLayerName: 'dataLayer',
@@ -64,7 +64,7 @@ const scenarios = [
       label: 'react-strict-mode',
       args: [
         '--filter',
-        '@react-gtm-kit/example-react-strict-mode',
+        '@gtm-kit/example-react-strict-mode',
         'exec',
         'vite',
         'preview',
@@ -76,7 +76,7 @@ const scenarios = [
     }),
     buildCommand: {
       command: 'pnpm',
-      args: ['--filter', '@react-gtm-kit/example-react-strict-mode', 'run', 'build']
+      args: ['--filter', '@gtm-kit/example-react-strict-mode', 'run', 'build']
     },
     url: (port) => `http://${HOST}:${port}/`,
     interactions: async (page, { url }) => {
@@ -101,7 +101,7 @@ const scenarios = [
   },
   {
     id: 'fullstack-web',
-    packageName: '@react-gtm-kit/example-fullstack-web',
+    packageName: '@gtm-kit/example-fullstack-web',
     description: 'Full-stack web example wiring consent toggles, ecommerce purchase pushes, and relay forwarding.',
     dataLayerName: 'dataLayer',
     previewCommand: (port) => ({
@@ -109,7 +109,7 @@ const scenarios = [
       label: 'fullstack-web',
       args: [
         '--filter',
-        '@react-gtm-kit/example-fullstack-web',
+        '@gtm-kit/example-fullstack-web',
         'exec',
         'vite',
         'preview',
@@ -121,7 +121,7 @@ const scenarios = [
     }),
     buildCommand: {
       command: 'pnpm',
-      args: ['--filter', '@react-gtm-kit/example-fullstack-web', 'run', 'build']
+      args: ['--filter', '@gtm-kit/example-fullstack-web', 'run', 'build']
     },
     url: (port) => `http://${HOST}:${port}/`,
     interactions: async (page) => {
@@ -141,7 +141,7 @@ const scenarios = [
   },
   {
     id: 'next-app',
-    packageName: '@react-gtm-kit/example-next-app',
+    packageName: '@gtm-kit/example-next-app',
     description:
       'Next.js App Router sample covering server-rendered head scripts, client navigations, and consent banner interactions.',
     dataLayerName: 'nextAppDataLayer',
@@ -150,7 +150,7 @@ const scenarios = [
       label: 'next-app',
       args: [
         '--filter',
-        '@react-gtm-kit/example-next-app',
+        '@gtm-kit/example-next-app',
         'exec',
         'next',
         'start',
@@ -162,7 +162,7 @@ const scenarios = [
     }),
     buildCommand: {
       command: 'pnpm',
-      args: ['--filter', '@react-gtm-kit/example-next-app', 'run', 'build']
+      args: ['--filter', '@gtm-kit/example-next-app', 'run', 'build']
     },
     url: (port) => `http://${HOST}:${port}/`,
     interactions: async (page, { url }) => {

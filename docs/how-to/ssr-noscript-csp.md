@@ -7,7 +7,7 @@ Render the GTM noscript fallback alongside CSP-compliant script tags to support 
 Use `createNoscriptMarkup` to build the iframe string during server rendering. Pair it with container descriptors so environment parameters and custom hosts are represented in the fallback URL.
 
 ```ts
-import { createNoscriptMarkup } from '@react-gtm-kit/core';
+import { createNoscriptMarkup } from '@jwiedeman/gtm-kit';
 
 const noscript = createNoscriptMarkup(
   { id: 'GTM-XXXX', queryParams: { gtm_auth: 'auth-token', gtm_preview: 'env-1' } },
@@ -31,7 +31,7 @@ res.render('page', { cspNonce });
 
 ```tsx
 // app/layout.tsx (React/Next.js)
-import { createGtmClient } from '@react-gtm-kit/core';
+import { createGtmClient } from '@jwiedeman/gtm-kit';
 
 export function GtmBridge({ nonce }: { nonce: string }) {
   const client = createGtmClient({

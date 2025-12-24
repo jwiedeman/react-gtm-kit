@@ -1,6 +1,6 @@
 # Vanilla CSR GTM example
 
-This example shows how to use `@react-gtm-kit/core` in a framework-agnostic, vanilla
+This example shows how to use `@jwiedeman/gtm-kit` in a framework-agnostic, vanilla
 TypeScript application. It renders a small control panel that pushes page views and
 custom events to the data layer while demonstrating consent defaults and updates.
 
@@ -8,9 +8,9 @@ custom events to the data layer while demonstrating consent defaults and updates
 
 ```bash
 pnpm install
-pnpm --filter @react-gtm-kit/example-vanilla-csr dev
-pnpm --filter @react-gtm-kit/example-vanilla-csr build
-pnpm --filter @react-gtm-kit/example-vanilla-csr preview
+pnpm --filter @gtm-kit/example-vanilla-csr dev
+pnpm --filter @gtm-kit/example-vanilla-csr build
+pnpm --filter @gtm-kit/example-vanilla-csr preview
 ```
 
 Set the following environment variables (via `.env` or inline) to customize runtime behavior:

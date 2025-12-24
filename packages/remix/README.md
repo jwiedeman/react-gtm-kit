@@ -1,9 +1,9 @@
-# @react-gtm-kit/remix
+# @jwiedeman/gtm-kit-remix
 
 [![CI](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml)
 [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=remix)](https://codecov.io/gh/jwiedeman/react-gtm-kit)
-[![npm version](https://img.shields.io/npm/v/@react-gtm-kit/remix.svg)](https://www.npmjs.com/package/@react-gtm-kit/remix)
-[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@react-gtm-kit/remix)](https://bundlephobia.com/package/@react-gtm-kit/remix)
+[![npm version](https://img.shields.io/npm/v/@jwiedeman/gtm-kit-remix.svg)](https://www.npmjs.com/package/@jwiedeman/gtm-kit-remix)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@jwiedeman/gtm-kit-remix)](https://bundlephobia.com/package/@jwiedeman/gtm-kit-remix)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Remix](https://img.shields.io/badge/Remix-2.0+-000000.svg?logo=remix)](https://remix.run/)
@@ -17,15 +17,15 @@ The Remix adapter for GTM Kit - provides components and hooks optimized for Remi
 ## Installation
 
 ```bash
-npm install @react-gtm-kit/core @react-gtm-kit/remix
+npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-remix
 ```
 
 ```bash
-yarn add @react-gtm-kit/core @react-gtm-kit/remix
+yarn add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-remix
 ```
 
 ```bash
-pnpm add @react-gtm-kit/core @react-gtm-kit/remix
+pnpm add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-remix
 ```
 
 ---
@@ -36,7 +36,7 @@ pnpm add @react-gtm-kit/core @react-gtm-kit/remix
 
 ```tsx
 // app/root.tsx
-import { GtmProvider, GtmScripts, useTrackPageViews } from '@react-gtm-kit/remix';
+import { GtmProvider, GtmScripts, useTrackPageViews } from '@jwiedeman/gtm-kit-remix';
 
 function PageViewTracker() {
   useTrackPageViews();
@@ -67,7 +67,7 @@ export default function App() {
 
 ```tsx
 // app/routes/products.$id.tsx
-import { useGtmPush } from '@react-gtm-kit/remix';
+import { useGtmPush } from '@jwiedeman/gtm-kit-remix';
 
 export default function ProductPage() {
   const push = useGtmPush();
@@ -86,14 +86,14 @@ export default function ProductPage() {
 
 ## Features
 
-| Feature | Description |
-|---------|-------------|
-| **Remix Native** | Built specifically for Remix |
+| Feature                | Description                                |
+| ---------------------- | ------------------------------------------ |
+| **Remix Native**       | Built specifically for Remix               |
 | **Auto Page Tracking** | `useTrackPageViews` hook for route changes |
-| **Server Scripts** | `GtmScripts` component for SSR |
-| **React Router v6** | Uses Remix's routing system |
-| **TypeScript** | Full type definitions included |
-| **Consent Mode v2** | Built-in GDPR compliance |
+| **Server Scripts**     | `GtmScripts` component for SSR             |
+| **React Router v6**    | Uses Remix's routing system                |
+| **TypeScript**         | Full type definitions included             |
+| **Consent Mode v2**    | Built-in GDPR compliance                   |
 
 ---
 
@@ -104,14 +104,14 @@ export default function ProductPage() {
 Server-side component that renders GTM script tags. Place in your document head.
 
 ```tsx
-import { GtmScripts } from '@react-gtm-kit/remix';
+import { GtmScripts } from '@jwiedeman/gtm-kit-remix';
 
 <GtmScripts
   containers="GTM-XXXXXX"
-  host="https://www.googletagmanager.com"  // optional
-  dataLayerName="dataLayer"                 // optional
-  scriptAttributes={{ nonce: '...' }}       // optional: CSP
-/>
+  host="https://www.googletagmanager.com" // optional
+  dataLayerName="dataLayer" // optional
+  scriptAttributes={{ nonce: '...' }} // optional: CSP
+/>;
 ```
 
 ### `<GtmProvider />`
@@ -119,7 +119,7 @@ import { GtmScripts } from '@react-gtm-kit/remix';
 Client-side provider that manages GTM state and provides context.
 
 ```tsx
-import { GtmProvider } from '@react-gtm-kit/remix';
+import { GtmProvider } from '@jwiedeman/gtm-kit-remix';
 
 <GtmProvider
   config={{ containers: 'GTM-XXXXXX' }}
@@ -131,7 +131,7 @@ import { GtmProvider } from '@react-gtm-kit/remix';
   }}
 >
   {children}
-</GtmProvider>
+</GtmProvider>;
 ```
 
 ---
@@ -143,14 +143,15 @@ import { GtmProvider } from '@react-gtm-kit/remix';
 Automatically tracks page views on route changes.
 
 ```tsx
-import { useTrackPageViews } from '@react-gtm-kit/remix';
+import { useTrackPageViews } from '@jwiedeman/gtm-kit-remix';
 
 function PageViewTracker() {
   useTrackPageViews({
-    eventName: 'page_view',           // default
-    trackInitialPageView: true,        // default
+    eventName: 'page_view', // default
+    trackInitialPageView: true, // default
     customData: { app_version: '1.0' }, // optional
-    transformEvent: (data) => ({       // optional
+    transformEvent: (data) => ({
+      // optional
       ...data,
       user_id: getCurrentUserId()
     })
@@ -165,16 +166,12 @@ function PageViewTracker() {
 Get the push function for sending events.
 
 ```tsx
-import { useGtmPush } from '@react-gtm-kit/remix';
+import { useGtmPush } from '@jwiedeman/gtm-kit-remix';
 
 function MyComponent() {
   const push = useGtmPush();
 
-  return (
-    <button onClick={() => push({ event: 'click', button: 'cta' })}>
-      Click Me
-    </button>
-  );
+  return <button onClick={() => push({ event: 'click', button: 'cta' })}>Click Me</button>;
 }
 ```
 
@@ -183,7 +180,7 @@ function MyComponent() {
 Get the full GTM context.
 
 ```tsx
-import { useGtm } from '@react-gtm-kit/remix';
+import { useGtm } from '@jwiedeman/gtm-kit-remix';
 
 function MyComponent() {
   const { push, client, updateConsent } = useGtm();
@@ -197,16 +194,12 @@ function MyComponent() {
 Access consent management functions.
 
 ```tsx
-import { useGtmConsent } from '@react-gtm-kit/remix';
+import { useGtmConsent } from '@jwiedeman/gtm-kit-remix';
 
 function CookieBanner() {
   const { updateConsent } = useGtmConsent();
 
-  return (
-    <button onClick={() => updateConsent({ analytics_storage: 'granted' })}>
-      Accept
-    </button>
-  );
+  return <button onClick={() => updateConsent({ analytics_storage: 'granted' })}>Accept</button>;
 }
 ```
 
@@ -224,8 +217,8 @@ Get a function that resolves when GTM is loaded.
 
 ```tsx
 // app/root.tsx
-import { GtmProvider, GtmScripts, useGtmConsent } from '@react-gtm-kit/remix';
-import { consentPresets } from '@react-gtm-kit/core';
+import { GtmProvider, GtmScripts, useGtmConsent } from '@jwiedeman/gtm-kit-remix';
+import { consentPresets } from '@jwiedeman/gtm-kit';
 
 function CookieBanner() {
   const { updateConsent } = useGtmConsent();
@@ -233,20 +226,28 @@ function CookieBanner() {
   return (
     <div className="cookie-banner">
       <p>We use cookies to improve your experience.</p>
-      <button onClick={() => updateConsent({
-        ad_storage: 'granted',
-        analytics_storage: 'granted',
-        ad_user_data: 'granted',
-        ad_personalization: 'granted'
-      })}>
+      <button
+        onClick={() =>
+          updateConsent({
+            ad_storage: 'granted',
+            analytics_storage: 'granted',
+            ad_user_data: 'granted',
+            ad_personalization: 'granted'
+          })
+        }
+      >
         Accept All
       </button>
-      <button onClick={() => updateConsent({
-        ad_storage: 'denied',
-        analytics_storage: 'denied',
-        ad_user_data: 'denied',
-        ad_personalization: 'denied'
-      })}>
+      <button
+        onClick={() =>
+          updateConsent({
+            ad_storage: 'denied',
+            analytics_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied'
+          })
+        }
+      >
         Reject All
       </button>
     </div>
@@ -284,7 +285,7 @@ For strict CSP configurations, generate and pass a nonce:
 
 ```tsx
 // app/root.tsx
-import { GtmScripts } from '@react-gtm-kit/remix';
+import { GtmScripts } from '@jwiedeman/gtm-kit-remix';
 
 export async function loader() {
   const nonce = generateNonce(); // Your nonce generation
@@ -297,14 +298,9 @@ export default function App() {
   return (
     <html>
       <head>
-        <GtmScripts
-          containers="GTM-XXXXXX"
-          scriptAttributes={{ nonce }}
-        />
+        <GtmScripts containers="GTM-XXXXXX" scriptAttributes={{ nonce }} />
       </head>
-      <body>
-        {/* ... */}
-      </body>
+      <body>{/* ... */}</body>
     </html>
   );
 }
@@ -340,20 +336,9 @@ export default function App() {
 
 ```tsx
 // app/root.tsx
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
-import {
-  GtmProvider,
-  GtmScripts,
-  useTrackPageViews,
-  useGtmConsent
-} from '@react-gtm-kit/remix';
-import { consentPresets } from '@react-gtm-kit/core';
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
+import { GtmProvider, GtmScripts, useTrackPageViews, useGtmConsent } from '@jwiedeman/gtm-kit-remix';
+import { consentPresets } from '@jwiedeman/gtm-kit';
 
 const GTM_ID = 'GTM-XXXXXX';
 
@@ -371,21 +356,25 @@ function CookieBanner() {
         <p>We use cookies to improve your experience.</p>
         <div className="space-x-2">
           <button
-            onClick={() => updateConsent({
-              ad_storage: 'granted',
-              analytics_storage: 'granted',
-              ad_user_data: 'granted',
-              ad_personalization: 'granted'
-            })}
+            onClick={() =>
+              updateConsent({
+                ad_storage: 'granted',
+                analytics_storage: 'granted',
+                ad_user_data: 'granted',
+                ad_personalization: 'granted'
+              })
+            }
             className="bg-blue-500 px-4 py-2 rounded"
           >
             Accept All
           </button>
           <button
-            onClick={() => updateConsent({
-              ad_storage: 'denied',
-              analytics_storage: 'denied'
-            })}
+            onClick={() =>
+              updateConsent({
+                ad_storage: 'denied',
+                analytics_storage: 'denied'
+              })
+            }
             className="bg-gray-600 px-4 py-2 rounded"
           >
             Reject
@@ -431,7 +420,7 @@ export default function App() {
 
 - Remix 2.0+
 - React 18+
-- `@react-gtm-kit/core` (peer dependency)
+- `@jwiedeman/gtm-kit` (peer dependency)
 
 ---
 

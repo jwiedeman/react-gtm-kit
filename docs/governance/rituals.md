@@ -10,7 +10,7 @@ This document captures the recurring ceremonies that keep the React GTM Kit team
   - Blockers by workstream (core, adapters, Next helpers, docs, governance).
   - Review changes to `TASKS.md` status updates since the previous meeting.
   - Call out upcoming releases, dependencies on privacy/legal, and E2E coverage gaps.
-- **Async fallback:** If a holiday or release freeze lands on a standup day, post updates in `#react-gtm-kit-core` using the format: _Status / Risks / Next steps_.
+- **Async fallback:** If a holiday or release freeze lands on a standup day, post updates in `#gtm-kit-core` using the format: _Status / Risks / Next steps_.
 
 ## Milestone demos
 
@@ -34,8 +34,8 @@ This document captures the recurring ceremonies that keep the React GTM Kit team
 ## Communication channels and escalation
 
 - **Slack:**
-  - `#react-gtm-kit-core` – day-to-day engineering, standup async updates, incident chatter.
-  - `#react-gtm-kit-launch` – milestone planning, demo invites, stakeholder updates.
+  - `#gtm-kit-core` – day-to-day engineering, standup async updates, incident chatter.
+  - `#gtm-kit-launch` – milestone planning, demo invites, stakeholder updates.
 - **Email:** `gtm-kit@company.test` distribution for exec/stakeholder summaries and legal approvals.
 - **Escalation path:** Core engineering → DX/docs → Product owner → Privacy/Security counsel → Executive sponsor.
 - **Office hours:** Weekly drop-in on Tuesdays @ 14:00 PT hosted by DX for docs/examples questions.

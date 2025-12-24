@@ -6,7 +6,7 @@ const workspaceRoot = path.resolve(__dirname, '../../..');
 const exampleDir = path.resolve(workspaceRoot, 'examples/nuxt-app');
 
 const buildNuxtExample = () => {
-  const result = spawnSync('pnpm', ['--filter', '@react-gtm-kit/example-nuxt-app', 'build'], {
+  const result = spawnSync('pnpm', ['--filter', '@gtm-kit/example-nuxt-app', 'build'], {
     cwd: workspaceRoot,
     stdio: 'inherit'
   });

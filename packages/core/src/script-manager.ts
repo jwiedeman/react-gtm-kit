@@ -7,6 +7,7 @@ import type {
   ScriptLoadState,
   ScriptLoadStatus
 } from './types';
+import { buildGtmScriptUrl } from './url-utils';
 
 const CONTAINER_ATTR = 'data-gtm-container-id';
 const INSTANCE_ATTR = 'data-gtm-kit-instance';
@@ -58,38 +59,6 @@ export interface EnsureResult {
   inserted: HTMLScriptElement[];
 }
 
-const toRecord = (
-  params?: Record<string, string | number | boolean>
-): Record<string, string> => {
-  if (!params) {
-    return {};
-  }
-
-  return Object.entries(params).reduce<Record<string, string>>((acc, [key, value]) => {
-    acc[key] = String(value);
-    return acc;
-  }, {});
-};
-
-const buildScriptUrl = (
-  host: string,
-  containerId: string,
-  queryParams?: Record<string, string | number | boolean>
-): string => {
-  const normalizedHost = host.endsWith('/') ? host.slice(0, -1) : host;
-  const searchParams = new URLSearchParams({ id: containerId });
-
-  const params = toRecord(queryParams);
-  for (const [key, value] of Object.entries(params)) {
-    if (key === 'id') {
-      continue;
-    }
-    searchParams.set(key, value);
-  }
-
-  return `${normalizedHost}/gtm.js?${searchParams.toString()}`;
-};
-
 const findExistingScript = (containerId: string): HTMLScriptElement | null => {
   if (typeof document === 'undefined') {
     return null;
@@ -102,9 +71,7 @@ const findExistingScript = (containerId: string): HTMLScriptElement | null => {
   }
 
   const scripts = Array.from(document.getElementsByTagName('script'));
-  return (
-    scripts.find((script) => script.src.includes(`id=${encodeURIComponent(containerId)}`)) || null
-  );
+  return scripts.find((script) => script.src.includes(`id=${encodeURIComponent(containerId)}`)) || null;
 };
 
 const formatErrorMessage = (event: Event): string => {
@@ -246,12 +213,8 @@ export class ScriptManager {
         ...container.queryParams
       };
 
-      if (this.dataLayerName !== DEFAULT_DATA_LAYER_NAME && params.l === undefined) {
-        params.l = this.dataLayerName;
-      }
-
       const script = document.createElement('script');
-      const url = buildScriptUrl(this.host, container.id, params);
+      const url = buildGtmScriptUrl(this.host, container.id, params, this.dataLayerName);
       script.src = url;
       script.setAttribute(CONTAINER_ATTR, container.id);
       script.setAttribute(INSTANCE_ATTR, this.options.instanceId);

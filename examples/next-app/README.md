@@ -19,7 +19,7 @@ helpers, the React provider, Consent Mode toggles, and the page-view listener so
 
 ```bash
 pnpm install
-pnpm --filter @react-gtm-kit/example-next-app dev
+pnpm --filter @gtm-kit/example-next-app dev
 ```
 
 The dev server binds to `127.0.0.1:3000` by default. Navigate around the app and check the browser console for the
@@ -28,8 +28,8 @@ The dev server binds to `127.0.0.1:3000` by default. Navigate around the app and
 ## Production build
 
 ```bash
-pnpm --filter @react-gtm-kit/example-next-app build
-pnpm --filter @react-gtm-kit/example-next-app start
+pnpm --filter @gtm-kit/example-next-app build
+pnpm --filter @gtm-kit/example-next-app start
 ```
 
 This runs `next start` with the same CSP-aware markup so you can test route transitions in a production bundle.

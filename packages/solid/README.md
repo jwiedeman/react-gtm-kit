@@ -1,9 +1,9 @@
-# @react-gtm-kit/solid
+# @jwiedeman/gtm-kit-solid
 
 [![CI](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml)
 [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=solid)](https://codecov.io/gh/jwiedeman/react-gtm-kit)
-[![npm version](https://img.shields.io/npm/v/@react-gtm-kit/solid.svg)](https://www.npmjs.com/package/@react-gtm-kit/solid)
-[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@react-gtm-kit/solid)](https://bundlephobia.com/package/@react-gtm-kit/solid)
+[![npm version](https://img.shields.io/npm/v/@jwiedeman/gtm-kit-solid.svg)](https://www.npmjs.com/package/@jwiedeman/gtm-kit-solid)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@jwiedeman/gtm-kit-solid)](https://bundlephobia.com/package/@jwiedeman/gtm-kit-solid)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![SolidJS](https://img.shields.io/badge/SolidJS-1.0+-2C4F7C.svg?logo=solid)](https://www.solidjs.com/)
@@ -17,15 +17,15 @@ The SolidJS adapter for GTM Kit - provides context and hooks for idiomatic Solid
 ## Installation
 
 ```bash
-npm install @react-gtm-kit/core @react-gtm-kit/solid
+npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-solid
 ```
 
 ```bash
-yarn add @react-gtm-kit/core @react-gtm-kit/solid
+yarn add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-solid
 ```
 
 ```bash
-pnpm add @react-gtm-kit/core @react-gtm-kit/solid
+pnpm add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-solid
 ```
 
 ---
@@ -36,7 +36,7 @@ pnpm add @react-gtm-kit/core @react-gtm-kit/solid
 
 ```tsx
 // App.tsx
-import { GtmProvider } from '@react-gtm-kit/solid';
+import { GtmProvider } from '@jwiedeman/gtm-kit-solid';
 
 function App() {
   return (
@@ -50,16 +50,12 @@ function App() {
 ### Step 2: Push Events
 
 ```tsx
-import { useGtmPush } from '@react-gtm-kit/solid';
+import { useGtmPush } from '@jwiedeman/gtm-kit-solid';
 
 function BuyButton() {
   const push = useGtmPush();
 
-  return (
-    <button onClick={() => push({ event: 'purchase', value: 49.99 })}>
-      Buy Now
-    </button>
-  );
+  return <button onClick={() => push({ event: 'purchase', value: 49.99 })}>Buy Now</button>;
 }
 ```
 
@@ -69,14 +65,14 @@ function BuyButton() {
 
 ## Features
 
-| Feature | Description |
-|---------|-------------|
-| **SolidJS Native** | Built for Solid's reactivity system |
-| **Fine-Grained** | Only updates what needs to update |
-| **Context-Based** | Uses Solid's context API |
-| **TypeScript** | Full type definitions included |
-| **Consent Mode v2** | Built-in GDPR compliance |
-| **SSR Compatible** | Safe for SolidStart SSR |
+| Feature             | Description                         |
+| ------------------- | ----------------------------------- |
+| **SolidJS Native**  | Built for Solid's reactivity system |
+| **Fine-Grained**    | Only updates what needs to update   |
+| **Context-Based**   | Uses Solid's context API            |
+| **TypeScript**      | Full type definitions included      |
+| **Consent Mode v2** | Built-in GDPR compliance            |
+| **SSR Compatible**  | Safe for SolidStart SSR             |
 
 ---
 
@@ -87,7 +83,7 @@ function BuyButton() {
 Get the full GTM context.
 
 ```tsx
-import { useGtm } from '@react-gtm-kit/solid';
+import { useGtm } from '@jwiedeman/gtm-kit-solid';
 
 function MyComponent() {
   const { push, client, updateConsent, initialized } = useGtm();
@@ -106,16 +102,12 @@ function MyComponent() {
 Get just the push function.
 
 ```tsx
-import { useGtmPush } from '@react-gtm-kit/solid';
+import { useGtmPush } from '@jwiedeman/gtm-kit-solid';
 
 function MyComponent() {
   const push = useGtmPush();
 
-  return (
-    <button onClick={() => push({ event: 'purchase', value: 99 })}>
-      Buy
-    </button>
-  );
+  return <button onClick={() => push({ event: 'purchase', value: 99 })}>Buy</button>;
 }
 ```
 
@@ -124,7 +116,7 @@ function MyComponent() {
 Access consent management functions.
 
 ```tsx
-import { useGtmConsent } from '@react-gtm-kit/solid';
+import { useGtmConsent } from '@jwiedeman/gtm-kit-solid';
 
 function CookieBanner() {
   const { updateConsent } = useGtmConsent();
@@ -147,7 +139,7 @@ function CookieBanner() {
 Get the raw GTM client instance.
 
 ```tsx
-import { useGtmClient } from '@react-gtm-kit/solid';
+import { useGtmClient } from '@jwiedeman/gtm-kit-solid';
 
 function MyComponent() {
   const client = useGtmClient();
@@ -161,7 +153,7 @@ function MyComponent() {
 Get a function that resolves when GTM is loaded.
 
 ```tsx
-import { useGtmReady } from '@react-gtm-kit/solid';
+import { useGtmReady } from '@jwiedeman/gtm-kit-solid';
 import { onMount } from 'solid-js';
 
 function MyComponent() {
@@ -206,7 +198,7 @@ function MyComponent() {
 
 ```tsx
 // src/root.tsx
-import { GtmProvider } from '@react-gtm-kit/solid';
+import { GtmProvider } from '@jwiedeman/gtm-kit-solid';
 
 export default function Root() {
   return (
@@ -225,7 +217,7 @@ export default function Root() {
 ### Page Tracking with Router
 
 ```tsx
-import { useGtmPush } from '@react-gtm-kit/solid';
+import { useGtmPush } from '@jwiedeman/gtm-kit-solid';
 import { useLocation } from '@solidjs/router';
 import { createEffect } from 'solid-js';
 
@@ -249,8 +241,8 @@ function PageTracker() {
 ## Consent Mode v2 (GDPR)
 
 ```tsx
-import { GtmProvider, useGtmConsent } from '@react-gtm-kit/solid';
-import { consentPresets } from '@react-gtm-kit/core';
+import { GtmProvider, useGtmConsent } from '@jwiedeman/gtm-kit-solid';
+import { consentPresets } from '@jwiedeman/gtm-kit';
 
 // In your root component
 function App() {
@@ -275,20 +267,28 @@ function CookieBanner() {
   return (
     <div class="cookie-banner">
       <p>We use cookies to improve your experience.</p>
-      <button onClick={() => updateConsent({
-        ad_storage: 'granted',
-        analytics_storage: 'granted',
-        ad_user_data: 'granted',
-        ad_personalization: 'granted'
-      })}>
+      <button
+        onClick={() =>
+          updateConsent({
+            ad_storage: 'granted',
+            analytics_storage: 'granted',
+            ad_user_data: 'granted',
+            ad_personalization: 'granted'
+          })
+        }
+      >
         Accept All
       </button>
-      <button onClick={() => updateConsent({
-        ad_storage: 'denied',
-        analytics_storage: 'denied',
-        ad_user_data: 'denied',
-        ad_personalization: 'denied'
-      })}>
+      <button
+        onClick={() =>
+          updateConsent({
+            ad_storage: 'denied',
+            analytics_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied'
+          })
+        }
+      >
         Reject All
       </button>
     </div>
@@ -302,10 +302,7 @@ function CookieBanner() {
 
 ```tsx
 <GtmProvider
-  containers={[
-    { id: 'GTM-MAIN' },
-    { id: 'GTM-ADS', queryParams: { gtm_auth: 'abc', gtm_preview: 'env-1' } }
-  ]}
+  containers={[{ id: 'GTM-MAIN' }, { id: 'GTM-ADS', queryParams: { gtm_auth: 'abc', gtm_preview: 'env-1' } }]}
 >
   {children}
 </GtmProvider>
@@ -318,8 +315,8 @@ function CookieBanner() {
 Full TypeScript support is included:
 
 ```tsx
-import type { GtmContextValue, GtmConsentApi } from '@react-gtm-kit/solid';
-import { useGtm, useGtmConsent } from '@react-gtm-kit/solid';
+import type { GtmContextValue, GtmConsentApi } from '@jwiedeman/gtm-kit-solid';
+import { useGtm, useGtmConsent } from '@jwiedeman/gtm-kit-solid';
 
 function MyComponent() {
   const gtm: GtmContextValue = useGtm();
@@ -335,7 +332,7 @@ function MyComponent() {
 ## Requirements
 
 - SolidJS 1.0+
-- `@react-gtm-kit/core` (peer dependency)
+- `@jwiedeman/gtm-kit` (peer dependency)
 
 ---
 

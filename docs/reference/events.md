@@ -6,7 +6,7 @@ remaining extensible for custom events.
 
 ## Type exports
 
-The `@react-gtm-kit/core` entry point now exports a handful of primitives for authoring and refining event
+The `@jwiedeman/gtm-kit` entry point now exports a handful of primitives for authoring and refining event
 shapes:
 
 - `EventName`, `EventPayload`, and `GtmEvent` – generic building blocks for data layer pushes.
@@ -22,7 +22,7 @@ These types are intended to be extended by consumers via intersection. For examp
 site-wide metadata can define:
 
 ```ts
-import type { CustomEvent, EventPayload } from '@react-gtm-kit/core';
+import type { CustomEvent, EventPayload } from '@jwiedeman/gtm-kit';
 
 type SiteEvent<TName extends string, TPayload extends EventPayload = EventPayload> = CustomEvent<
   TName,
@@ -37,7 +37,7 @@ payload object. The helper returns the same object that is queued into the data 
 inference.
 
 ```ts
-import { createGtmClient, pushEvent } from '@react-gtm-kit/core';
+import { createGtmClient, pushEvent } from '@jwiedeman/gtm-kit';
 
 const client = createGtmClient({ containers: 'GTM-XXXX' });
 
@@ -61,7 +61,7 @@ error in TypeScript projects.
 when additional metadata is supplied.
 
 ```ts
-import { pushEcommerce } from '@react-gtm-kit/core';
+import { pushEcommerce } from '@jwiedeman/gtm-kit';
 
 pushEcommerce(
   client,

@@ -1,9 +1,9 @@
-# @react-gtm-kit/vue
+# @jwiedeman/gtm-kit-vue
 
 [![CI](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml)
 [![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=vue)](https://codecov.io/gh/jwiedeman/react-gtm-kit)
-[![npm version](https://img.shields.io/npm/v/@react-gtm-kit/vue.svg)](https://www.npmjs.com/package/@react-gtm-kit/vue)
-[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@react-gtm-kit/vue)](https://bundlephobia.com/package/@react-gtm-kit/vue)
+[![npm version](https://img.shields.io/npm/v/@jwiedeman/gtm-kit-vue.svg)](https://www.npmjs.com/package/@jwiedeman/gtm-kit-vue)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@jwiedeman/gtm-kit-vue)](https://bundlephobia.com/package/@jwiedeman/gtm-kit-vue)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Vue 3](https://img.shields.io/badge/Vue-3.3+-4FC08D.svg?logo=vue.js)](https://vuejs.org/)
@@ -17,15 +17,15 @@ The Vue adapter for GTM Kit - provides a plugin and composables for clean Vue in
 ## Installation
 
 ```bash
-npm install @react-gtm-kit/core @react-gtm-kit/vue
+npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-vue
 ```
 
 ```bash
-yarn add @react-gtm-kit/core @react-gtm-kit/vue
+yarn add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-vue
 ```
 
 ```bash
-pnpm add @react-gtm-kit/core @react-gtm-kit/vue
+pnpm add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-vue
 ```
 
 ---
@@ -37,7 +37,7 @@ pnpm add @react-gtm-kit/core @react-gtm-kit/vue
 ```ts
 // main.ts
 import { createApp } from 'vue';
-import { GtmPlugin } from '@react-gtm-kit/vue';
+import { GtmPlugin } from '@jwiedeman/gtm-kit-vue';
 import App from './App.vue';
 
 createApp(App).use(GtmPlugin, { containers: 'GTM-XXXXXX' }).mount('#app');
@@ -47,7 +47,7 @@ createApp(App).use(GtmPlugin, { containers: 'GTM-XXXXXX' }).mount('#app');
 
 ```vue
 <script setup>
-import { useGtm } from '@react-gtm-kit/vue';
+import { useGtm } from '@jwiedeman/gtm-kit-vue';
 
 const { push } = useGtm();
 
@@ -86,7 +86,7 @@ Get the full GTM API.
 
 ```vue
 <script setup>
-import { useGtm } from '@react-gtm-kit/vue';
+import { useGtm } from '@jwiedeman/gtm-kit-vue';
 
 const { client, push, updateConsent, setConsentDefaults } = useGtm();
 
@@ -100,7 +100,7 @@ Get just the push function.
 
 ```vue
 <script setup>
-import { useGtmPush } from '@react-gtm-kit/vue';
+import { useGtmPush } from '@jwiedeman/gtm-kit-vue';
 
 const push = useGtmPush();
 
@@ -114,7 +114,7 @@ Manage consent state.
 
 ```vue
 <script setup>
-import { useGtmConsent } from '@react-gtm-kit/vue';
+import { useGtmConsent } from '@jwiedeman/gtm-kit-vue';
 
 const { updateConsent } = useGtmConsent();
 
@@ -135,7 +135,7 @@ Get the raw GTM client instance.
 
 ```vue
 <script setup>
-import { useGtmClient } from '@react-gtm-kit/vue';
+import { useGtmClient } from '@jwiedeman/gtm-kit-vue';
 
 const client = useGtmClient();
 
@@ -152,7 +152,7 @@ Get a function that resolves when GTM is loaded.
 
 ```vue
 <script setup>
-import { useGtmReady } from '@react-gtm-kit/vue';
+import { useGtmReady } from '@jwiedeman/gtm-kit-vue';
 
 const whenReady = useGtmReady();
 
@@ -189,7 +189,7 @@ app.use(GtmPlugin, {
 
 ```vue
 <script setup>
-import { useGtm } from '@react-gtm-kit/vue';
+import { useGtm } from '@jwiedeman/gtm-kit-vue';
 import { watch } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -209,7 +209,7 @@ Or create a reusable composable:
 
 ```ts
 // composables/usePageTracking.ts
-import { useGtm } from '@react-gtm-kit/vue';
+import { useGtm } from '@jwiedeman/gtm-kit-vue';
 import { watch, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -240,8 +240,8 @@ export function usePageTracking() {
 ```ts
 // main.ts
 import { createApp } from 'vue';
-import { GtmPlugin } from '@react-gtm-kit/vue';
-import { consentPresets } from '@react-gtm-kit/core';
+import { GtmPlugin } from '@jwiedeman/gtm-kit-vue';
+import { consentPresets } from '@jwiedeman/gtm-kit';
 import App from './App.vue';
 
 createApp(App)
@@ -258,8 +258,8 @@ createApp(App)
 ```vue
 <!-- CookieBanner.vue -->
 <script setup>
-import { useGtmConsent } from '@react-gtm-kit/vue';
-import { consentPresets } from '@react-gtm-kit/core';
+import { useGtmConsent } from '@jwiedeman/gtm-kit-vue';
+import { consentPresets } from '@jwiedeman/gtm-kit';
 
 const { updateConsent } = useGtmConsent();
 
@@ -296,7 +296,7 @@ const customChoice = () =>
 
 ```vue
 <script setup>
-import { useGtmConsent } from '@react-gtm-kit/vue';
+import { useGtmConsent } from '@jwiedeman/gtm-kit-vue';
 
 const { updateConsent } = useGtmConsent();
 
@@ -314,7 +314,7 @@ const enableAds = () =>
 
 ## Nuxt 3
 
-For Nuxt 3 projects, use [`@react-gtm-kit/nuxt`](https://www.npmjs.com/package/@react-gtm-kit/nuxt) which provides:
+For Nuxt 3 projects, use [`@jwiedeman/gtm-kit-nuxt`](https://www.npmjs.com/package/@jwiedeman/gtm-kit-nuxt) which provides:
 
 - Native Nuxt module integration
 - Auto-import of composables
@@ -326,7 +326,7 @@ For Nuxt 3 projects, use [`@react-gtm-kit/nuxt`](https://www.npmjs.com/package/@
 ## Requirements
 
 - Vue 3.3+
-- `@react-gtm-kit/core` (peer dependency)
+- `@jwiedeman/gtm-kit` (peer dependency)
 
 ---
 

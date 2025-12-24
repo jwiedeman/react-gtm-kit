@@ -1,6 +1,6 @@
 # Release process
 
-React GTM Kit uses [semantic-release](https://github.com/semantic-release/semantic-release) to automate versioning, changelog generation, and package publishing. This section outlines how maintainers prepare releases and what automation expects from the repository configuration.
+GTM Kit uses [semantic-release](https://github.com/semantic-release/semantic-release) to automate versioning, changelog generation, and package publishing. This section outlines how maintainers prepare releases and what automation expects from the repository configuration.
 
 ## Branch strategy
 
@@ -13,10 +13,10 @@ Semantic-release applies tags in the form of `vX.Y.Z` to match the generated ver
 
 Configure the following repository secrets so GitHub Actions can publish artifacts:
 
-| Secret                | Purpose                                                                                                                                                           |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `NPM_TOKEN`           | Authenticates `npm publish` for each workspace package. Generate from the npm account that owns the `@react-gtm-kit/*` scope and grant automation publish rights. |
-| `GH_TOKEN` (optional) | Overrides the default `GITHUB_TOKEN` when you need cross-repo release permissions. The default token is sufficient for creating GitHub releases in most cases.    |
+| Secret                | Purpose                                                                                                                                                               |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `NPM_TOKEN`           | Authenticates `npm publish` for each workspace package. Generate from the npm account that owns the `@jwiedeman/gtm-kit-*` scope and grant automation publish rights. |
+| `GH_TOKEN` (optional) | Overrides the default `GITHUB_TOKEN` when you need cross-repo release permissions. The default token is sufficient for creating GitHub releases in most cases.        |
 
 > **Tip:** Update the npm tokens whenever maintainers rotate their credentials. Semantic-release fails fast if authentication is missing, preventing partial releases.
 

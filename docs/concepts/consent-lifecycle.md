@@ -95,7 +95,7 @@ GTM Kit provides convenience presets for common scenarios:
 | `consentPresets.analyticsOnly` | denied       | granted             | denied         | denied               |
 
 ```ts
-import { consentPresets } from '@react-gtm-kit/core';
+import { consentPresets } from '@jwiedeman/gtm-kit';
 
 // Use preset for defaults
 client.setConsentDefaults(consentPresets.eeaDefault, { region: ['EEA'] });

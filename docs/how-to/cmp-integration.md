@@ -54,7 +54,7 @@ defaults. The client queues consent commands ahead of other pre-init pushes so t
 banner cannot be bypassed by early events.
 
 ```ts
-import { createGtmClient } from '@react-gtm-kit/core';
+import { createGtmClient } from '@jwiedeman/gtm-kit';
 
 const gtm = createGtmClient({ containers: 'GTM-XXXXXXX' });
 

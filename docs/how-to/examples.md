@@ -6,13 +6,13 @@ can verify builds stay healthy without launching full end-to-end browsers.
 
 ## Available examples
 
-| Package                                    | Description                                                              | Key features                                                    |
-| ------------------------------------------ | ------------------------------------------------------------------------ | --------------------------------------------------------------- |
-| `@react-gtm-kit/example-vanilla-csr`       | Framework-agnostic Vite setup using only `@react-gtm-kit/core`.          | Consent defaults, manual event pushes, live data layer viewer.  |
-| `@react-gtm-kit/example-react-strict-mode` | React Router SPA running in Strict Mode.                                 | Modern adapter provider + hooks, router-driven page views.      |
-| `@react-gtm-kit/example-react-legacy`      | Class component demo using the legacy adapter.                           | `withGtm` HOC lifecycle integration.                            |
-| `@react-gtm-kit/example-next-app`          | Next.js App Router sample with consent banner and CSP nonce propagation. | Server helpers, route analytics, consent persistence.           |
-| `@react-gtm-kit/example-server`            | Node relay for server-side tagging setups.                               | Request normalization, consent forwarding, diagnostics logging. |
+| Package                              | Description                                                              | Key features                                                    |
+| ------------------------------------ | ------------------------------------------------------------------------ | --------------------------------------------------------------- |
+| `@gtm-kit/example-vanilla-csr`       | Framework-agnostic Vite setup using only `@jwiedeman/gtm-kit`.           | Consent defaults, manual event pushes, live data layer viewer.  |
+| `@gtm-kit/example-react-strict-mode` | React Router SPA running in Strict Mode.                                 | Modern adapter provider + hooks, router-driven page views.      |
+| `@gtm-kit/example-react-legacy`      | Class component demo using the legacy adapter.                           | `withGtm` HOC lifecycle integration.                            |
+| `@gtm-kit/example-next-app`          | Next.js App Router sample with consent banner and CSP nonce propagation. | Server helpers, route analytics, consent persistence.           |
+| `@gtm-kit/example-server`            | Node relay for server-side tagging setups.                               | Request normalization, consent forwarding, diagnostics logging. |
 
 Cross-reference the [tracking scenario matrix](/design/tracking-matrix) for a
 full list of required events, consent expectations, and validation coverage per
@@ -30,10 +30,10 @@ Then run any example by filtering with its package name:
 
 ```bash
 # Vanilla CSR example
-pnpm --filter @react-gtm-kit/example-vanilla-csr dev
+pnpm --filter @gtm-kit/example-vanilla-csr dev
 
 # React Strict Mode example
-pnpm --filter @react-gtm-kit/example-react-strict-mode dev
+pnpm --filter @gtm-kit/example-react-strict-mode dev
 ```
 
 Each example inherits the shared ESLint + TypeScript configs. `pnpm run build` performs a
@@ -49,7 +49,7 @@ pnpm run examples:smoke
 ```
 
 Under the hood this command executes every `smoke` script sequentially via
-`pnpm --filter @react-gtm-kit/example-*`. CI can invoke the same command to confirm
+`pnpm --filter @gtm-kit/example-*`. CI can invoke the same command to confirm
 examples continue to build after code changes without spawning browsers.
 
 The server relay does not perform network requests during smoke runs—it uses

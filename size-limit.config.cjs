@@ -58,5 +58,11 @@ module.exports = [
     path: 'packages/remix/src/index.ts',
     import: '{ GtmProvider }',
     limit: '7.5 KB'
+  }),
+  withDefaults({
+    name: '@jwiedeman/gtm-kit-astro',
+    path: 'packages/astro/src/index.ts',
+    import: '{ initGtm }',
+    limit: '6 KB'
   })
 ];

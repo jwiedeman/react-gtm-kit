@@ -1,6 +1,6 @@
 # React Router page view instrumentation
 
-This guide shows how to pair the `@react-gtm-kit/react-modern` provider with React Router so every
+This guide shows how to pair the `@jwiedeman/gtm-kit-react` provider with React Router so every
 navigation emits a `page_view` event exactly once, even when running inside
 `<React.StrictMode>` where effects fire twice in development builds.
 
@@ -13,7 +13,7 @@ Use the GTM provider at the top of your tree so child routes can access the cont
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import { GtmProvider } from '@react-gtm-kit/react-modern';
+import { GtmProvider } from '@jwiedeman/gtm-kit-react';
 
 import App from './App';
 
@@ -39,7 +39,7 @@ StrictMode.
 ```tsx
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useGtmPush } from '@react-gtm-kit/react-modern';
+import { useGtmPush } from '@jwiedeman/gtm-kit-react';
 
 export const useRouteAwarePageView = (): void => {
   const push = useGtmPush();

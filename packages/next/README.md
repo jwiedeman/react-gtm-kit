@@ -1,9 +1,9 @@
-# @react-gtm-kit/next
+# @jwiedeman/gtm-kit-next
 
-[![CI](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml)
-[![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=next)](https://codecov.io/gh/jwiedeman/react-gtm-kit)
-[![npm version](https://img.shields.io/npm/v/@react-gtm-kit/next.svg)](https://www.npmjs.com/package/@react-gtm-kit/next)
-[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@react-gtm-kit/next)](https://bundlephobia.com/package/@react-gtm-kit/next)
+[![CI](https://github.com/jwiedeman/GTM-Kit/actions/workflows/ci.yml/badge.svg)](https://github.com/jwiedeman/GTM-Kit/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/jwiedeman/GTM-Kit/graph/badge.svg?flag=next)](https://codecov.io/gh/jwiedeman/GTM-Kit)
+[![npm version](https://img.shields.io/npm/v/@jwiedeman/gtm-kit-next.svg)](https://www.npmjs.com/package/@jwiedeman/gtm-kit-next)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@jwiedeman/gtm-kit-next)](https://bundlephobia.com/package/@jwiedeman/gtm-kit-next)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Next.js](https://img.shields.io/badge/Next.js-13+-000000.svg?logo=next.js)](https://nextjs.org/)
@@ -17,15 +17,15 @@ The Next.js adapter for GTM Kit - provides server components and route tracking 
 ## Installation
 
 ```bash
-npm install @react-gtm-kit/core @react-gtm-kit/next
+npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-next
 ```
 
 ```bash
-yarn add @react-gtm-kit/core @react-gtm-kit/next
+yarn add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-next
 ```
 
 ```bash
-pnpm add @react-gtm-kit/core @react-gtm-kit/next
+pnpm add @jwiedeman/gtm-kit @jwiedeman/gtm-kit-next
 ```
 
 ---
@@ -36,7 +36,7 @@ pnpm add @react-gtm-kit/core @react-gtm-kit/next
 
 ```tsx
 // app/layout.tsx
-import { GtmHeadScript, GtmNoScript } from '@react-gtm-kit/next';
+import { GtmHeadScript, GtmNoScript } from '@jwiedeman/gtm-kit-next';
 
 export default function RootLayout({ children }) {
   return (
@@ -58,8 +58,8 @@ export default function RootLayout({ children }) {
 ```tsx
 // app/providers/gtm.tsx
 'use client';
-import { createGtmClient } from '@react-gtm-kit/core';
-import { useTrackPageViews } from '@react-gtm-kit/next';
+import { createGtmClient } from '@jwiedeman/gtm-kit';
+import { useTrackPageViews } from '@jwiedeman/gtm-kit-next';
 
 const client = createGtmClient({ containers: 'GTM-XXXXXX' });
 client.init();
@@ -74,7 +74,7 @@ export function GtmProvider({ children }) {
 
 ```tsx
 'use client';
-import { pushEvent } from '@react-gtm-kit/core';
+import { pushEvent } from '@jwiedeman/gtm-kit';
 
 // In any client component
 function BuyButton({ client }) {
@@ -104,7 +104,7 @@ function BuyButton({ client }) {
 Renders the GTM script tag. Place in your `<head>`.
 
 ```tsx
-import { GtmHeadScript } from '@react-gtm-kit/next';
+import { GtmHeadScript } from '@jwiedeman/gtm-kit-next';
 
 <GtmHeadScript
   containers="GTM-XXXXXX"
@@ -117,7 +117,7 @@ import { GtmHeadScript } from '@react-gtm-kit/next';
 Renders the noscript fallback iframe. Place at the start of `<body>`.
 
 ```tsx
-import { GtmNoScript } from '@react-gtm-kit/next';
+import { GtmNoScript } from '@jwiedeman/gtm-kit-next';
 
 <GtmNoScript containers="GTM-XXXXXX" />;
 ```
@@ -132,7 +132,7 @@ Automatically tracks page views on route changes.
 
 ```tsx
 'use client';
-import { useTrackPageViews } from '@react-gtm-kit/next';
+import { useTrackPageViews } from '@jwiedeman/gtm-kit-next';
 
 export function GtmProvider({ children, client }) {
   useTrackPageViews({ client });
@@ -148,7 +148,7 @@ export function GtmProvider({ children, client }) {
 
 ```tsx
 // app/layout.tsx
-import { GtmHeadScript, GtmNoScript } from '@react-gtm-kit/next';
+import { GtmHeadScript, GtmNoScript } from '@jwiedeman/gtm-kit-next';
 import { GtmProvider } from './providers/gtm';
 
 export default function RootLayout({ children }) {
@@ -171,8 +171,8 @@ export default function RootLayout({ children }) {
 ```tsx
 // app/providers/gtm.tsx
 'use client';
-import { createGtmClient } from '@react-gtm-kit/core';
-import { useTrackPageViews } from '@react-gtm-kit/next';
+import { createGtmClient } from '@jwiedeman/gtm-kit';
+import { useTrackPageViews } from '@jwiedeman/gtm-kit-next';
 import { createContext, useContext } from 'react';
 
 const client = createGtmClient({ containers: 'GTM-XXXXXX' });
@@ -195,7 +195,7 @@ export function useGtmClient() {
 ```tsx
 // app/components/BuyButton.tsx
 'use client';
-import { pushEvent } from '@react-gtm-kit/core';
+import { pushEvent } from '@jwiedeman/gtm-kit';
 import { useGtmClient } from '../providers/gtm';
 
 export function BuyButton() {
@@ -212,8 +212,8 @@ export function BuyButton() {
 ```tsx
 // app/providers/gtm.tsx
 'use client';
-import { createGtmClient, consentPresets } from '@react-gtm-kit/core';
-import { useTrackPageViews } from '@react-gtm-kit/next';
+import { createGtmClient, consentPresets } from '@jwiedeman/gtm-kit';
+import { useTrackPageViews } from '@jwiedeman/gtm-kit-next';
 
 const client = createGtmClient({ containers: 'GTM-XXXXXX' });
 
@@ -234,7 +234,7 @@ export { client };
 // app/components/CookieBanner.tsx
 'use client';
 import { client } from '../providers/gtm';
-import { consentPresets } from '@react-gtm-kit/core';
+import { consentPresets } from '@jwiedeman/gtm-kit';
 
 export function CookieBanner() {
   // Accept all tracking
@@ -280,7 +280,7 @@ For strict CSP configurations, pass a nonce:
 ```tsx
 // app/layout.tsx
 import { headers } from 'next/headers';
-import { GtmHeadScript, GtmNoScript } from '@react-gtm-kit/next';
+import { GtmHeadScript, GtmNoScript } from '@jwiedeman/gtm-kit-next';
 
 export default function RootLayout({ children }) {
   const nonce = headers().get('x-nonce') || '';
@@ -313,11 +313,11 @@ export default function RootLayout({ children }) {
 
 ## Pages Router (Legacy)
 
-For Next.js Pages Router, use `@react-gtm-kit/react-modern` instead:
+For Next.js Pages Router, use `@jwiedeman/gtm-kit-react` instead:
 
 ```tsx
 // pages/_app.tsx
-import { GtmProvider } from '@react-gtm-kit/react-modern';
+import { GtmProvider } from '@jwiedeman/gtm-kit-react';
 
 export default function App({ Component, pageProps }) {
   return (
@@ -334,7 +334,7 @@ export default function App({ Component, pageProps }) {
 
 - Next.js 13.4+ (App Router)
 - React 18+
-- `@react-gtm-kit/core` (peer dependency)
+- `@jwiedeman/gtm-kit` (peer dependency)
 
 ---
 
