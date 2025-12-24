@@ -50,6 +50,16 @@ const escapeJsString = (value: string): string =>
     .replace(/\u2028/g, '\\u2028')
     .replace(/\u2029/g, '\\u2029');
 
+/**
+ * Checks if a dataLayer value is the GTM.js load event.
+ * Used to detect when GTM has finished loading.
+ */
+const isGtmLoadEvent = (value: DataLayerValue): boolean =>
+  value !== null &&
+  typeof value === 'object' &&
+  !Array.isArray(value) &&
+  (value as Record<string, unknown>).event === 'gtm.js';
+
 /** Options for configuring the auto-queue behavior */
 export interface AutoQueueOptions {
   /**
@@ -171,15 +181,7 @@ export function installAutoQueue(options: AutoQueueOptions = {}): AutoQueueState
   let timeoutTimer: ReturnType<typeof setTimeout> | null = null;
 
   // Check if GTM.js event is present (indicating GTM has loaded)
-  const isGtmLoaded = (): boolean => {
-    return dataLayer.some(
-      (entry) =>
-        entry !== null &&
-        typeof entry === 'object' &&
-        !Array.isArray(entry) &&
-        (entry as Record<string, unknown>).event === 'gtm.js'
-    );
-  };
+  const isGtmLoaded = (): boolean => dataLayer.some(isGtmLoadEvent);
 
   // Replay all buffered events to the dataLayer
   const replay = (): void => {
@@ -245,13 +247,7 @@ export function installAutoQueue(options: AutoQueueOptions = {}): AutoQueueState
       }
 
       // Check if this push indicates GTM is ready
-      if (
-        active &&
-        value !== null &&
-        typeof value === 'object' &&
-        !Array.isArray(value) &&
-        (value as Record<string, unknown>).event === 'gtm.js'
-      ) {
+      if (active && isGtmLoadEvent(value)) {
         // GTM just loaded! Trigger replay on next tick to ensure
         // this event is fully processed first
         setTimeout(replay, 0);

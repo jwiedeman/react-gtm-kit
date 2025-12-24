@@ -1,7 +1,7 @@
 # @jwiedeman/gtm-kit-remix
 
-[![CI](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml)
-[![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=remix)](https://codecov.io/gh/jwiedeman/react-gtm-kit)
+[![CI](https://github.com/jwiedeman/GTM-Kit/actions/workflows/ci.yml/badge.svg)](https://github.com/jwiedeman/GTM-Kit/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/jwiedeman/GTM-Kit/graph/badge.svg?flag=remix)](https://codecov.io/gh/jwiedeman/GTM-Kit)
 [![npm version](https://img.shields.io/npm/v/@jwiedeman/gtm-kit-remix.svg)](https://www.npmjs.com/package/@jwiedeman/gtm-kit-remix)
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/@jwiedeman/gtm-kit-remix)](https://bundlephobia.com/package/@jwiedeman/gtm-kit-remix)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)

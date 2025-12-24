@@ -336,6 +336,9 @@ importers:
 
   packages/cli:
     devDependencies:
+      '@types/node':
+        specifier: ^20.11.30
+        version: 20.19.24
       tslib:
         specifier: ^2.6.2
         version: 2.8.1
