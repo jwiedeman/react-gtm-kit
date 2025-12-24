@@ -8,7 +8,7 @@ const workspaceRoot = path.resolve(__dirname, '../../..');
 const exampleDir = path.resolve(workspaceRoot, 'examples/next-app');
 
 const buildNextExample = () => {
-  const result = spawnSync('pnpm', ['--filter', '@react-gtm-kit/example-next-app', 'build'], {
+  const result = spawnSync('pnpm', ['--filter', '@gtm-kit/example-next-app', 'build'], {
     cwd: workspaceRoot,
     stdio: 'inherit'
   });

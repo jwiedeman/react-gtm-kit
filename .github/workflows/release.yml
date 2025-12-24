@@ -41,7 +41,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile || pnpm install --frozen-lockfile --ignore-scripts
       - name: Build packages (excluding nuxt-app due to oxc-parser native binding issues)
-        run: pnpm -r --filter '!@react-gtm-kit/example-nuxt-app' build
+        run: pnpm -r --filter '!@gtm-kit/example-nuxt-app' build
       - name: semantic-release dry run
         run: pnpm run release:dry-run
         env:
@@ -83,7 +83,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile || pnpm install --frozen-lockfile --ignore-scripts
       - name: Build packages (excluding nuxt-app due to oxc-parser native binding issues)
-        run: pnpm -r --filter '!@react-gtm-kit/example-nuxt-app' build
+        run: pnpm -r --filter '!@gtm-kit/example-nuxt-app' build
       - name: Configure npm authentication
         if: steps.check-npm-token.outputs.has_npm_token == 'true'
         env:

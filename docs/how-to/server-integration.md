@@ -42,7 +42,7 @@ TAGGING_SERVER_URL="https://gtm.example.com" \
 GTM_MEASUREMENT_ID="G-1234567" \
 GTM_API_SECRET="shhh-secret" \
 ALLOWED_ORIGINS="https://app.example.com" \
-pnpm --filter @react-gtm-kit/example-server start
+pnpm --filter @gtm-kit/example-server start
 ```
 
 The response returns `202 Accepted` when the upstream call succeeds. Preview credentials

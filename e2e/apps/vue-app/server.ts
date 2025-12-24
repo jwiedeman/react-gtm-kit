@@ -36,7 +36,7 @@ const exampleDir = path.resolve(workspaceRoot, 'examples/vue-app');
 const distDir = path.resolve(exampleDir, 'dist');
 
 const buildVueExample = () => {
-  const result = spawnSync('pnpm', ['--filter', '@react-gtm-kit/example-vue-app', 'build'], {
+  const result = spawnSync('pnpm', ['--filter', '@gtm-kit/example-vue-app', 'build'], {
     cwd: workspaceRoot,
     stdio: 'inherit'
   });

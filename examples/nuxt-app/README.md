@@ -9,7 +9,7 @@ This example demonstrates how to integrate GTM Kit with a Nuxt 3 application, in
 pnpm install
 
 # Start the development server
-pnpm --filter @react-gtm-kit/example-nuxt-app dev
+pnpm --filter @gtm-kit/example-nuxt-app dev
 ```
 
 Open http://localhost:3000 to view the app.
@@ -46,7 +46,7 @@ nuxt-app/
 ### 1. Install Packages
 
 ```bash
-npm install @react-gtm-kit/core @react-gtm-kit/nuxt @react-gtm-kit/vue
+npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-nuxt @jwiedeman/gtm-kit-vue
 ```
 
 ### 2. Create GTM Plugin (plugins/gtm.client.ts)
@@ -54,8 +54,8 @@ npm install @react-gtm-kit/core @react-gtm-kit/nuxt @react-gtm-kit/vue
 The `.client.ts` suffix ensures this only runs on the client side.
 
 ```typescript
-import { GtmPlugin, type GtmPluginOptions } from '@react-gtm-kit/vue';
-import { consentPresets } from '@react-gtm-kit/core';
+import { GtmPlugin, type GtmPluginOptions } from '@jwiedeman/gtm-kit-vue';
+import { consentPresets } from '@jwiedeman/gtm-kit';
 
 export default defineNuxtPlugin((nuxtApp) => {
   const gtmOptions: GtmPluginOptions = {
@@ -76,7 +76,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
 ```vue
 <script setup lang="ts">
-import { useTrackPageViews } from '@react-gtm-kit/nuxt';
+import { useTrackPageViews } from '@jwiedeman/gtm-kit-nuxt';
 
 const route = useRoute();
 
@@ -99,7 +99,7 @@ useTrackPageViews({
 
 ```vue
 <script setup lang="ts">
-import { useNuxtGtmPush } from '@react-gtm-kit/nuxt';
+import { useNuxtGtmPush } from '@jwiedeman/gtm-kit-nuxt';
 
 const push = useNuxtGtmPush();
 
@@ -120,7 +120,7 @@ const handleClick = () => {
 
 ```vue
 <script setup lang="ts">
-import { useNuxtGtmConsent } from '@react-gtm-kit/nuxt';
+import { useNuxtGtmConsent } from '@jwiedeman/gtm-kit-nuxt';
 
 const { update } = useNuxtGtmConsent();
 
@@ -158,17 +158,17 @@ import {
   useNuxtGtmConsent, // Consent management (update, setDefaults)
   useNuxtGtmClient, // Raw GTM client instance
   useTrackPageViews // Automatic page view tracking
-} from '@react-gtm-kit/nuxt';
+} from '@jwiedeman/gtm-kit-nuxt';
 ```
 
 ## Testing
 
 ```bash
 # Build the app
-pnpm --filter @react-gtm-kit/example-nuxt-app build
+pnpm --filter @gtm-kit/example-nuxt-app build
 
 # Preview the built app
-pnpm --filter @react-gtm-kit/example-nuxt-app preview
+pnpm --filter @gtm-kit/example-nuxt-app preview
 
 # Run E2E tests
 pnpm e2e:test
@@ -212,7 +212,7 @@ You can also use `createNuxtGtmPlugin` for a more explicit setup:
 
 ```typescript
 // plugins/gtm.client.ts
-import { createNuxtGtmPlugin } from '@react-gtm-kit/nuxt';
+import { createNuxtGtmPlugin } from '@jwiedeman/gtm-kit-nuxt';
 
 export default defineNuxtPlugin((nuxtApp) => {
   const client = createNuxtGtmPlugin(nuxtApp.vueApp, {

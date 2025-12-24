@@ -7,7 +7,7 @@
  * @example
  * ```ts
  * // Call as early as possible (ideally inline in <head>)
- * import { installAutoQueue } from '@react-gtm-kit/core';
+ * import { installAutoQueue } from '@jwiedeman/gtm-kit';
  *
  * installAutoQueue(); // Start buffering immediately
  *

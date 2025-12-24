@@ -31,7 +31,7 @@ for an architectural walkthrough and production hardening guidance.
    TAGGING_SERVER_URL="https://gtm.example.com" \
    GTM_MEASUREMENT_ID="G-1234567" \
    GTM_API_SECRET="shhh-secret" \
-   pnpm --filter @react-gtm-kit/example-server start
+   pnpm --filter @gtm-kit/example-server start
    ```
 
    See the [relay README](../server/README.md) for the full list of supported
@@ -60,7 +60,7 @@ for an architectural walkthrough and production hardening guidance.
 4. Start the Vite dev server:
 
    ```bash
-   pnpm --filter @react-gtm-kit/example-fullstack-web dev
+   pnpm --filter @gtm-kit/example-fullstack-web dev
    ```
 
    The app renders on [http://127.0.0.1:5175](http://127.0.0.1:5175) by default.

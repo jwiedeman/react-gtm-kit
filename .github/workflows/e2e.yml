@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install || pnpm install --ignore-scripts
       - name: Build packages (excluding nuxt-app due to oxc-parser native binding issues)
-        run: pnpm -r --filter '!@react-gtm-kit/example-nuxt-app' build
+        run: pnpm -r --filter '!@gtm-kit/example-nuxt-app' build
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium
         env:
