@@ -1,3 +1,9 @@
+## [1.1.3](https://github.com/jwiedeman/GTM-Kit/compare/v1.1.2...v1.1.3) (2025-12-24)
+
+### Bug Fixes
+
+- address critical issues from comprehensive security/polish review ([4deb4fe](https://github.com/jwiedeman/GTM-Kit/commit/4deb4fe792eae977be62e88721fa90e4fc51a2f8))
+
 ## [1.1.2](https://github.com/jwiedeman/GTM-Kit/compare/v1.1.1...v1.1.2) (2025-12-23)
 
 ### Bug Fixes
