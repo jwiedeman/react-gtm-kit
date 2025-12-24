@@ -19,6 +19,32 @@ export {
   buildGtmNoscriptUrl as buildNoscriptUrl
 };
 
+/**
+ * Validate that a string is a valid JavaScript identifier.
+ * This prevents XSS attacks through dataLayerName injection.
+ */
+export const isValidJsIdentifier = (value: string): boolean => {
+  // Must be a valid JS identifier: starts with letter/$/_, followed by letters/digits/$/_
+  return /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(value);
+};
+
+/**
+ * Escape a string for safe use in JavaScript string literals.
+ * Prevents XSS when interpolating user-provided values into inline scripts.
+ */
+export const escapeJsString = (value: string): string => {
+  return value
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\r')
+    .replace(/</g, '\\x3c')
+    .replace(/>/g, '\\x3e')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
+};
+
 /** Filter out null/undefined values from an object */
 const filterNullish = <T extends Record<string, unknown>>(obj: T): T =>
   Object.fromEntries(Object.entries(obj).filter(([, v]) => v != null)) as T;
@@ -145,7 +171,13 @@ export const generateNoscriptTags = (
 
 /**
  * Generate the dataLayer initialization script.
+ * @throws {Error} If dataLayerName is not a valid JavaScript identifier
  */
 export const generateDataLayerScript = (dataLayerName: string = DEFAULT_DATA_LAYER_NAME): string => {
+  if (!isValidJsIdentifier(dataLayerName)) {
+    throw new Error(
+      `Invalid dataLayerName: "${dataLayerName}". Must be a valid JavaScript identifier (letters, digits, $, _ only, cannot start with a digit).`
+    );
+  }
   return `window.${dataLayerName}=window.${dataLayerName}||[];`;
 };

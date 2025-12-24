@@ -352,6 +352,21 @@ function Button() {
 
 ---
 
+## Related Packages
+
+- **Core**: [@jwiedeman/gtm-kit](https://www.npmjs.com/package/@jwiedeman/gtm-kit) (required)
+- **Modern React**: [@jwiedeman/gtm-kit-react](https://www.npmjs.com/package/@jwiedeman/gtm-kit-react) (recommended for new projects with hooks)
+
+---
+
+## Support
+
+**Have a question, found a bug, or need help?**
+
+[Open an issue on GitHub](https://github.com/jwiedeman/GTM-Kit/issues) — we're actively maintaining this project and respond quickly.
+
+---
+
 ## License
 
 MIT

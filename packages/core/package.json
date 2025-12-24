@@ -1,20 +1,29 @@
 {
   "name": "@jwiedeman/gtm-kit",
   "version": "1.0.0",
-  "description": "Framework-agnostic Google Tag Manager client - the core of GTM Kit.",
+  "description": "Framework-agnostic Google Tag Manager client - the core of GTM Kit. Zero dependencies, 3.7KB gzipped.",
   "repository": {
     "type": "git",
     "url": "https://github.com/jwiedeman/GTM-Kit.git",
     "directory": "packages/core"
+  },
+  "homepage": "https://github.com/jwiedeman/GTM-Kit#readme",
+  "bugs": {
+    "url": "https://github.com/jwiedeman/GTM-Kit/issues"
   },
   "author": "jwiedeman",
   "keywords": [
     "gtm",
     "google-tag-manager",
     "analytics",
-    "dataLayer"
+    "dataLayer",
+    "tracking",
+    "tag-manager",
+    "consent-mode",
+    "gdpr"
   ],
   "license": "MIT",
+  "sideEffects": false,
   "publishConfig": {
     "access": "public"
   },

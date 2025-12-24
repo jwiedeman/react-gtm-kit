@@ -1,11 +1,15 @@
 {
   "name": "@jwiedeman/gtm-kit-nuxt",
   "version": "1.0.0",
-  "description": "Nuxt 3 module for GTM Kit - Google Tag Manager integration with auto page tracking.",
+  "description": "Nuxt 3 module for GTM Kit - Google Tag Manager integration with auto page tracking and runtime config.",
   "repository": {
     "type": "git",
     "url": "https://github.com/jwiedeman/GTM-Kit.git",
     "directory": "packages/nuxt"
+  },
+  "homepage": "https://github.com/jwiedeman/GTM-Kit/tree/main/packages/nuxt#readme",
+  "bugs": {
+    "url": "https://github.com/jwiedeman/GTM-Kit/issues"
   },
   "author": "jwiedeman",
   "keywords": [
@@ -13,9 +17,13 @@
     "google-tag-manager",
     "nuxt",
     "nuxt3",
-    "module"
+    "module",
+    "auto-tracking",
+    "analytics",
+    "ssr"
   ],
   "license": "MIT",
+  "sideEffects": false,
   "publishConfig": {
     "access": "public"
   },

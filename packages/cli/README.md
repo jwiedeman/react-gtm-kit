@@ -255,6 +255,21 @@ const code = generateCode({
 
 ---
 
+## Related Packages
+
+- **Core**: [@jwiedeman/gtm-kit](https://www.npmjs.com/package/@jwiedeman/gtm-kit)
+- **All Adapters**: See the [main repository](https://github.com/jwiedeman/GTM-Kit) for the full list
+
+---
+
+## Support
+
+**Have a question, found a bug, or need help?**
+
+[Open an issue on GitHub](https://github.com/jwiedeman/GTM-Kit/issues) — we're actively maintaining this project and respond quickly.
+
+---
+
 ## License
 
 MIT
