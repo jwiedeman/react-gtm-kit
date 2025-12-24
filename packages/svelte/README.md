@@ -1,7 +1,7 @@
 # @jwiedeman/gtm-kit-svelte
 
-[![CI](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/jwiedeman/react-gtm-kit/actions/workflows/ci.yml)
-[![Coverage](https://codecov.io/gh/jwiedeman/react-gtm-kit/graph/badge.svg?flag=svelte)](https://codecov.io/gh/jwiedeman/react-gtm-kit)
+[![CI](https://github.com/jwiedeman/GTM-Kit/actions/workflows/ci.yml/badge.svg)](https://github.com/jwiedeman/GTM-Kit/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/jwiedeman/GTM-Kit/graph/badge.svg?flag=svelte)](https://codecov.io/gh/jwiedeman/GTM-Kit)
 [![npm version](https://img.shields.io/npm/v/@jwiedeman/gtm-kit-svelte.svg)](https://www.npmjs.com/package/@jwiedeman/gtm-kit-svelte)
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/@jwiedeman/gtm-kit-svelte)](https://bundlephobia.com/package/@jwiedeman/gtm-kit-svelte)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)

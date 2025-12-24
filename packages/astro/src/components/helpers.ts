@@ -1,6 +1,7 @@
 import {
   DEFAULT_DATA_LAYER_NAME,
   DEFAULT_GTM_HOST,
+  DEFAULT_NOSCRIPT_IFRAME_ATTRIBUTES,
   normalizeContainer,
   normalizeContainers,
   buildGtmScriptUrl,
@@ -11,6 +12,7 @@ import type { ContainerConfigInput, ScriptAttributes } from '@jwiedeman/gtm-kit'
 // Re-export for convenience
 export {
   DEFAULT_GTM_HOST,
+  DEFAULT_NOSCRIPT_IFRAME_ATTRIBUTES,
   normalizeContainer,
   normalizeContainers,
   buildGtmScriptUrl as buildScriptUrl,
@@ -90,13 +92,6 @@ export interface NoscriptTagData {
   src: string;
   attributes: Record<string, string>;
 }
-
-const DEFAULT_NOSCRIPT_IFRAME_ATTRIBUTES: Record<string, string> = {
-  height: '0',
-  width: '0',
-  style: 'display:none;visibility:hidden',
-  title: 'Google Tag Manager'
-};
 
 /**
  * Generate noscript iframe data for GTM containers.

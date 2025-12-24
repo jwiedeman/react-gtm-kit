@@ -5,7 +5,7 @@ const sidebar: DefaultTheme.Sidebar = {
     {
       text: 'How-to Guides',
       items: [
-        { text: 'Initialize React GTM Kit', link: '/how-to/setup' },
+        { text: 'Initialize GTM Kit', link: '/how-to/setup' },
         { text: 'Migrate from existing GTM setups', link: '/how-to/migration' },
         { text: 'Debug GTM integrations', link: '/how-to/debugging' },
         { text: 'Send analytics events', link: '/how-to/analytics-integration' },
@@ -20,7 +20,9 @@ const sidebar: DefaultTheme.Sidebar = {
         { text: 'SSR and CSP setup', link: '/how-to/ssr' },
         { text: 'SSR noscript + CSP nonces', link: '/how-to/ssr-noscript-csp' },
         { text: 'Keep bundles lightweight', link: '/how-to/optimization' },
+        { text: 'Auto-queue for race conditions', link: '/how-to/auto-queue' },
         { text: 'Examples & smoke tests', link: '/how-to/examples' },
+        { text: 'Troubleshooting install issues', link: '/how-to/troubleshooting-install' },
         { text: 'Troubleshooting & FAQ', link: '/how-to/troubleshooting' }
       ]
     }
@@ -103,11 +105,11 @@ const sidebar: DefaultTheme.Sidebar = {
 };
 
 const config: UserConfig = {
-  title: 'React GTM Kit',
-  description: 'Production-grade Google Tag Manager tooling for modern React stacks.',
+  title: 'GTM Kit',
+  description: 'Production-grade Google Tag Manager tooling for modern JavaScript frameworks.',
   lastUpdated: true,
   cleanUrls: true,
-  ignoreDeadLinks: true,
+  ignoreDeadLinks: false,
   themeConfig: {
     nav: [
       { text: 'Getting Started', link: '/' },
@@ -121,7 +123,7 @@ const config: UserConfig = {
     socialLinks: [{ icon: 'github', link: 'https://github.com/jwiedeman/GTM-Kit' }],
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2025 React GTM Kit maintainers'
+      copyright: 'Copyright © 2025 GTM Kit maintainers'
     }
   }
 };
