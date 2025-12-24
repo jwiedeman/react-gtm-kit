@@ -2,29 +2,30 @@
 
 **The simplest way to add Google Tag Manager to any JavaScript app.**
 
-Works with React, Vue, Next.js, Nuxt, Svelte, SolidJS, Remix, or vanilla JavaScript. Pick what you need, ignore the rest.
+Works with React, Vue, Next.js, Nuxt, Svelte, SolidJS, Remix, Astro, or vanilla JavaScript. Pick what you need, ignore the rest.
 
 <!-- Badges: Build & Quality -->
 
 [![CI](https://github.com/jwiedeman/GTM-Kit/actions/workflows/ci.yml/badge.svg)](https://github.com/jwiedeman/GTM-Kit/actions/workflows/ci.yml)
 [![E2E](https://github.com/jwiedeman/GTM-Kit/actions/workflows/e2e.yml/badge.svg)](https://github.com/jwiedeman/GTM-Kit/actions/workflows/e2e.yml)
 [![codecov](https://codecov.io/gh/jwiedeman/GTM-Kit/graph/badge.svg)](https://codecov.io/gh/jwiedeman/GTM-Kit)
-![Tests](https://img.shields.io/badge/tests-366_passed-brightgreen?logo=jest&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-645_passed-brightgreen?logo=jest&logoColor=white)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-3178C6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
 <!-- Badges: Package Status -->
 
-![core](https://img.shields.io/badge/core-3.7KB-brightgreen?logo=javascript&logoColor=white)
-![react](https://img.shields.io/badge/react-6.9KB-61DAFB?logo=react&logoColor=white)
-![vue](https://img.shields.io/badge/vue-4.0KB-4FC08D?logo=vuedotjs&logoColor=white)
-![next](https://img.shields.io/badge/next-14.2KB-000000?logo=nextdotjs&logoColor=white)
-![nuxt](https://img.shields.io/badge/nuxt-8.3KB-00DC82?logo=nuxtdotjs&logoColor=white)
+![core](https://img.shields.io/badge/core-5.3KB-brightgreen?logo=javascript&logoColor=white)
+![react](https://img.shields.io/badge/react-6.0KB-61DAFB?logo=react&logoColor=white)
+![vue](https://img.shields.io/badge/vue-5.9KB-4FC08D?logo=vuedotjs&logoColor=white)
+![next](https://img.shields.io/badge/next-7.2KB-000000?logo=nextdotjs&logoColor=white)
+![nuxt](https://img.shields.io/badge/nuxt-6.1KB-00DC82?logo=nuxtdotjs&logoColor=white)
 
 <!-- Badges: More Frameworks -->
 
-![svelte](https://img.shields.io/badge/svelte-5.4KB-FF3E00?logo=svelte&logoColor=white)
-![solid](https://img.shields.io/badge/solid-7.6KB-2C4F7C?logo=solid&logoColor=white)
-![remix](https://img.shields.io/badge/remix-7KB-000000?logo=remix&logoColor=white)
+![svelte](https://img.shields.io/badge/svelte-5.9KB-FF3E00?logo=svelte&logoColor=white)
+![solid](https://img.shields.io/badge/solid-6.0KB-2C4F7C?logo=solid&logoColor=white)
+![remix](https://img.shields.io/badge/remix-7.0KB-000000?logo=remix&logoColor=white)
+![astro](https://img.shields.io/badge/astro-6.3KB-FF5D01?logo=astro&logoColor=white)
 
 <!-- Badges: npm -->
 
@@ -52,7 +53,7 @@ Everything you need for production GTM implementations, out of the box:
 | **SSR/SSG Ready**       | Works with Next.js, Nuxt, Remix, SvelteKit - no hydration mismatches.               |
 | **Multiple Containers** | Load multiple GTM containers with independent configs.                              |
 | **CSP Nonce Support**   | Content Security Policy compatible with nonce injection.                            |
-| **Zero Dependencies**   | Core is 3.7KB gzipped. No bloat.                                                    |
+| **Zero Dependencies**   | Core is 5.3KB gzipped. No bloat.                                                    |
 
 ### Consent Mode v2 (GDPR)
 
@@ -98,6 +99,7 @@ Everything you need for production GTM implementations, out of the box:
 | **Svelte**  | Stores, SvelteKit SSR support                           |
 | **SolidJS** | Primitives, signals integration                         |
 | **Remix**   | Loader integration, streaming SSR                       |
+| **Astro**   | View Transitions support, component-based integration   |
 
 ---
 
@@ -109,7 +111,7 @@ Everything you need for production GTM implementations, out of the box:
 | "How do I do Consent Mode v2?"        | One-liner with built-in presets.  |
 | "I need multiple GTM containers"      | Pass an array. Done.              |
 | "It breaks SSR"                       | Nope. SSR-safe by default.        |
-| "The bundle is huge"                  | Core is 3.7KB gzipped. Zero deps. |
+| "The bundle is huge"                  | Core is 5.3KB gzipped. Zero deps. |
 
 ---
 
@@ -140,6 +142,7 @@ If you prefer to install manually, copy-paste the command for your framework:
 | **Svelte**        | `npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-svelte`       |
 | **SolidJS**       | `npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-solid`        |
 | **Remix**         | `npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-remix`        |
+| **Astro**         | `npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-astro`        |
 | **Vanilla**       | `npm install @jwiedeman/gtm-kit`                                 |
 | **React (class)** | `npm install @jwiedeman/gtm-kit @jwiedeman/gtm-kit-react-legacy` |
 
@@ -546,15 +549,16 @@ import {
 
 | Package                           | Size (gzip) | Use Case               |
 | --------------------------------- | ----------- | ---------------------- |
-| `@jwiedeman/gtm-kit`              | 3.7 KB      | Required for all       |
-| `@jwiedeman/gtm-kit-react`        | 6.9 KB      | React 16.8+            |
-| `@jwiedeman/gtm-kit-react-legacy` | 6.9 KB      | React class components |
-| `@jwiedeman/gtm-kit-vue`          | 4.0 KB      | Vue 3                  |
-| `@jwiedeman/gtm-kit-next`         | 14.2 KB     | Next.js 13+            |
-| `@jwiedeman/gtm-kit-nuxt`         | 8.3 KB      | Nuxt 3                 |
-| `@jwiedeman/gtm-kit-svelte`       | 5.4 KB      | Svelte 4+              |
-| `@jwiedeman/gtm-kit-solid`        | 7.6 KB      | SolidJS 1+             |
+| `@jwiedeman/gtm-kit`              | 5.3 KB      | Required for all       |
+| `@jwiedeman/gtm-kit-react`        | 6.0 KB      | React 16.8+            |
+| `@jwiedeman/gtm-kit-react-legacy` | 5.7 KB      | React class components |
+| `@jwiedeman/gtm-kit-vue`          | 5.9 KB      | Vue 3                  |
+| `@jwiedeman/gtm-kit-next`         | 7.2 KB      | Next.js 13+            |
+| `@jwiedeman/gtm-kit-nuxt`         | 6.1 KB      | Nuxt 3                 |
+| `@jwiedeman/gtm-kit-svelte`       | 5.9 KB      | Svelte 4+              |
+| `@jwiedeman/gtm-kit-solid`        | 6.0 KB      | SolidJS 1+             |
 | `@jwiedeman/gtm-kit-remix`        | 7.0 KB      | Remix 2+               |
+| `@jwiedeman/gtm-kit-astro`        | 6.3 KB      | Astro 3+               |
 
 ---
 
@@ -688,20 +692,21 @@ Use the correct adapter for your framework:
 
 ## Framework Support Matrix
 
-| Framework     | Package                           | Status    | Min Version | Tests                                                                   | Coverage                                                        | Size                                                     |
-| ------------- | --------------------------------- | --------- | ----------- | ----------------------------------------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------- |
-| Vanilla JS    | `@jwiedeman/gtm-kit`              | ✅ Stable | ES2018+     | ![155 tests](https://img.shields.io/badge/tests-155_passed-brightgreen) | ![82%](https://img.shields.io/badge/coverage-82%25-green)       | ![3.7KB](https://img.shields.io/badge/gzip-3.7KB-blue)   |
-| React (hooks) | `@jwiedeman/gtm-kit-react`        | ✅ Stable | 16.8+       | ![9 tests](https://img.shields.io/badge/tests-9_passed-brightgreen)     | ![84%](https://img.shields.io/badge/coverage-84%25-green)       | ![6.9KB](https://img.shields.io/badge/gzip-6.9KB-blue)   |
-| React (class) | `@jwiedeman/gtm-kit-react-legacy` | ✅ Stable | 16.0+       | ![4 tests](https://img.shields.io/badge/tests-4_passed-brightgreen)     | ![98%](https://img.shields.io/badge/coverage-98%25-brightgreen) | ![6.9KB](https://img.shields.io/badge/gzip-6.9KB-blue)   |
-| Next.js       | `@jwiedeman/gtm-kit-next`         | ✅ Stable | 13+         | ![14 tests](https://img.shields.io/badge/tests-14_passed-brightgreen)   | ![87%](https://img.shields.io/badge/coverage-87%25-green)       | ![14.2KB](https://img.shields.io/badge/gzip-14.2KB-blue) |
-| Vue 3         | `@jwiedeman/gtm-kit-vue`          | ✅ Stable | 3.0+        | ![23 tests](https://img.shields.io/badge/tests-23_passed-brightgreen)   | ![98%](https://img.shields.io/badge/coverage-98%25-brightgreen) | ![4.0KB](https://img.shields.io/badge/gzip-4.0KB-blue)   |
-| Nuxt 3        | `@jwiedeman/gtm-kit-nuxt`         | ✅ Stable | 3.0+        | ![12 tests](https://img.shields.io/badge/tests-12_passed-brightgreen)   | ![84%](https://img.shields.io/badge/coverage-84%25-green)       | ![8.3KB](https://img.shields.io/badge/gzip-8.3KB-blue)   |
-| Svelte        | `@jwiedeman/gtm-kit-svelte`       | ✅ Stable | 4.0+        | ![15 tests](https://img.shields.io/badge/tests-15_passed-brightgreen)   | ![83%](https://img.shields.io/badge/coverage-83%25-green)       | ![5.4KB](https://img.shields.io/badge/gzip-5.4KB-blue)   |
-| SolidJS       | `@jwiedeman/gtm-kit-solid`        | ✅ Stable | 1.0+        | ![21 tests](https://img.shields.io/badge/tests-21_passed-brightgreen)   | ![96%](https://img.shields.io/badge/coverage-96%25-brightgreen) | ![7.6KB](https://img.shields.io/badge/gzip-7.6KB-blue)   |
-| Remix         | `@jwiedeman/gtm-kit-remix`        | ✅ Stable | 2.0+        | ![19 tests](https://img.shields.io/badge/tests-19_passed-brightgreen)   | ![71%](https://img.shields.io/badge/coverage-71%25-yellow)      | ![7.0KB](https://img.shields.io/badge/gzip-7.0KB-blue)   |
-| CLI           | `@jwiedeman/gtm-kit-cli`          | ✅ Stable | Node 18+    | ![94 tests](https://img.shields.io/badge/tests-94_passed-brightgreen)   | ![72%](https://img.shields.io/badge/coverage-72%25-yellow)      | ![0KB](https://img.shields.io/badge/runtime-0KB-blue)    |
+| Framework     | Package                           | Status    | Min Version | Tests                                                                   | Coverage                                                        | Size                                                   |
+| ------------- | --------------------------------- | --------- | ----------- | ----------------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------ |
+| Vanilla JS    | `@jwiedeman/gtm-kit`              | ✅ Stable | ES2018+     | ![313 tests](https://img.shields.io/badge/tests-313_passed-brightgreen) | ![96%](https://img.shields.io/badge/coverage-96%25-brightgreen) | ![5.3KB](https://img.shields.io/badge/gzip-5.3KB-blue) |
+| React (hooks) | `@jwiedeman/gtm-kit-react`        | ✅ Stable | 16.8+       | ![26 tests](https://img.shields.io/badge/tests-26_passed-brightgreen)   | ![90%](https://img.shields.io/badge/coverage-90%25-green)       | ![6.0KB](https://img.shields.io/badge/gzip-6.0KB-blue) |
+| React (class) | `@jwiedeman/gtm-kit-react-legacy` | ✅ Stable | 16.0+       | ![4 tests](https://img.shields.io/badge/tests-4_passed-brightgreen)     | ![98%](https://img.shields.io/badge/coverage-98%25-brightgreen) | ![5.7KB](https://img.shields.io/badge/gzip-5.7KB-blue) |
+| Next.js       | `@jwiedeman/gtm-kit-next`         | ✅ Stable | 13+         | ![14 tests](https://img.shields.io/badge/tests-14_passed-brightgreen)   | ![86%](https://img.shields.io/badge/coverage-86%25-green)       | ![7.2KB](https://img.shields.io/badge/gzip-7.2KB-blue) |
+| Vue 3         | `@jwiedeman/gtm-kit-vue`          | ✅ Stable | 3.0+        | ![40 tests](https://img.shields.io/badge/tests-40_passed-brightgreen)   | ![99%](https://img.shields.io/badge/coverage-99%25-brightgreen) | ![5.9KB](https://img.shields.io/badge/gzip-5.9KB-blue) |
+| Nuxt 3        | `@jwiedeman/gtm-kit-nuxt`         | ✅ Stable | 3.0+        | ![12 tests](https://img.shields.io/badge/tests-12_passed-brightgreen)   | ![82%](https://img.shields.io/badge/coverage-82%25-green)       | ![6.1KB](https://img.shields.io/badge/gzip-6.1KB-blue) |
+| Svelte        | `@jwiedeman/gtm-kit-svelte`       | ✅ Stable | 4.0+        | ![15 tests](https://img.shields.io/badge/tests-15_passed-brightgreen)   | ![83%](https://img.shields.io/badge/coverage-83%25-green)       | ![5.9KB](https://img.shields.io/badge/gzip-5.9KB-blue) |
+| SolidJS       | `@jwiedeman/gtm-kit-solid`        | ✅ Stable | 1.0+        | ![21 tests](https://img.shields.io/badge/tests-21_passed-brightgreen)   | ![96%](https://img.shields.io/badge/coverage-96%25-brightgreen) | ![6.0KB](https://img.shields.io/badge/gzip-6.0KB-blue) |
+| Remix         | `@jwiedeman/gtm-kit-remix`        | ✅ Stable | 2.0+        | ![24 tests](https://img.shields.io/badge/tests-24_passed-brightgreen)   | ![92%](https://img.shields.io/badge/coverage-92%25-brightgreen) | ![7.0KB](https://img.shields.io/badge/gzip-7.0KB-blue) |
+| Astro         | `@jwiedeman/gtm-kit-astro`        | ✅ Stable | 3.0+        | ![57 tests](https://img.shields.io/badge/tests-57_passed-brightgreen)   | ![86%](https://img.shields.io/badge/coverage-86%25-green)       | ![6.3KB](https://img.shields.io/badge/gzip-6.3KB-blue) |
+| CLI           | `@jwiedeman/gtm-kit-cli`          | ✅ Stable | Node 18+    | ![119 tests](https://img.shields.io/badge/tests-119_passed-brightgreen) | ![94%](https://img.shields.io/badge/coverage-94%25-brightgreen) | ![0KB](https://img.shields.io/badge/runtime-0KB-blue)  |
 
-**Total: 366 tests across 10 packages**
+**Total: 645 tests across 11 packages**
 
 ---
 
