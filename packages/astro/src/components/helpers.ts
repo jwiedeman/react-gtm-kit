@@ -19,6 +19,10 @@ export {
   buildGtmNoscriptUrl as buildNoscriptUrl
 };
 
+/** Filter out null/undefined values from an object */
+const filterNullish = <T extends Record<string, unknown>>(obj: T): T =>
+  Object.fromEntries(Object.entries(obj).filter(([, v]) => v != null)) as T;
+
 export interface GtmScriptConfig {
   containers: ContainerConfigInput | ContainerConfigInput[];
   host?: string;
@@ -68,21 +72,13 @@ export const generateScriptTags = (config: GtmScriptConfig): ScriptTagData[] => 
     const src = buildGtmScriptUrl(host, container.id, params, dataLayerName);
     const { async: asyncAttr, defer, nonce, ...restAttributes } = scriptAttributes ?? {};
 
-    const attributes: Record<string, string | boolean> = {};
-
-    for (const [key, value] of Object.entries(restAttributes)) {
-      if (value !== undefined && value !== null) {
-        attributes[key] = value;
-      }
-    }
-
     return {
       id: container.id,
       src,
       async: asyncAttr ?? true,
       defer,
       nonce,
-      attributes
+      attributes: filterNullish(restAttributes) as Record<string, string | boolean>
     };
   });
 };
@@ -132,12 +128,12 @@ export const generateNoscriptTags = (
       ...iframeAttributes
     };
 
-    const attributes: Record<string, string> = {};
-    for (const [key, value] of Object.entries(mergedAttributes)) {
-      if (value !== undefined && value !== null) {
-        attributes[key] = String(value);
-      }
-    }
+    // Filter nullish values and convert to strings
+    const attributes = Object.fromEntries(
+      Object.entries(mergedAttributes)
+        .filter(([, v]) => v != null)
+        .map(([k, v]) => [k, String(v)])
+    ) as Record<string, string>;
 
     return {
       id: container.id,
