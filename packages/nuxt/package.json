@@ -49,8 +49,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@jwiedeman/gtm-kit": "workspace:*",
-    "@jwiedeman/gtm-kit-vue": "workspace:*"
+    "@jwiedeman/gtm-kit": "^1.0.0",
+    "@jwiedeman/gtm-kit-vue": "^1.0.0"
   },
   "peerDependencies": {
     "nuxt": "^3.0.0",

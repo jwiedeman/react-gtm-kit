@@ -324,8 +324,8 @@ importers:
   packages/astro:
     dependencies:
       '@jwiedeman/gtm-kit':
-        specifier: workspace:*
-        version: link:../core
+        specifier: ^1.0.0
+        version: 1.1.5
     devDependencies:
       astro:
         specifier: ^4.16.0
@@ -355,8 +355,8 @@ importers:
   packages/next:
     dependencies:
       '@jwiedeman/gtm-kit':
-        specifier: workspace:*
-        version: link:../core
+        specifier: ^1.0.0
+        version: 1.1.5
       next:
         specifier: ^13.4.0 || ^14.0.0 || ^15.0.0
         version: 15.5.6(@babel/core@7.28.5)(@playwright/test@1.56.1)(react-dom@18.3.1)(react@18.3.1)
@@ -386,11 +386,11 @@ importers:
   packages/nuxt:
     dependencies:
       '@jwiedeman/gtm-kit':
-        specifier: workspace:*
-        version: link:../core
+        specifier: ^1.0.0
+        version: 1.1.5
       '@jwiedeman/gtm-kit-vue':
-        specifier: workspace:*
-        version: link:../vue
+        specifier: ^1.0.0
+        version: 1.1.5(vue@3.5.23)
     devDependencies:
       '@vue/test-utils':
         specifier: ^2.4.6
@@ -408,8 +408,8 @@ importers:
   packages/react-legacy:
     dependencies:
       '@jwiedeman/gtm-kit':
-        specifier: workspace:*
-        version: link:../core
+        specifier: ^1.0.0
+        version: 1.1.5
     devDependencies:
       '@testing-library/jest-dom':
         specifier: ^6.4.2
@@ -436,8 +436,8 @@ importers:
   packages/react-modern:
     dependencies:
       '@jwiedeman/gtm-kit':
-        specifier: workspace:*
-        version: link:../core
+        specifier: ^1.0.0
+        version: 1.1.5
     devDependencies:
       '@testing-library/jest-dom':
         specifier: ^6.4.2
@@ -467,8 +467,8 @@ importers:
   packages/remix:
     dependencies:
       '@jwiedeman/gtm-kit':
-        specifier: workspace:*
-        version: link:../core
+        specifier: ^1.0.0
+        version: 1.1.5
     devDependencies:
       '@remix-run/react':
         specifier: ^2.8.1
@@ -498,8 +498,8 @@ importers:
   packages/solid:
     dependencies:
       '@jwiedeman/gtm-kit':
-        specifier: workspace:*
-        version: link:../core
+        specifier: ^1.0.0
+        version: 1.1.5
     devDependencies:
       '@solidjs/testing-library':
         specifier: ^0.8.7
@@ -517,8 +517,8 @@ importers:
   packages/svelte:
     dependencies:
       '@jwiedeman/gtm-kit':
-        specifier: workspace:*
-        version: link:../core
+        specifier: ^1.0.0
+        version: 1.1.5
     devDependencies:
       '@testing-library/svelte':
         specifier: ^5.2.0
@@ -536,8 +536,8 @@ importers:
   packages/vue:
     dependencies:
       '@jwiedeman/gtm-kit':
-        specifier: workspace:*
-        version: link:../core
+        specifier: ^1.0.0
+        version: 1.1.5
     devDependencies:
       '@vue/test-utils':
         specifier: ^2.4.6
@@ -3989,6 +3989,19 @@ packages:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
     dev: true
+
+  /@jwiedeman/gtm-kit-vue@1.1.5(vue@3.5.23):
+    resolution: {integrity: sha512-rkKV4DV5FIvj0XKyPvNkcG4YcD87o+0ALH1OV4d30aOmv/nHWQgTUnHMqkTQ1Wq2J0pIKA920XlQ0Qq4nNUA5Q==}
+    peerDependencies:
+      vue: ^3.3.0
+    dependencies:
+      '@jwiedeman/gtm-kit': 1.1.5
+      vue: 3.5.23(typescript@5.4.5)
+    dev: false
+
+  /@jwiedeman/gtm-kit@1.1.5:
+    resolution: {integrity: sha512-1Kc3O6w5DQI0KQ1h2Ku3r/AWNwEgYjpsl940j9Hcj7DKKgJVKNQkJFnaSol2O4kGOAiJnoh6PaCWz6Np76Aa1Q==}
+    dev: false
 
   /@kwsites/file-exists@1.1.1:
     resolution: {integrity: sha512-m9/5YGR18lIwxSFDwfE3oA7bWuq9kdau6ugN4H2rJeyhFQZcG9AgSHkQtSD15a8WvTgfz9aikZMrKPHvbpqFiw==}
