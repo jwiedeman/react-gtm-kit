@@ -1,3 +1,9 @@
+## [1.1.6](https://github.com/jwiedeman/GTM-Kit/compare/v1.1.5...v1.1.6) (2026-01-09)
+
+### Bug Fixes
+
+- replace workspace:\* dependencies with ^1.0.0 for npm compatibility ([f0bb45f](https://github.com/jwiedeman/GTM-Kit/commit/f0bb45ff3722e6ffb34b7a8434d74d64c1575b30)), closes [#124](https://github.com/jwiedeman/GTM-Kit/issues/124)
+
 ## [1.1.5](https://github.com/jwiedeman/GTM-Kit/compare/v1.1.4...v1.1.5) (2025-12-24)
 
 ### Bug Fixes
