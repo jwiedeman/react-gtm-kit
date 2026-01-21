@@ -1,4 +1,13 @@
-import React, { createContext, useContext, useEffect, useRef, useMemo, type ReactNode } from 'react';
+import React, {
+  Component,
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useMemo,
+  type ErrorInfo,
+  type ReactNode
+} from 'react';
 import {
   createGtmClient,
   type ConsentRegionOptions,
@@ -43,6 +52,8 @@ export interface GtmContextValue {
   setConsentDefaults: (state: ConsentState, options?: ConsentRegionOptions) => void;
   /** Update consent state */
   updateConsent: (state: ConsentState, options?: ConsentRegionOptions) => void;
+  /** Synchronously check if all GTM scripts have finished loading */
+  isReady: () => boolean;
   /** Returns a promise that resolves when all GTM scripts are loaded */
   whenReady: () => Promise<ScriptLoadState[]>;
 }
@@ -59,6 +70,15 @@ export interface GtmConsentApi {
  * The GTM context for Remix.
  */
 export const GtmContext = createContext<GtmContextValue | null>(null);
+
+const warnOnNestedProvider = (): void => {
+  if (process.env.NODE_ENV !== 'production') {
+    console.warn(
+      '[gtm-kit/remix] Nested GtmProvider detected. You should only have one GtmProvider at the root of your app. ' +
+        'The nested provider will be ignored.'
+    );
+  }
+};
 
 /**
  * GTM Provider component for Remix.
@@ -84,6 +104,29 @@ export const GtmContext = createContext<GtmContextValue | null>(null);
  * ```
  */
 export function GtmProvider({ config, children, onBeforeInit, onAfterInit }: GtmProviderProps): React.ReactElement {
+  // Check for nested provider
+  const existingContext = useContext(GtmContext);
+
+  // Warn if we're inside another GtmProvider (nested providers)
+  useEffect(() => {
+    if (existingContext) {
+      warnOnNestedProvider();
+    }
+  }, [existingContext]);
+
+  // If nested, just pass through children without creating a new context
+  if (existingContext) {
+    return <>{children}</>;
+  }
+
+  return (
+    <GtmProviderInner config={config} onBeforeInit={onBeforeInit} onAfterInit={onAfterInit}>
+      {children}
+    </GtmProviderInner>
+  );
+}
+
+function GtmProviderInner({ config, children, onBeforeInit, onAfterInit }: GtmProviderProps): React.ReactElement {
   // Create client once and store in ref to survive StrictMode remounts
   const clientRef = useRef<GtmClient | null>(null);
   const initializedRef = useRef(false);
@@ -145,6 +188,7 @@ export function GtmProvider({ config, children, onBeforeInit, onAfterInit }: Gtm
       setConsentDefaults: (state: ConsentState, options?: ConsentRegionOptions) =>
         client.setConsentDefaults(state, options),
       updateConsent: (state: ConsentState, options?: ConsentRegionOptions) => client.updateConsent(state, options),
+      isReady: () => client.isReady(),
       whenReady: () => client.whenReady()
     }),
     [client]
@@ -166,7 +210,7 @@ const useGtmContext = (): GtmContextValue => {
   const context = useContext(GtmContext);
   if (!context) {
     throw new Error(
-      '[gtm-kit] useGtm() was called outside of a GtmProvider. ' +
+      '[gtm-kit/remix] useGtm() was called outside of a GtmProvider. ' +
         'Make sure to wrap your app with <GtmProvider config={{ containers: "GTM-XXXXXX" }}>.'
     );
   }
@@ -279,3 +323,110 @@ export const useGtmClient = (): GtmClient => {
 export const useGtmReady = (): (() => Promise<ScriptLoadState[]>) => {
   return useGtmContext().whenReady;
 };
+
+/**
+ * Hook to check if GTM scripts have finished loading synchronously.
+ *
+ * @example
+ * ```tsx
+ * import { useIsGtmReady } from '@jwiedeman/gtm-kit-remix';
+ *
+ * function MyComponent() {
+ *   const isReady = useIsGtmReady();
+ *   return <div>{isReady() ? 'GTM Ready' : 'Loading...'}</div>;
+ * }
+ * ```
+ */
+export const useIsGtmReady = (): (() => boolean) => {
+  return useGtmContext().isReady;
+};
+
+/**
+ * Props for GtmErrorBoundary component.
+ */
+export interface GtmErrorBoundaryProps {
+  children: ReactNode;
+  /** Fallback UI to render when an error occurs */
+  fallback?: ReactNode | ((error: Error, reset: () => void) => ReactNode);
+  /** Callback invoked when an error is caught */
+  onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  /** Whether to log errors to console (default: true in development) */
+  logErrors?: boolean;
+}
+
+interface GtmErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+}
+
+/**
+ * Error boundary component for GTM provider in Remix apps.
+ * Catches errors during GTM initialization and renders a fallback UI.
+ * Analytics and tracking will be disabled when an error occurs.
+ *
+ * @example
+ * ```tsx
+ * import { GtmProvider, GtmErrorBoundary } from '@jwiedeman/gtm-kit-remix';
+ *
+ * export default function App() {
+ *   return (
+ *     <GtmErrorBoundary fallback={<div>GTM failed to load</div>}>
+ *       <GtmProvider config={{ containers: 'GTM-XXXXXX' }}>
+ *         <Outlet />
+ *       </GtmProvider>
+ *     </GtmErrorBoundary>
+ *   );
+ * }
+ * ```
+ */
+export class GtmErrorBoundary extends Component<GtmErrorBoundaryProps, GtmErrorBoundaryState> {
+  constructor(props: GtmErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error): GtmErrorBoundaryState {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    const { onError, logErrors = process.env.NODE_ENV !== 'production' } = this.props;
+
+    if (logErrors) {
+      console.error('[gtm-kit/remix] Error caught by GtmErrorBoundary:', error);
+      console.error('[gtm-kit/remix] Component stack:', errorInfo.componentStack);
+    }
+
+    if (onError) {
+      try {
+        onError(error, errorInfo);
+      } catch {
+        // Ignore callback errors
+      }
+    }
+  }
+
+  reset = (): void => {
+    this.setState({ hasError: false, error: null });
+  };
+
+  render(): ReactNode {
+    const { hasError, error } = this.state;
+    const { children, fallback } = this.props;
+
+    if (hasError && error) {
+      if (fallback === undefined) {
+        // Default: render children without GTM (silent fallback)
+        return children;
+      }
+
+      if (typeof fallback === 'function') {
+        return fallback(error, this.reset);
+      }
+
+      return fallback;
+    }
+
+    return children;
+  }
+}

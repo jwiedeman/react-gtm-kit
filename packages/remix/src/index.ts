@@ -1,12 +1,14 @@
-export type { GtmProviderProps, GtmContextValue, GtmConsentApi } from './provider';
+export type { GtmProviderProps, GtmContextValue, GtmConsentApi, GtmErrorBoundaryProps } from './provider';
 export {
   GtmProvider,
+  GtmErrorBoundary,
   GtmContext,
   useGtm,
   useGtmPush,
   useGtmConsent,
   useGtmClient,
-  useGtmReady
+  useGtmReady,
+  useIsGtmReady
 } from './provider';
 
 export { useTrackPageViews } from './route-tracker';

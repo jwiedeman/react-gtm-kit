@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { defineComponent, h } from 'vue';
-import { GtmPlugin, useGtm, useGtmPush, useGtmConsent, useGtmClient, useGtmReady } from '../plugin';
+import { GtmPlugin, useGtm, useGtmPush, useGtmConsent, useGtmClient, useGtmReady, useIsGtmReady } from '../plugin';
 
 // Mock the core module
 jest.mock('@jwiedeman/gtm-kit', () => {
@@ -11,6 +11,7 @@ jest.mock('@jwiedeman/gtm-kit', () => {
     updateConsent: jest.fn(),
     teardown: jest.fn(),
     isInitialized: jest.fn().mockReturnValue(true),
+    isReady: jest.fn().mockReturnValue(true),
     whenReady: jest.fn().mockResolvedValue([{ containerId: 'GTM-TEST', status: 'loaded' }]),
     onReady: jest.fn().mockImplementation((cb) => {
       cb([{ containerId: 'GTM-TEST', status: 'loaded' }]);
@@ -332,6 +333,29 @@ describe('GtmPlugin', () => {
 
       expect(mockClient.updateConsent).toHaveBeenCalledWith(consentState, undefined);
     });
+
+    it('should return memoized consent API (same object reference)', () => {
+      let consentApi1: ReturnType<typeof useGtmConsent> | undefined;
+      let consentApi2: ReturnType<typeof useGtmConsent> | undefined;
+
+      const TestComponent = defineComponent({
+        setup() {
+          // Call useGtmConsent twice
+          consentApi1 = useGtmConsent();
+          consentApi2 = useGtmConsent();
+          return () => h('div', 'test');
+        }
+      });
+
+      mount(TestComponent, {
+        global: {
+          plugins: [[GtmPlugin, { containers: 'GTM-TEST123' }]]
+        }
+      });
+
+      // Both calls should return the same object reference (memoized)
+      expect(consentApi1).toBe(consentApi2);
+    });
   });
 
   describe('useGtmClient', () => {
@@ -396,6 +420,29 @@ describe('GtmPlugin', () => {
 
       const states = await whenReady!();
       expect(states).toEqual([{ containerId: 'GTM-TEST', status: 'loaded' }]);
+    });
+  });
+
+  describe('useIsGtmReady', () => {
+    it('should return the isReady function', () => {
+      let isReady: ReturnType<typeof useIsGtmReady> | undefined;
+
+      const TestComponent = defineComponent({
+        setup() {
+          isReady = useIsGtmReady();
+          return () => h('div', 'test');
+        }
+      });
+
+      mount(TestComponent, {
+        global: {
+          plugins: [[GtmPlugin, { containers: 'GTM-TEST123' }]]
+        }
+      });
+
+      expect(typeof isReady).toBe('function');
+      expect(isReady!()).toBe(true);
+      expect(mockClient.isReady).toHaveBeenCalled();
     });
   });
 
@@ -530,6 +577,104 @@ describe('GtmPlugin', () => {
 
       expect(mockClient.push).toHaveBeenCalledWith({ event: 'child_a_event' });
       expect(mockClient.push).toHaveBeenCalledWith({ event: 'child_b_event' });
+    });
+  });
+
+  describe('duplicate installation guard', () => {
+    it('should be prevented by Vue when plugin is installed twice on same app', () => {
+      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+      const TestComponent = defineComponent({
+        setup() {
+          return () => h('div', 'test');
+        }
+      });
+
+      // Mount with the plugin installed twice using the same app
+      // Vue itself prevents duplicate plugin installation
+      const wrapper = mount(TestComponent, {
+        global: {
+          plugins: [
+            [GtmPlugin, { containers: 'GTM-FIRST' }],
+            [GtmPlugin, { containers: 'GTM-SECOND' }]
+          ]
+        }
+      });
+
+      // Vue's built-in protection warns about duplicate plugin installation
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('Plugin has already been applied'));
+
+      // Should only create one client due to Vue's protection
+      expect(createGtmClient).toHaveBeenCalledTimes(1);
+
+      consoleWarnSpy.mockRestore();
+      wrapper.unmount();
+    });
+  });
+
+  describe('consent warning', () => {
+    it('should warn when setConsentDefaults is called after init with onBeforeInit provided', () => {
+      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+      let consentApi: ReturnType<typeof useGtmConsent> | undefined;
+
+      const TestComponent = defineComponent({
+        setup() {
+          consentApi = useGtmConsent();
+          return () => h('div', 'test');
+        }
+      });
+
+      // onBeforeInit is provided (typically used to set consent defaults)
+      const onBeforeInit = () => {
+        // Doesn't matter what this does - just that it's provided
+      };
+
+      mount(TestComponent, {
+        global: {
+          plugins: [[GtmPlugin, { containers: 'GTM-TEST123', onBeforeInit }]]
+        }
+      });
+
+      // Call setConsentDefaults after init - should warn about using onBeforeInit instead
+      consentApi!.setConsentDefaults({ analytics_storage: 'denied' });
+
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'setConsentDefaults() was called after initialization while onBeforeInit was also provided'
+        )
+      );
+
+      consoleWarnSpy.mockRestore();
+    });
+
+    it('should not warn when setConsentDefaults is called without onBeforeInit', () => {
+      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+      let consentApi: ReturnType<typeof useGtmConsent> | undefined;
+
+      const TestComponent = defineComponent({
+        setup() {
+          consentApi = useGtmConsent();
+          return () => h('div', 'test');
+        }
+      });
+
+      mount(TestComponent, {
+        global: {
+          plugins: [[GtmPlugin, { containers: 'GTM-TEST123' }]]
+        }
+      });
+
+      // Call setConsentDefaults without onBeforeInit - no warning expected
+      consentApi!.setConsentDefaults({ analytics_storage: 'denied' });
+
+      // Should not have any consent-related warnings
+      const consentWarnings = consoleWarnSpy.mock.calls.filter(
+        (call) =>
+          typeof call[0] === 'string' && (call[0].includes('consent defaults') || call[0].includes('onBeforeInit'))
+      );
+      expect(consentWarnings.length).toBe(0);
+
+      consoleWarnSpy.mockRestore();
     });
   });
 });

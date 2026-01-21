@@ -268,7 +268,7 @@ describe('@jwiedeman/gtm-kit-solid', () => {
           useGtm();
           return null;
         });
-      }).toThrow('[gtm-kit] useGtm() was called outside of a GtmProvider');
+      }).toThrow('[gtm-kit/solid] useGtm() was called outside of a GtmProvider');
     });
 
     it('throws error when useGtmPush is called outside provider', () => {
@@ -277,7 +277,7 @@ describe('@jwiedeman/gtm-kit-solid', () => {
           useGtmPush();
           return null;
         });
-      }).toThrow('[gtm-kit] useGtm() was called outside of a GtmProvider');
+      }).toThrow('[gtm-kit/solid] useGtm() was called outside of a GtmProvider');
     });
   });
 
@@ -419,7 +419,7 @@ describe('@jwiedeman/gtm-kit-solid', () => {
           useGtmConsent();
           return null;
         });
-      }).toThrow('[gtm-kit] useGtm() was called outside of a GtmProvider');
+      }).toThrow('[gtm-kit/solid] useGtm() was called outside of a GtmProvider');
     });
 
     it('throws error when useGtmClient is called outside provider', () => {
@@ -428,7 +428,7 @@ describe('@jwiedeman/gtm-kit-solid', () => {
           useGtmClient();
           return null;
         });
-      }).toThrow('[gtm-kit] useGtm() was called outside of a GtmProvider');
+      }).toThrow('[gtm-kit/solid] useGtm() was called outside of a GtmProvider');
     });
 
     it('throws error when useGtmReady is called outside provider', () => {
@@ -437,7 +437,7 @@ describe('@jwiedeman/gtm-kit-solid', () => {
           useGtmReady();
           return null;
         });
-      }).toThrow('[gtm-kit] useGtm() was called outside of a GtmProvider');
+      }).toThrow('[gtm-kit/solid] useGtm() was called outside of a GtmProvider');
     });
   });
 });

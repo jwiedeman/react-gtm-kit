@@ -1,13 +1,23 @@
 <script setup lang="ts">
-import { useGtm } from '@jwiedeman/gtm-kit-vue';
+import { onMounted } from 'vue';
 
-const { push } = useGtm();
+// Store the push function once available on the client
+let push: ((data: Record<string, unknown>) => void) | null = null;
+
+// Only initialize GTM composables on the client side
+onMounted(async () => {
+  const { useGtm } = await import('@jwiedeman/gtm-kit-vue');
+  const gtm = useGtm();
+  push = gtm.push;
+});
 
 const trackFormSubmit = () => {
-  push({
-    event: 'form_submit',
-    form_name: 'contact_form'
-  });
+  if (push) {
+    push({
+      event: 'form_submit',
+      form_name: 'contact_form'
+    });
+  }
   alert('Form event tracked!');
 };
 

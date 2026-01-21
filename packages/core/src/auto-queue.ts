@@ -60,6 +60,35 @@ const isGtmLoadEvent = (value: DataLayerValue): boolean =>
   !Array.isArray(value) &&
   (value as Record<string, unknown>).event === 'gtm.js';
 
+/**
+ * Cleans up the inline buffer global reference.
+ * Call this in error handlers to prevent memory leaks if the full
+ * GTM Kit fails to initialize after the inline script ran.
+ *
+ * @example
+ * ```ts
+ * try {
+ *   // Initialize GTM Kit
+ *   const client = createGtmClient({ containers: 'GTM-XXXXX' });
+ *   client.init();
+ * } catch (error) {
+ *   // Clean up inline buffer on error
+ *   cleanupInlineBuffer();
+ *   console.error('GTM initialization failed:', error);
+ * }
+ * ```
+ */
+export function cleanupInlineBuffer(): void {
+  if (typeof globalThis === 'undefined') {
+    return;
+  }
+
+  const globalScope = globalThis as Record<string, unknown>;
+  if (globalScope.__gtmkit_buffer !== undefined) {
+    delete globalScope.__gtmkit_buffer;
+  }
+}
+
 /** Options for configuring the auto-queue behavior */
 export interface AutoQueueOptions {
   /**
@@ -179,6 +208,7 @@ export function installAutoQueue(options: AutoQueueOptions = {}): AutoQueueState
   let gtmReady = false;
   let pollTimer: ReturnType<typeof setInterval> | null = null;
   let timeoutTimer: ReturnType<typeof setTimeout> | null = null;
+  let replayTimer: ReturnType<typeof setTimeout> | null = null;
 
   // Check if GTM.js event is present (indicating GTM has loaded)
   const isGtmLoaded = (): boolean => dataLayer.some(isGtmLoadEvent);
@@ -190,7 +220,7 @@ export function installAutoQueue(options: AutoQueueOptions = {}): AutoQueueState
     active = false;
     gtmReady = true;
 
-    // Clear timers
+    // Clear all timers
     if (pollTimer) {
       clearInterval(pollTimer);
       pollTimer = null;
@@ -198,6 +228,10 @@ export function installAutoQueue(options: AutoQueueOptions = {}): AutoQueueState
     if (timeoutTimer) {
       clearTimeout(timeoutTimer);
       timeoutTimer = null;
+    }
+    if (replayTimer) {
+      clearTimeout(replayTimer);
+      replayTimer = null;
     }
 
     // Restore original push
@@ -219,6 +253,7 @@ export function installAutoQueue(options: AutoQueueOptions = {}): AutoQueueState
 
     active = false;
 
+    // Clear all timers
     if (pollTimer) {
       clearInterval(pollTimer);
       pollTimer = null;
@@ -227,9 +262,16 @@ export function installAutoQueue(options: AutoQueueOptions = {}): AutoQueueState
       clearTimeout(timeoutTimer);
       timeoutTimer = null;
     }
+    if (replayTimer) {
+      clearTimeout(replayTimer);
+      replayTimer = null;
+    }
 
     dataLayer.push = originalPush;
     buffer.length = 0;
+
+    // Clean up any lingering global buffer reference
+    cleanupInlineBuffer();
   };
 
   // Create intercepted push function
@@ -247,10 +289,10 @@ export function installAutoQueue(options: AutoQueueOptions = {}): AutoQueueState
       }
 
       // Check if this push indicates GTM is ready
-      if (active && isGtmLoadEvent(value)) {
+      if (active && !replayTimer && isGtmLoadEvent(value)) {
         // GTM just loaded! Trigger replay on next tick to ensure
         // this event is fully processed first
-        setTimeout(replay, 0);
+        replayTimer = setTimeout(replay, 0);
       }
     }
 
@@ -263,7 +305,7 @@ export function installAutoQueue(options: AutoQueueOptions = {}): AutoQueueState
   // Check if GTM was already loaded before we installed
   if (isGtmLoaded()) {
     // GTM already present, replay immediately
-    setTimeout(replay, 0);
+    replayTimer = setTimeout(replay, 0);
   } else {
     // Poll for GTM readiness as backup detection
     pollTimer = setInterval(() => {

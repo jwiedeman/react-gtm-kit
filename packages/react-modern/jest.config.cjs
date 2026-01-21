@@ -13,10 +13,10 @@ module.exports = {
   // Some display name/debug utilities are difficult to test
   coverageThreshold: {
     global: {
-      statements: 90,
+      statements: 92,
       branches: 90,
       functions: 85,
-      lines: 90
+      lines: 92
     }
   }
 };

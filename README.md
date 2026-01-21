@@ -9,7 +9,7 @@ Works with React, Vue, Next.js, Nuxt, Svelte, SolidJS, Remix, Astro, or vanilla 
 [![CI](https://github.com/jwiedeman/GTM-Kit/actions/workflows/ci.yml/badge.svg)](https://github.com/jwiedeman/GTM-Kit/actions/workflows/ci.yml)
 [![E2E](https://github.com/jwiedeman/GTM-Kit/actions/workflows/e2e.yml/badge.svg)](https://github.com/jwiedeman/GTM-Kit/actions/workflows/e2e.yml)
 [![codecov](https://codecov.io/gh/jwiedeman/GTM-Kit/graph/badge.svg)](https://codecov.io/gh/jwiedeman/GTM-Kit)
-![Tests](https://img.shields.io/badge/tests-645_passed-brightgreen?logo=jest&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-963_passed-brightgreen?logo=jest&logoColor=white)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-3178C6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
 <!-- Badges: Package Status -->
@@ -690,23 +690,114 @@ Use the correct adapter for your framework:
 
 ---
 
+## Debugging & Diagnostics
+
+GTM Kit includes built-in debugging tools to help troubleshoot tracking issues.
+
+### Enable Debug Mode
+
+```ts
+const client = createGtmClient({
+  containers: 'GTM-XXXXXX',
+  debug: true // Enables verbose logging
+});
+```
+
+When enabled, debug mode logs:
+
+- Client initialization and configuration
+- All dataLayer pushes with payload details
+- Consent command processing
+- Script load timing and status
+- Event queue state changes
+
+### Get Diagnostics
+
+Programmatically inspect GTM Kit's internal state:
+
+```ts
+const diagnostics = client.getDiagnostics();
+
+console.log(diagnostics);
+// {
+//   initialized: true,
+//   ready: true,
+//   dataLayerName: 'dataLayer',
+//   dataLayerSize: 12,
+//   queueSize: 0,
+//   consentCommandsDelivered: 2,
+//   containers: ['GTM-XXXXXX'],
+//   scriptStates: [{ containerId: 'GTM-XXXXXX', status: 'loaded', loadTimeMs: 234 }],
+//   uptimeMs: 45000,
+//   debugMode: true
+// }
+```
+
+### DataLayer Mutation Tracing
+
+When `debug: true`, GTM Kit automatically wraps the dataLayer with a Proxy that logs all mutations:
+
+```
+[gtm-kit] dataLayer.push: { event: "page_view", page_path: "/" }
+[gtm-kit] dataLayer[5] = { event: "purchase", value: 99.99 }
+```
+
+This helps identify:
+
+- Events pushed by your code vs. GTM's internal events
+- Unexpected mutations from third-party scripts
+- Order of events during complex flows
+
+### Event Queue Visualization
+
+In debug mode, the event queue state is logged when events are queued before GTM loads:
+
+```
+[Queue Visualization] Event queued
+  Queue length: 3
+  Entries:
+    1. page_view
+    2. consent:default
+    3. add_to_cart [ecommerce]
+```
+
+### React: Check Initialization Status
+
+```tsx
+import { useGtmInitialized, useGtmError } from '@jwiedeman/gtm-kit-react';
+
+function DebugPanel() {
+  const initialized = useGtmInitialized();
+  const { hasError, errorMessage, failedScripts } = useGtmError();
+
+  return (
+    <div>
+      <p>GTM Initialized: {initialized ? 'Yes' : 'No'}</p>
+      {hasError && <p>Error: {errorMessage}</p>}
+    </div>
+  );
+}
+```
+
+---
+
 ## Framework Support Matrix
 
 | Framework     | Package                           | Status    | Min Version | Tests                                                                   | Coverage                                                        | Size                                                   |
 | ------------- | --------------------------------- | --------- | ----------- | ----------------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------ |
-| Vanilla JS    | `@jwiedeman/gtm-kit`              | ✅ Stable | ES2018+     | ![313 tests](https://img.shields.io/badge/tests-313_passed-brightgreen) | ![96%](https://img.shields.io/badge/coverage-96%25-brightgreen) | ![5.3KB](https://img.shields.io/badge/gzip-5.3KB-blue) |
-| React (hooks) | `@jwiedeman/gtm-kit-react`        | ✅ Stable | 16.8+       | ![26 tests](https://img.shields.io/badge/tests-26_passed-brightgreen)   | ![90%](https://img.shields.io/badge/coverage-90%25-green)       | ![6.0KB](https://img.shields.io/badge/gzip-6.0KB-blue) |
+| Vanilla JS    | `@jwiedeman/gtm-kit`              | ✅ Stable | ES2018+     | ![588 tests](https://img.shields.io/badge/tests-588_passed-brightgreen) | ![96%](https://img.shields.io/badge/coverage-96%25-brightgreen) | ![5.3KB](https://img.shields.io/badge/gzip-5.3KB-blue) |
+| React (hooks) | `@jwiedeman/gtm-kit-react`        | ✅ Stable | 16.8+       | ![51 tests](https://img.shields.io/badge/tests-51_passed-brightgreen)   | ![90%](https://img.shields.io/badge/coverage-90%25-green)       | ![6.0KB](https://img.shields.io/badge/gzip-6.0KB-blue) |
 | React (class) | `@jwiedeman/gtm-kit-react-legacy` | ✅ Stable | 16.0+       | ![4 tests](https://img.shields.io/badge/tests-4_passed-brightgreen)     | ![98%](https://img.shields.io/badge/coverage-98%25-brightgreen) | ![5.7KB](https://img.shields.io/badge/gzip-5.7KB-blue) |
 | Next.js       | `@jwiedeman/gtm-kit-next`         | ✅ Stable | 13+         | ![14 tests](https://img.shields.io/badge/tests-14_passed-brightgreen)   | ![86%](https://img.shields.io/badge/coverage-86%25-green)       | ![7.2KB](https://img.shields.io/badge/gzip-7.2KB-blue) |
-| Vue 3         | `@jwiedeman/gtm-kit-vue`          | ✅ Stable | 3.0+        | ![40 tests](https://img.shields.io/badge/tests-40_passed-brightgreen)   | ![99%](https://img.shields.io/badge/coverage-99%25-brightgreen) | ![5.9KB](https://img.shields.io/badge/gzip-5.9KB-blue) |
+| Vue 3         | `@jwiedeman/gtm-kit-vue`          | ✅ Stable | 3.0+        | ![45 tests](https://img.shields.io/badge/tests-45_passed-brightgreen)   | ![99%](https://img.shields.io/badge/coverage-99%25-brightgreen) | ![5.9KB](https://img.shields.io/badge/gzip-5.9KB-blue) |
 | Nuxt 3        | `@jwiedeman/gtm-kit-nuxt`         | ✅ Stable | 3.0+        | ![12 tests](https://img.shields.io/badge/tests-12_passed-brightgreen)   | ![82%](https://img.shields.io/badge/coverage-82%25-green)       | ![6.1KB](https://img.shields.io/badge/gzip-6.1KB-blue) |
-| Svelte        | `@jwiedeman/gtm-kit-svelte`       | ✅ Stable | 4.0+        | ![15 tests](https://img.shields.io/badge/tests-15_passed-brightgreen)   | ![83%](https://img.shields.io/badge/coverage-83%25-green)       | ![5.9KB](https://img.shields.io/badge/gzip-5.9KB-blue) |
+| Svelte        | `@jwiedeman/gtm-kit-svelte`       | ✅ Stable | 4.0+        | ![17 tests](https://img.shields.io/badge/tests-17_passed-brightgreen)   | ![83%](https://img.shields.io/badge/coverage-83%25-green)       | ![5.9KB](https://img.shields.io/badge/gzip-5.9KB-blue) |
 | SolidJS       | `@jwiedeman/gtm-kit-solid`        | ✅ Stable | 1.0+        | ![21 tests](https://img.shields.io/badge/tests-21_passed-brightgreen)   | ![96%](https://img.shields.io/badge/coverage-96%25-brightgreen) | ![6.0KB](https://img.shields.io/badge/gzip-6.0KB-blue) |
-| Remix         | `@jwiedeman/gtm-kit-remix`        | ✅ Stable | 2.0+        | ![24 tests](https://img.shields.io/badge/tests-24_passed-brightgreen)   | ![92%](https://img.shields.io/badge/coverage-92%25-brightgreen) | ![7.0KB](https://img.shields.io/badge/gzip-7.0KB-blue) |
+| Remix         | `@jwiedeman/gtm-kit-remix`        | ✅ Stable | 2.0+        | ![35 tests](https://img.shields.io/badge/tests-35_passed-brightgreen)   | ![92%](https://img.shields.io/badge/coverage-92%25-brightgreen) | ![7.0KB](https://img.shields.io/badge/gzip-7.0KB-blue) |
 | Astro         | `@jwiedeman/gtm-kit-astro`        | ✅ Stable | 3.0+        | ![57 tests](https://img.shields.io/badge/tests-57_passed-brightgreen)   | ![86%](https://img.shields.io/badge/coverage-86%25-green)       | ![6.3KB](https://img.shields.io/badge/gzip-6.3KB-blue) |
 | CLI           | `@jwiedeman/gtm-kit-cli`          | ✅ Stable | Node 18+    | ![119 tests](https://img.shields.io/badge/tests-119_passed-brightgreen) | ![94%](https://img.shields.io/badge/coverage-94%25-brightgreen) | ![0KB](https://img.shields.io/badge/runtime-0KB-blue)  |
 
-**Total: 645 tests across 11 packages**
+**Total: 963 tests across 11 packages**
 
 ---
 

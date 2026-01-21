@@ -1,0 +1,22 @@
+---
+---
+
+<footer>
+  <button id="grant-analytics">Grant Analytics Consent</button>
+</footer>
+
+<script>
+  import { updateConsent } from '@jwiedeman/gtm-kit-astro';
+
+  document.getElementById('grant-analytics')?.addEventListener('click', () => {
+    updateConsent({ analytics_storage: 'granted' });
+  });
+</script>
+
+<style>
+  footer {
+    padding: 1rem;
+    background: #f5f5f5;
+    text-align: center;
+  }
+</style>

@@ -10,3 +10,31 @@ test-results
 .nuxt
 .output
 node-compile-cache
+
+# Build artifacts
+*.bundled_*.mjs
+.svelte-kit
+.turbo
+.vercel
+.netlify
+
+# Example app build outputs
+examples/remix-app/build
+examples/svelte-app/build
+examples/astro-app/.astro
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS
+Thumbs.db

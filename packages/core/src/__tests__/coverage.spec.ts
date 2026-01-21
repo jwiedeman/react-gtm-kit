@@ -175,7 +175,7 @@ describe('ScriptManager SSR environment simulation', () => {
 
 describe('Noscript edge cases', () => {
   it('throws error for container without id', () => {
-    expect(() => createNoscriptMarkup({ id: '' })).toThrow('Container id is required to build noscript markup.');
+    expect(() => createNoscriptMarkup({ id: '' })).toThrow('Container ID is required to build noscript markup.');
   });
 
   it('throws error for empty container array', () => {
@@ -418,6 +418,154 @@ describe('Data layer edge cases', () => {
   });
 });
 
+describe('DataLayer mutation tracing', () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { createTracedDataLayer } = require('../data-layer');
+
+  const createMockLogger = () => ({
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn()
+  });
+
+  beforeEach(() => {
+    delete (globalThis as Record<string, unknown>).dataLayer;
+  });
+
+  it('logs push operations', () => {
+    const logger = createMockLogger();
+    const dataLayer: unknown[] = [];
+    const traced = createTracedDataLayer(dataLayer, { logger, dataLayerName: 'dataLayer' });
+
+    traced.push({ event: 'test' });
+
+    expect(logger.debug).toHaveBeenCalledWith(
+      '[dataLayer] push() called with 1 item(s)',
+      expect.objectContaining({ items: [expect.any(String)], previousLength: 0 })
+    );
+    expect(dataLayer.length).toBe(1);
+  });
+
+  it('logs pop operations', () => {
+    const logger = createMockLogger();
+    const dataLayer: unknown[] = [{ event: 'first' }];
+    const traced = createTracedDataLayer(dataLayer, { logger, dataLayerName: 'dataLayer' });
+
+    const popped = traced.pop();
+
+    expect(logger.debug).toHaveBeenCalledWith(
+      '[dataLayer] pop() called',
+      expect.objectContaining({ previousLength: 1 })
+    );
+    expect(popped).toEqual({ event: 'first' });
+  });
+
+  it('logs shift operations', () => {
+    const logger = createMockLogger();
+    const dataLayer: unknown[] = [{ event: 'first' }, { event: 'second' }];
+    const traced = createTracedDataLayer(dataLayer, { logger, dataLayerName: 'dataLayer' });
+
+    const shifted = traced.shift();
+
+    expect(logger.debug).toHaveBeenCalledWith(
+      '[dataLayer] shift() called',
+      expect.objectContaining({ previousLength: 2 })
+    );
+    expect(shifted).toEqual({ event: 'first' });
+  });
+
+  it('logs unshift operations', () => {
+    const logger = createMockLogger();
+    const dataLayer: unknown[] = [{ event: 'existing' }];
+    const traced = createTracedDataLayer(dataLayer, { logger, dataLayerName: 'dataLayer' });
+
+    traced.unshift({ event: 'new' });
+
+    expect(logger.debug).toHaveBeenCalledWith(
+      '[dataLayer] unshift() called with 1 item(s)',
+      expect.objectContaining({ previousLength: 1 })
+    );
+    expect(dataLayer[0]).toEqual({ event: 'new' });
+  });
+
+  it('logs splice operations', () => {
+    const logger = createMockLogger();
+    const dataLayer: unknown[] = [{ event: 'a' }, { event: 'b' }, { event: 'c' }];
+    const traced = createTracedDataLayer(dataLayer, { logger, dataLayerName: 'dataLayer' });
+
+    traced.splice(1, 1, { event: 'replaced' });
+
+    expect(logger.debug).toHaveBeenCalledWith(
+      '[dataLayer] splice() called',
+      expect.objectContaining({ start: 1, deleteCount: 1 })
+    );
+    expect(dataLayer[1]).toEqual({ event: 'replaced' });
+  });
+
+  it('logs direct index assignment (replacement)', () => {
+    const logger = createMockLogger();
+    const dataLayer: unknown[] = [{ event: 'original' }];
+    const traced = createTracedDataLayer(dataLayer, { logger, dataLayerName: 'dataLayer' });
+
+    traced[0] = { event: 'replaced' };
+
+    expect(logger.debug).toHaveBeenCalledWith('[dataLayer] Replaced value at index 0', expect.anything());
+  });
+
+  it('logs delete operations', () => {
+    const logger = createMockLogger();
+    const dataLayer: unknown[] = [{ event: 'test' }];
+    const traced = createTracedDataLayer(dataLayer, { logger, dataLayerName: 'dataLayer' });
+
+    delete traced[0];
+
+    expect(logger.debug).toHaveBeenCalledWith('[dataLayer] Deleted value at index 0', expect.anything());
+  });
+
+  it('handles circular references in value formatting', () => {
+    const logger = createMockLogger();
+    const dataLayer: unknown[] = [];
+    const traced = createTracedDataLayer(dataLayer, { logger, dataLayerName: 'dataLayer' });
+
+    // Create circular reference
+    const circular: Record<string, unknown> = { a: 1 };
+    circular.self = circular;
+
+    traced.push(circular);
+
+    // Should not throw, and should log
+    expect(logger.debug).toHaveBeenCalled();
+    expect(dataLayer.length).toBe(1);
+  });
+
+  it('truncates long values in logs', () => {
+    const logger = createMockLogger();
+    const dataLayer: unknown[] = [];
+    const traced = createTracedDataLayer(dataLayer, { logger, dataLayerName: 'dataLayer' });
+
+    const longValue = { data: 'x'.repeat(200) };
+    traced.push(longValue);
+
+    const logCall = logger.debug.mock.calls[0];
+    const loggedItems = logCall[1].items[0];
+    expect(loggedItems.length).toBeLessThanOrEqual(103); // 100 + '...'
+  });
+
+  it('formats null, undefined, and function values', () => {
+    const logger = createMockLogger();
+    const dataLayer: unknown[] = [];
+    const traced = createTracedDataLayer(dataLayer, { logger, dataLayerName: 'dataLayer' });
+
+    traced.push(null);
+    traced.push(undefined as unknown);
+    // eslint-disable-next-line @typescript-eslint/no-empty-function -- Testing empty function handling
+    traced.push(() => {});
+
+    expect(logger.debug).toHaveBeenCalledTimes(3);
+  });
+});
+
 describe('Auto-queue edge cases', () => {
   beforeEach(() => {
     document.head.innerHTML = '';
@@ -557,7 +705,7 @@ describe('Consent edge cases', () => {
         state: { ad_storage: 'denied' },
         options: { region: 'US-CA' as unknown as string[] }
       })
-    ).toThrow('Consent region list must be an array of ISO region codes.');
+    ).toThrow('Consent region list must be an array of ISO 3166-2 region codes.');
   });
 
   it('throws error for unsupported consent command', () => {
@@ -566,7 +714,7 @@ describe('Consent edge cases', () => {
         command: 'invalid' as 'default',
         state: { ad_storage: 'denied' }
       })
-    ).toThrow('Unsupported consent command: invalid');
+    ).toThrow('Unsupported consent command: "invalid"');
   });
 
   it('throws error for empty state', () => {
@@ -582,6 +730,59 @@ describe('Consent edge cases', () => {
 
     // Should not include region in output since array is empty
     expect(result.length).toBe(3); // No options object
+  });
+
+  it('rejects __proto__ key in consent state (prototype pollution protection)', () => {
+    // Attempt to inject __proto__ via JSON parsing
+    const maliciousState = JSON.parse('{"__proto__":{"polluted":"true"},"ad_storage":"granted"}');
+
+    // Should throw because __proto__ is not a valid consent key
+    expect(() => normalizeConsentState(maliciousState)).toThrow('Invalid consent key: "__proto__"');
+
+    // Verify no prototype pollution occurred
+    expect(({} as Record<string, unknown>).polluted).toBeUndefined();
+  });
+
+  it('rejects constructor key in consent state (prototype pollution protection)', () => {
+    const maliciousState = { constructor: 'granted', ad_storage: 'granted' };
+
+    expect(() => normalizeConsentState(maliciousState as unknown as Record<string, string>)).toThrow(
+      'Invalid consent key: "constructor"'
+    );
+  });
+
+  it('rejects __defineGetter__ key in consent state', () => {
+    const maliciousState = { __defineGetter__: 'granted', ad_storage: 'granted' };
+
+    expect(() => normalizeConsentState(maliciousState as unknown as Record<string, string>)).toThrow(
+      'Invalid consent key: "__defineGetter__"'
+    );
+  });
+
+  it('does not pollute Object prototype through consent commands', () => {
+    // Store original state
+    const originalPolluted = Object.prototype.hasOwnProperty.call(Object.prototype, 'polluted');
+
+    // Try various prototype pollution attempts through buildConsentCommand
+    // Use Object.assign to create plain objects with these keys
+    const attempts = [
+      Object.assign(Object.create(null), { ad_storage: 'granted', toString: 'granted' }),
+      Object.assign(Object.create(null), { ad_storage: 'granted', valueOf: 'granted' }),
+      Object.assign(Object.create(null), { ad_storage: 'granted', hasOwnProperty: 'granted' })
+    ];
+
+    for (const attempt of attempts) {
+      expect(() =>
+        buildConsentCommand({
+          command: 'default',
+          state: attempt as Record<string, 'granted' | 'denied'>
+        })
+      ).toThrow(/Invalid consent key/);
+    }
+
+    // Verify no prototype pollution
+    expect(Object.prototype.hasOwnProperty.call(Object.prototype, 'polluted')).toBe(originalPolluted);
+    expect(({} as Record<string, unknown>).toString).toBe(Object.prototype.toString);
   });
 });
 

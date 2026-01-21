@@ -30,7 +30,9 @@ export interface NoscriptOptions {
 
 const buildNoscriptForContainer = (container: ContainerDescriptor, options: NoscriptOptions): string => {
   if (!container.id) {
-    throw new Error('Container id is required to build noscript markup.');
+    throw new Error(
+      'Container ID is required to build noscript markup. ' + 'Example: createNoscriptMarkup("GTM-XXXXXX")'
+    );
   }
 
   const host = options.host ?? DEFAULT_GTM_HOST;
@@ -59,7 +61,10 @@ export const createNoscriptMarkup = (
     : [normalizeContainer(containers)];
 
   if (!normalizedContainers.length) {
-    throw new Error('At least one container is required to build noscript markup.');
+    throw new Error(
+      'At least one container is required to build noscript markup. ' +
+        'Example: createNoscriptMarkup("GTM-XXXXXX") or createNoscriptMarkup(["GTM-ABC123", "GTM-XYZ789"])'
+    );
   }
 
   return normalizedContainers.map((container) => buildNoscriptForContainer(container, options)).join('');

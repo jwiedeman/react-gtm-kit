@@ -24,7 +24,8 @@ describe('Stress Testing', () => {
 
   describe('High-frequency push operations', () => {
     it('handles 10,000 rapid push calls', () => {
-      const client = createGtmClient({ containers: 'GTM-STRESS' });
+      // Use unlimited dataLayer size for stress testing
+      const client = createGtmClient({ containers: 'GTM-STRESS', maxDataLayerSize: 0 });
       client.init();
 
       const startTime = performance.now();
@@ -49,7 +50,8 @@ describe('Stress Testing', () => {
     });
 
     it('handles burst traffic pattern', () => {
-      const client = createGtmClient({ containers: 'GTM-BURST' });
+      // Use unlimited dataLayer size for stress testing
+      const client = createGtmClient({ containers: 'GTM-BURST', maxDataLayerSize: 0 });
       client.init();
 
       // Simulate 10 bursts of 100 events each
@@ -70,7 +72,8 @@ describe('Stress Testing', () => {
     });
 
     it('handles concurrent push from multiple contexts', async () => {
-      const client = createGtmClient({ containers: 'GTM-CONCURRENT' });
+      // Use unlimited dataLayer size for stress testing
+      const client = createGtmClient({ containers: 'GTM-CONCURRENT', maxDataLayerSize: 0 });
       client.init();
 
       // Simulate concurrent pushes (as if from different components)
@@ -158,11 +161,166 @@ describe('Stress Testing', () => {
       const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
 
       // Should have consent default and updates
-      const consentEntries = dataLayer.filter(
-        (e) => Array.isArray(e) && e[0] === 'consent'
-      );
+      const consentEntries = dataLayer.filter((e) => Array.isArray(e) && e[0] === 'consent');
 
       expect(consentEntries.length).toBeGreaterThanOrEqual(2);
+    });
+
+    it('handles concurrent promise-based consent updates', async () => {
+      const client = createGtmClient({ containers: 'GTM-RACE-ASYNC' });
+      client.init();
+
+      // Simulate multiple async consent updates from different components
+      const updates = [
+        Promise.resolve().then(() => client.updateConsent({ ad_storage: 'granted' })),
+        Promise.resolve().then(() => client.updateConsent({ analytics_storage: 'granted' })),
+        Promise.resolve().then(() => client.updateConsent({ ad_user_data: 'granted' })),
+        Promise.resolve().then(() => client.updateConsent({ ad_personalization: 'granted' }))
+      ];
+
+      await Promise.all(updates);
+
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+      const consentUpdates = dataLayer.filter((e) => Array.isArray(e) && e[0] === 'consent' && e[1] === 'update');
+
+      // All unique consent updates should be present
+      expect(consentUpdates).toHaveLength(4);
+    });
+
+    it('maintains correct order when consent updates race with event pushes', async () => {
+      const client = createGtmClient({ containers: 'GTM-RACE-ORDER', maxDataLayerSize: 0 });
+      client.init();
+
+      const results: string[] = [];
+
+      // Interleave consent updates with event pushes using microtasks
+      await Promise.all([
+        Promise.resolve().then(() => {
+          client.push({ event: 'event_1' });
+          results.push('event_1');
+        }),
+        Promise.resolve().then(() => {
+          client.updateConsent({ ad_storage: 'granted' });
+          results.push('consent_1');
+        }),
+        Promise.resolve().then(() => {
+          client.push({ event: 'event_2' });
+          results.push('event_2');
+        }),
+        Promise.resolve().then(() => {
+          client.updateConsent({ analytics_storage: 'granted' });
+          results.push('consent_2');
+        })
+      ]);
+
+      // All operations completed
+      expect(results).toHaveLength(4);
+
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+      const events = dataLayer.filter(
+        (e) => typeof e === 'object' && !Array.isArray(e) && (e as { event?: string }).event
+      );
+      const consents = dataLayer.filter((e) => Array.isArray(e) && e[0] === 'consent');
+
+      expect(events.length).toBeGreaterThanOrEqual(2); // gtm.js + our events
+      expect(consents).toHaveLength(2);
+    });
+
+    it('safely handles consent updates after teardown', () => {
+      const client = createGtmClient({ containers: 'GTM-RACE-TEARDOWN' });
+      client.init();
+
+      // Update consent
+      client.updateConsent({ ad_storage: 'granted' });
+
+      // Teardown
+      client.teardown();
+
+      // Attempting consent update after teardown should not throw
+      expect(() => {
+        client.updateConsent({ analytics_storage: 'granted' });
+      }).not.toThrow();
+
+      // Re-initialize
+      expect(() => client.init()).not.toThrow();
+    });
+
+    it('handles rapid setConsentDefaults before init correctly', () => {
+      const client = createGtmClient({ containers: 'GTM-RACE-DEFAULTS' });
+
+      // Multiple consent defaults before init (simulating different CMPs/components)
+      client.setConsentDefaults({ ad_storage: 'denied' });
+      client.setConsentDefaults({ analytics_storage: 'denied' });
+      client.setConsentDefaults({ ad_user_data: 'denied' });
+      client.setConsentDefaults({ ad_personalization: 'denied' });
+
+      client.init();
+
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+      const defaults = dataLayer.filter((e) => Array.isArray(e) && e[0] === 'consent' && e[1] === 'default');
+
+      // All unique defaults should be applied
+      expect(defaults).toHaveLength(4);
+    });
+
+    it('handles consent update during simulated page navigation', () => {
+      const client = createGtmClient({ containers: 'GTM-CONSENT-NAV' });
+      client.setConsentDefaults({ ad_storage: 'denied', analytics_storage: 'denied' });
+      client.init();
+
+      // Update consent
+      client.updateConsent({ ad_storage: 'granted' });
+
+      // Simulate page hide (navigation)
+      const pagehideEvent = new Event('pagehide');
+      window.dispatchEvent(pagehideEvent);
+
+      // Try another consent update after pagehide
+      // This should still work (though the page is "navigating away")
+      expect(() => {
+        client.updateConsent({ analytics_storage: 'granted' });
+      }).not.toThrow();
+
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+      const updates = dataLayer.filter((e) => Array.isArray(e) && e[0] === 'consent' && e[1] === 'update');
+
+      // Both updates should be present
+      expect(updates.length).toBeGreaterThanOrEqual(2);
+
+      client.teardown();
+    });
+
+    it('preserves consent state across rapid navigation simulation', () => {
+      // First page load
+      const client1 = createGtmClient({
+        containers: 'GTM-NAV-PERSIST',
+        dataLayerName: 'navTestLayer1'
+      });
+      client1.setConsentDefaults({ ad_storage: 'denied' });
+      client1.init();
+      client1.updateConsent({ ad_storage: 'granted' });
+
+      const dataLayer1 = (globalThis as Record<string, unknown>).navTestLayer1 as unknown[];
+      const update1 = dataLayer1.find((e) => Array.isArray(e) && e[0] === 'consent' && e[1] === 'update');
+      expect(update1).toBeDefined();
+
+      // Teardown first client (simulating navigation)
+      client1.teardown();
+
+      // Second page load (new client, different dataLayer to simulate fresh page)
+      const client2 = createGtmClient({
+        containers: 'GTM-NAV-PERSIST-2',
+        dataLayerName: 'navTestLayer2'
+      });
+      client2.setConsentDefaults({ ad_storage: 'denied' });
+      client2.init();
+
+      // User should need to re-consent on new page (normal GTM behavior)
+      const dataLayer2 = (globalThis as Record<string, unknown>).navTestLayer2 as unknown[];
+      const defaults2 = dataLayer2.filter((e) => Array.isArray(e) && e[0] === 'consent' && e[1] === 'default');
+      expect(defaults2).toHaveLength(1);
+
+      client2.teardown();
     });
 
     it('handles multiple containers with interleaved operations', () => {
@@ -229,6 +387,122 @@ describe('Stress Testing', () => {
       ) as Record<string, unknown>;
 
       expect((event.ecommerce as { items: unknown[] }).items).toHaveLength(500);
+    });
+
+    it('handles 100+ cart items in ecommerce event', () => {
+      const client = createGtmClient({ containers: 'GTM-CART-100' });
+      client.init();
+
+      // Create a realistic GA4 ecommerce event with 100+ items
+      const items = Array.from({ length: 150 }, (_, i) => ({
+        item_id: `SKU-${String(i).padStart(5, '0')}`,
+        item_name: `Product ${i}`,
+        affiliation: 'Online Store',
+        coupon: i % 10 === 0 ? 'DISCOUNT10' : undefined,
+        discount: i % 10 === 0 ? 5.0 : 0,
+        index: i,
+        item_brand: `Brand ${i % 20}`,
+        item_category: `Category ${i % 10}`,
+        item_category2: `Subcategory ${i % 50}`,
+        item_category3: `Type ${i % 5}`,
+        item_list_id: 'main_list',
+        item_list_name: 'Main Product List',
+        item_variant: `Size ${['S', 'M', 'L', 'XL'][i % 4]}`,
+        location_id: `LOC-${i % 3}`,
+        price: parseFloat((Math.random() * 200 + 10).toFixed(2)),
+        quantity: Math.floor(Math.random() * 5) + 1
+      }));
+
+      const purchaseEvent = {
+        event: 'purchase',
+        ecommerce: {
+          transaction_id: `T-${Date.now()}`,
+          affiliation: 'Online Store',
+          value: items.reduce((sum, item) => sum + item.price * item.quantity, 0),
+          tax: 125.5,
+          shipping: 15.0,
+          currency: 'USD',
+          coupon: 'SUMMER_SALE',
+          items
+        }
+      };
+
+      expect(() => client.push(purchaseEvent)).not.toThrow();
+
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+      const event = dataLayer.find(
+        (e) => typeof e === 'object' && !Array.isArray(e) && (e as { event?: string }).event === 'purchase'
+      ) as Record<string, unknown>;
+
+      expect(event).toBeDefined();
+      expect((event.ecommerce as { items: unknown[] }).items).toHaveLength(150);
+    });
+
+    it('handles 1000+ sequential dataLayer events', () => {
+      // Use unlimited dataLayer size for this stress test
+      const client = createGtmClient({ containers: 'GTM-1000-EVENTS', maxDataLayerSize: 0 });
+      client.init();
+
+      const startTime = performance.now();
+
+      // Push 1000+ events simulating real user session activity
+      for (let i = 0; i < 1200; i++) {
+        const eventType = i % 10;
+        switch (eventType) {
+          case 0:
+            client.push({ event: 'page_view', page_path: `/page-${i}`, page_title: `Page ${i}` });
+            break;
+          case 1:
+            client.push({ event: 'scroll', percent_scrolled: i % 100 });
+            break;
+          case 2:
+            client.push({ event: 'click', element_id: `btn-${i}`, element_class: 'cta-button' });
+            break;
+          case 3:
+            client.push({ event: 'view_item', ecommerce: { items: [{ item_id: `SKU-${i}` }] } });
+            break;
+          case 4:
+            client.push({ event: 'add_to_cart', ecommerce: { items: [{ item_id: `SKU-${i}`, quantity: 1 }] } });
+            break;
+          case 5:
+            client.push({ event: 'video_start', video_title: `Video ${i}`, video_provider: 'YouTube' });
+            break;
+          case 6:
+            client.push({ event: 'video_progress', video_percent: 25, video_title: `Video ${i}` });
+            break;
+          case 7:
+            client.push({ event: 'form_start', form_id: `form-${i}`, form_name: `Form ${i}` });
+            break;
+          case 8:
+            client.push({ event: 'form_submit', form_id: `form-${i}`, form_name: `Form ${i}` });
+            break;
+          case 9:
+            client.push({ event: 'search', search_term: `query ${i}` });
+            break;
+        }
+      }
+
+      const endTime = performance.now();
+      const duration = endTime - startTime;
+
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+
+      // Verify all events were pushed
+      const pushEvents = dataLayer.filter(
+        (e) => typeof e === 'object' && !Array.isArray(e) && typeof (e as { event?: string }).event === 'string'
+      );
+
+      // Account for gtm.js auto-event + 1200 user events
+      expect(pushEvents.length).toBeGreaterThanOrEqual(1200);
+
+      // Performance: should complete in reasonable time (< 2 seconds for 1200 events)
+      expect(duration).toBeLessThan(2000);
+
+      // Verify event distribution
+      const pageViews = dataLayer.filter(
+        (e) => typeof e === 'object' && !Array.isArray(e) && (e as { event?: string }).event === 'page_view'
+      );
+      expect(pageViews).toHaveLength(120); // 1200 / 10 = 120 page views
     });
 
     it('handles deeply nested objects (20 levels)', () => {
@@ -313,9 +587,7 @@ describe('Stress Testing', () => {
       const results: number[] = [];
 
       // Call whenReady multiple times simultaneously
-      const promises = Array.from({ length: 10 }, (_, i) =>
-        client.whenReady().then(() => results.push(i))
-      );
+      const promises = Array.from({ length: 10 }, (_, i) => client.whenReady().then(() => results.push(i)));
 
       // Simulate script load
       const script = document.querySelector<HTMLScriptElement>('script[data-gtm-container-id="GTM-WHEN-READY-MULTI"]');
@@ -389,9 +661,15 @@ describe('Chaos Testing', () => {
         new WeakSet(),
         new Error('test'),
         /regex/,
-        () => { /* noop */ },
-        async () => { /* noop */ },
-        function* () { yield; },
+        () => {
+          /* noop */
+        },
+        async () => {
+          /* noop */
+        },
+        function* () {
+          yield;
+        },
         Promise.resolve(),
         new ArrayBuffer(8),
         new Uint8Array(8)

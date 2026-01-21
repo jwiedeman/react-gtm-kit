@@ -40,6 +40,8 @@ export interface GtmStoreValue {
   setConsentDefaults: (state: ConsentState, options?: ConsentRegionOptions) => void;
   /** Update consent state */
   updateConsent: (state: ConsentState, options?: ConsentRegionOptions) => void;
+  /** Synchronously check if all GTM scripts have finished loading */
+  isReady: () => boolean;
   /** Returns a promise that resolves when all GTM scripts are loaded */
   whenReady: () => Promise<ScriptLoadState[]>;
   /** Register a callback for when GTM scripts are ready */
@@ -85,6 +87,7 @@ export function createGtmStore(options: GtmStoreOptions): Writable<GtmStoreValue
       client.setConsentDefaults(state, regionOptions),
     updateConsent: (state: ConsentState, regionOptions?: ConsentRegionOptions) =>
       client.updateConsent(state, regionOptions),
+    isReady: () => client.isReady(),
     whenReady: () => client.whenReady(),
     onReady: (callback: (state: ScriptLoadState[]) => void) => client.onReady(callback),
     initialized: false
@@ -124,7 +127,7 @@ export function getGtmContext(): Writable<GtmStoreValue> {
   const context = getContext<Writable<GtmStoreValue>>(GTM_CONTEXT_KEY);
   if (!context) {
     throw new Error(
-      '[gtm-kit] getGtmContext() was called outside of a component tree with GTM context. ' +
+      '[gtm-kit/svelte] getGtmContext() was called outside of a component tree with GTM context. ' +
         'Make sure to call setGtmContext() in a parent component.'
     );
   }
@@ -148,6 +151,22 @@ export function getGtmContext(): Writable<GtmStoreValue> {
  * ```
  */
 export function setGtmContext(store: Writable<GtmStoreValue>): void {
+  // Check if a context already exists (nested context)
+  try {
+    const existing = getContext<Writable<GtmStoreValue>>(GTM_CONTEXT_KEY);
+    if (existing) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn(
+          '[gtm-kit/svelte] setGtmContext() was called when a GTM context already exists. ' +
+            'You should only have one GTM context at the root of your app. ' +
+            'The duplicate context will be ignored.'
+        );
+      }
+      return;
+    }
+  } catch {
+    // getContext throws when called outside component initialization, which is fine
+  }
   setContext(GTM_CONTEXT_KEY, store);
 }
 
@@ -240,4 +259,62 @@ export function gtmClient(): Readable<GtmClient> {
 export function gtmReady(): Readable<() => Promise<ScriptLoadState[]>> {
   const store = getGtmContext();
   return derived(store, ($store) => $store.whenReady);
+}
+
+/**
+ * Get a derived store that provides the isReady function.
+ * Use this to check synchronously if GTM scripts have finished loading.
+ *
+ * @example
+ * ```svelte
+ * <script>
+ *   import { gtmIsReady } from '@jwiedeman/gtm-kit-svelte';
+ *
+ *   const isReady = gtmIsReady();
+ *
+ *   // Check if GTM is ready
+ *   if ($isReady()) {
+ *     console.log('GTM is ready');
+ *   }
+ * </script>
+ * ```
+ */
+export function gtmIsReady(): Readable<() => boolean> {
+  const store = getGtmContext();
+  return derived(store, ($store) => $store.isReady);
+}
+
+/**
+ * Teardown the GTM client and clean up resources.
+ * Call this in your component's onDestroy lifecycle hook.
+ *
+ * @example
+ * ```svelte
+ * <script>
+ *   import { createGtmStore, setGtmContext, destroyGtmStore } from '@jwiedeman/gtm-kit-svelte';
+ *   import { onDestroy } from 'svelte';
+ *
+ *   const gtm = createGtmStore({ containers: 'GTM-XXXXXX' });
+ *   setGtmContext(gtm);
+ *
+ *   onDestroy(() => {
+ *     destroyGtmStore(gtm);
+ *   });
+ * </script>
+ * ```
+ */
+export function destroyGtmStore(store: Writable<GtmStoreValue>): void {
+  let storeValue: GtmStoreValue | null = null;
+
+  // Get the store value synchronously
+  const unsubscribe = store.subscribe((value) => {
+    storeValue = value;
+  });
+  unsubscribe();
+
+  // Teardown the client
+  if (storeValue !== null) {
+    (storeValue as GtmStoreValue).client.teardown();
+    store.update((s) => ({ ...s, initialized: false }));
+  }
 }

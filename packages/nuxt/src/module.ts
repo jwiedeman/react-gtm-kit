@@ -6,6 +6,8 @@ import {
   useGtmPush,
   useGtmConsent,
   useGtmClient,
+  useGtmReady,
+  useIsGtmReady,
   type GtmPluginOptions,
   type GtmContext
 } from '@jwiedeman/gtm-kit-vue';
@@ -89,6 +91,18 @@ export const useNuxtGtmConsent = useGtmConsent;
  * This is an alias for useGtmClient() from @jwiedeman/gtm-kit-vue.
  */
 export const useNuxtGtmClient = useGtmClient;
+
+/**
+ * Composable for getting the whenReady function in Nuxt.
+ * This is an alias for useGtmReady() from @jwiedeman/gtm-kit-vue.
+ */
+export const useNuxtGtmReady = useGtmReady;
+
+/**
+ * Composable for checking if GTM scripts have finished loading synchronously.
+ * This is an alias for useIsGtmReady() from @jwiedeman/gtm-kit-vue.
+ */
+export const useNuxtIsGtmReady = useIsGtmReady;
 
 /**
  * Options for the useTrackPageViews composable.

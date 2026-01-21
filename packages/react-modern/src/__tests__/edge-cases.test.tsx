@@ -49,8 +49,10 @@ type MockClient = GtmClient & {
   setConsentDefaults: jest.Mock<void, [ConsentState, ConsentRegionOptions | undefined]>;
   updateConsent: jest.Mock<void, [ConsentState, ConsentRegionOptions | undefined]>;
   isInitialized: jest.Mock<boolean, []>;
+  isReady: jest.Mock<boolean, []>;
   whenReady: jest.Mock<Promise<ScriptLoadState[]>, []>;
   onReady: jest.Mock<() => void, [(state: ScriptLoadState[]) => void]>;
+  getDiagnostics: jest.Mock;
 };
 
 const createMockClient = (): MockClient => ({
@@ -61,21 +63,31 @@ const createMockClient = (): MockClient => ({
   setConsentDefaults: jest.fn(),
   updateConsent: jest.fn(),
   isInitialized: jest.fn(() => true),
+  isReady: jest.fn(() => true),
   whenReady: jest.fn(() => Promise.resolve([])),
   onReady: jest.fn((callback: (state: ScriptLoadState[]) => void) => {
     callback([]);
     return jest.fn();
-  })
+  }),
+  getDiagnostics: jest.fn(() => ({
+    initialized: true,
+    ready: true,
+    dataLayerName: 'dataLayer',
+    dataLayerSize: 0,
+    queueSize: 0,
+    consentCommandsDelivered: 0,
+    containers: ['GTM-TEST'],
+    scriptStates: [],
+    uptimeMs: 0,
+    debugMode: false
+  }))
 });
 
 const baseConfig: CreateGtmClientOptions = { containers: 'GTM-TEST' };
 const mockedCreateClient = jest.mocked(createGtmClient);
 
 // Error Boundary for testing error scenarios
-class ErrorBoundary extends Component<
-  { children: ReactNode; fallback: ReactNode },
-  { hasError: boolean }
-> {
+class ErrorBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, { hasError: boolean }> {
   constructor(props: { children: ReactNode; fallback: ReactNode }) {
     super(props);
     this.state = { hasError: false };
@@ -393,7 +405,9 @@ describe('React Modern Provider Edge Cases', () => {
         return <div />;
       };
 
-      expect(() => render(<InvalidComponent />)).toThrow(/useGtm hook must be used within a GtmProvider/);
+      expect(() => render(<InvalidComponent />)).toThrow(
+        '[gtm-kit/react] useGtm() was called outside of a GtmProvider'
+      );
 
       consoleErrorSpy.mockRestore();
     });
@@ -547,15 +561,11 @@ describe('React Modern Provider Edge Cases', () => {
   });
 
   describe('Nested Provider Handling', () => {
-    it('inner provider overrides outer provider', async () => {
+    it('nested provider is ignored and outer provider is used for all children', async () => {
       const outerClient = createMockClient();
-      const innerClient = createMockClient();
+      mockedCreateClient.mockReturnValue(outerClient);
 
-      let callIndex = 0;
-      mockedCreateClient.mockImplementation(() => {
-        callIndex++;
-        return callIndex === 1 ? outerClient : innerClient;
-      });
+      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
 
       const InnerComponent = (): JSX.Element => {
         const push = useGtmPush();
@@ -589,10 +599,17 @@ describe('React Modern Provider Edge Cases', () => {
       await findByText('outer');
       await findByText('inner');
 
-      // Outer should receive outer event
+      // Both events should go to the outer provider's client (nested provider is ignored)
       expect(outerClient.push).toHaveBeenCalledWith({ event: 'outer_event' });
-      // Inner should receive inner event
-      expect(innerClient.push).toHaveBeenCalledWith({ event: 'inner_event' });
+      expect(outerClient.push).toHaveBeenCalledWith({ event: 'inner_event' });
+
+      // Only one client should be created
+      expect(mockedCreateClient).toHaveBeenCalledTimes(1);
+
+      // Should warn about nested provider
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('Nested GtmProvider detected'));
+
+      consoleWarnSpy.mockRestore();
     });
   });
 

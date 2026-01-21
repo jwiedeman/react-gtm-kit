@@ -3,11 +3,13 @@ import type { ContainerConfigInput, ContainerDescriptor } from './types';
 
 /**
  * Type guard to check if a value is a string.
+ * @internal Primarily for internal use. API may change.
  */
 export const isString = (value: unknown): value is string => typeof value === 'string';
 
 /**
  * Normalize a container input to a ContainerDescriptor.
+ * @internal Primarily for internal use. API may change.
  */
 export const normalizeContainer = (input: ContainerConfigInput): ContainerDescriptor => {
   if (isString(input)) {
@@ -18,6 +20,7 @@ export const normalizeContainer = (input: ContainerConfigInput): ContainerDescri
 
 /**
  * Normalize container inputs to an array of ContainerDescriptors.
+ * @internal Primarily for internal use. API may change.
  */
 export const normalizeContainers = (
   containers: ContainerConfigInput | ContainerConfigInput[]
@@ -30,6 +33,7 @@ export const normalizeContainers = (
 
 /**
  * Convert query params to a Record<string, string>.
+ * @internal Primarily for internal use. API may change.
  */
 export const toRecord = (params?: Record<string, string | number | boolean>): Record<string, string> => {
   if (!params) {
@@ -43,6 +47,7 @@ export const toRecord = (params?: Record<string, string | number | boolean>): Re
 
 /**
  * Normalize a host URL by removing trailing slashes.
+ * @internal Primarily for internal use. API may change.
  */
 export const normalizeHost = (host: string): string => (host.endsWith('/') ? host.slice(0, -1) : host);
 
@@ -98,6 +103,7 @@ export const buildGtmNoscriptUrl = (
 
 /**
  * Escape a string for use in HTML attributes.
+ * @internal Primarily for internal use. API may change.
  */
 export const escapeAttributeValue = (value: string): string =>
   value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

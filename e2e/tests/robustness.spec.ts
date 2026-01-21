@@ -90,7 +90,7 @@ test.describe('Script Blocking Resilience', () => {
     await unblockGtmRequests(page);
 
     // Navigate to trigger new script load
-    await page.click('text=Products');
+    await page.getByRole('link', { name: 'Products' }).click();
 
     // Should be able to push events
     const dataLayer = await getDataLayer<{ event?: string }>(page, 'vueAppDataLayer');
@@ -129,7 +129,7 @@ test.describe('Network Failure Handling', () => {
     await expect(page.locator('body')).toBeVisible();
 
     // Should be able to interact while GTM is loading
-    await page.click('text=Products');
+    await page.getByRole('link', { name: 'Products' }).click();
     await expect(page).toHaveURL(/\/products/);
   });
 
@@ -176,10 +176,10 @@ test.describe('Rapid Navigation Stress Tests', () => {
     await page.goto(server.url, { waitUntil: 'networkidle' });
 
     // Navigate to a few pages
-    await page.click('text=Products');
+    await page.getByRole('link', { name: 'Products' }).click();
     await page.waitForURL(/\/products/);
 
-    await page.click('text=About');
+    await page.getByRole('link', { name: 'About' }).click();
     await page.waitForURL(/\/about/);
 
     // Rapid back/forward
@@ -216,9 +216,9 @@ test.describe('Rapid Navigation Stress Tests', () => {
 
     // Rapid navigation
     for (let i = 0; i < 3; i++) {
-      await page.click('text=Products');
+      await page.getByRole('link', { name: 'Products' }).click();
       await page.waitForTimeout(100);
-      await page.click('text=Home');
+      await page.getByRole('link', { name: 'Home', exact: true }).click();
       await page.waitForTimeout(100);
     }
 
@@ -307,7 +307,7 @@ test.describe('Consent Race Conditions', () => {
     }
 
     // Immediately navigate
-    await page.click('text=Products');
+    await page.getByRole('link', { name: 'Products' }).click();
 
     // Page should navigate successfully
     await page.waitForURL(/\/products/);
@@ -470,13 +470,13 @@ test.describe('Duplicate Script Prevention', () => {
     await page.goto(server.url, { waitUntil: 'networkidle' });
 
     // Navigate multiple times
-    await page.click('text=Products');
+    await page.getByRole('link', { name: 'Products' }).click();
     await page.waitForURL(/\/products/);
 
-    await page.click('text=Home');
+    await page.getByRole('link', { name: 'Home', exact: true }).click();
     await page.waitForURL(/\/$/);
 
-    await page.click('text=About');
+    await page.getByRole('link', { name: 'About' }).click();
     await page.waitForURL(/\/about/);
 
     // Should still have only one script
@@ -597,7 +597,7 @@ test.describe('Memory Stability', () => {
     }
 
     // Page should still be responsive
-    await page.click('text=Products');
+    await page.getByRole('link', { name: 'Products' }).click();
     await expect(page).toHaveURL(/\/products/);
   });
 });
@@ -621,7 +621,7 @@ test.describe('Error Boundary Behavior', () => {
   test('does not cause console errors in normal operation', async ({ page }) => {
     const errors = await collectConsoleErrors(page, async () => {
       await page.goto(server.url, { waitUntil: 'networkidle' });
-      await page.click('text=Products');
+      await page.getByRole('link', { name: 'Products' }).click();
       await page.waitForURL(/\/products/);
     });
 

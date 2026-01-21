@@ -119,26 +119,17 @@ describe('Fuzz Testing - Container IDs', () => {
   it('handles edge case container IDs (may throw)', () => {
     // These IDs contain characters that may break CSS selectors
     // The library should either handle them gracefully or throw predictably
-    const edgeCases = [
-      'GTM-',
-      '-GTM',
-      'GTM',
-      '',
-      ' ',
-      'GTM-WITH SPACE',
-      'GTM-<script>'
-    ];
+    const edgeCases = ['GTM-', '-GTM', 'GTM', '', ' ', 'GTM-WITH SPACE', 'GTM-<script>'];
 
     edgeCases.forEach((containerId) => {
-      const client = createGtmClient({ containers: containerId });
-
-      // These may throw or succeed - either is acceptable for edge cases
+      // These may throw during creation or during operations - either is acceptable for edge cases
       try {
+        const client = createGtmClient({ containers: containerId });
         client.init();
         client.push({ event: 'test' });
         client.teardown();
       } catch {
-        // Expected for some edge cases
+        // Expected for some edge cases (e.g., empty container IDs now throw)
       }
 
       // Cleanup
@@ -210,7 +201,8 @@ describe('Fuzz Testing - Push Values', () => {
     document.head.innerHTML = '';
     document.body.innerHTML = '';
     delete (globalThis as Record<string, unknown>).dataLayer;
-    client = createGtmClient({ containers: 'GTM-FUZZ' });
+    // Use unlimited dataLayer size for fuzz testing
+    client = createGtmClient({ containers: 'GTM-FUZZ', maxDataLayerSize: 0 });
     client.init();
   });
 
@@ -401,11 +393,7 @@ describe('Fuzz Testing - Consent Values', () => {
   });
 
   it('handles all consent presets', () => {
-    const presets = [
-      consentPresets.eeaDefault,
-      consentPresets.allGranted,
-      consentPresets.analyticsOnly
-    ];
+    const presets = [consentPresets.eeaDefault, consentPresets.allGranted, consentPresets.analyticsOnly];
 
     presets.forEach((preset) => {
       const client = createGtmClient({ containers: 'GTM-CONSENT' });

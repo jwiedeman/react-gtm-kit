@@ -27,8 +27,10 @@ type MockClient = GtmClient & {
   setConsentDefaults: jest.Mock<void, [ConsentState, ConsentRegionOptions | undefined]>;
   updateConsent: jest.Mock<void, [ConsentState, ConsentRegionOptions | undefined]>;
   isInitialized: jest.Mock<boolean, []>;
+  isReady: jest.Mock<boolean, []>;
   whenReady: jest.Mock<Promise<ScriptLoadState[]>, []>;
   onReady: jest.Mock<() => void, [(state: ScriptLoadState[]) => void]>;
+  getDiagnostics: jest.Mock;
 };
 
 const createMockClient = (): MockClient => ({
@@ -39,11 +41,24 @@ const createMockClient = (): MockClient => ({
   setConsentDefaults: jest.fn(),
   updateConsent: jest.fn(),
   isInitialized: jest.fn(() => true),
+  isReady: jest.fn(() => true),
   whenReady: jest.fn(() => Promise.resolve([])),
   onReady: jest.fn((callback: (state: ScriptLoadState[]) => void) => {
     callback([]);
     return jest.fn();
-  })
+  }),
+  getDiagnostics: jest.fn(() => ({
+    initialized: true,
+    ready: true,
+    dataLayerName: 'dataLayer',
+    dataLayerSize: 0,
+    queueSize: 0,
+    consentCommandsDelivered: 0,
+    containers: ['GTM-LEGACY'],
+    scriptStates: [],
+    uptimeMs: 0,
+    debugMode: false
+  }))
 });
 
 const baseConfig: CreateGtmClientOptions = { containers: 'GTM-LEGACY' };

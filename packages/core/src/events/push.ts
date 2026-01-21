@@ -24,11 +24,18 @@ export const pushEvent = <TName extends string, TPayload extends EventPayload = 
   payload?: TPayload
 ): EventForName<TName> => {
   if (!name) {
-    throw new Error('An event name is required when pushing to the dataLayer.');
+    throw new Error(
+      'An event name is required when pushing to the dataLayer. ' +
+        'Example: pushEvent(client, "page_view", { page_path: "/home" })'
+    );
   }
 
   if (payload !== undefined && !isRecord(payload)) {
-    throw new Error('Event payloads must be plain objects when pushing to the dataLayer.');
+    throw new Error(
+      'Event payloads must be plain objects when pushing to the dataLayer. ' +
+        `Received: ${typeof payload}. ` +
+        'Example: pushEvent(client, "click", { button_name: "cta" })'
+    );
   }
 
   const event = {
@@ -51,13 +58,21 @@ export const pushEcommerce = <TName extends EcommerceEventName, TExtras extends 
   options?: PushEcommerceOptions<TExtras>
 ): EcommerceEvent<TName, TExtras> => {
   if (!isRecord(ecommerce)) {
-    throw new Error('Ecommerce payload must be an object.');
+    throw new Error(
+      'Ecommerce payload must be an object. ' +
+        `Received: ${ecommerce === null ? 'null' : typeof ecommerce}. ` +
+        'Example: pushEcommerce(client, "purchase", { transaction_id: "T123", value: 99.99, items: [...] })'
+    );
   }
 
   const extras = options?.extras ?? {};
 
   if (!isRecord(extras)) {
-    throw new Error('Ecommerce extras must be an object when provided.');
+    throw new Error(
+      'Ecommerce extras must be an object when provided. ' +
+        `Received: ${typeof extras}. ` +
+        'Example: pushEcommerce(client, "purchase", ecommerce, { extras: { user_id: "123" } })'
+    );
   }
 
   const payload = { ...extras, ecommerce } as { ecommerce: EcommercePayload } & TExtras;

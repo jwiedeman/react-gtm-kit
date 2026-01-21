@@ -1,22 +1,47 @@
 export type {
+  ContainerId,
   ContainerConfigInput,
   ContainerDescriptor,
   CreateGtmClientOptions,
+  DataLayerName,
   DataLayerValue,
   GtmClient,
+  GtmDiagnostics,
+  GtmGlobalExtension,
   ScriptAttributes,
   ScriptLoadState,
-  ScriptLoadStatus
+  ScriptLoadStatus,
+  ScriptRetryOptions
 } from './types';
-export { DEFAULT_DATA_LAYER_NAME, DEFAULT_GTM_HOST } from './constants';
+export {
+  isValidContainerId,
+  toContainerId,
+  isValidDataLayerName,
+  toDataLayerName,
+  getGlobalDataLayer,
+  getGoogleTagManager
+} from './types';
+export {
+  DEFAULT_DATA_LAYER_NAME,
+  DEFAULT_GTM_HOST,
+  DEFAULT_MAX_DATA_LAYER_SIZE,
+  MAX_CONSENT_WAIT_MS,
+  DEFAULT_SCRIPT_TIMEOUT_MS,
+  DEFAULT_INIT_TIMEOUT_MS,
+  DEFAULT_RETRY_DELAY_MS,
+  MAX_RETRY_DELAY_MS
+} from './constants';
 export type { ConsentCommand, ConsentRegionOptions, ConsentState } from './consent';
 export { buildConsentCommand, consent, createConsentDefaultsCommand, createConsentUpdateCommand } from './consent';
 export { consentPresets, getConsentPreset, eeaDefault, allGranted, analyticsOnly } from './consent/presets';
 export { createGtmClient } from './client';
+export { createDebugLogger } from './logger';
+export type { Logger, PartialLogger } from './types';
 export { pushEvent, pushEcommerce } from './events';
 export { createNoscriptMarkup, DEFAULT_NOSCRIPT_IFRAME_ATTRIBUTES } from './noscript';
 export type { NoscriptOptions } from './noscript';
 export type {
+  // Core event types
   AdsConversionEvent,
   AdsConversionPayload,
   CustomEvent,
@@ -27,13 +52,152 @@ export type {
   EventForName,
   EventName,
   EventPayload,
+  ExtendedEventName,
+  GA4RecommendedEvent,
+  GenerateLeadEvent,
+  GenerateLeadPayload,
   GtmEvent,
+  GtmInternalEvent,
+  LoginEvent,
+  LoginPayload,
   PageViewEvent,
   PageViewPayload,
-  PushEcommerceOptions
+  PushEcommerceOptions,
+  ScreenViewEvent,
+  ScreenViewPayload,
+  ScrollEvent,
+  ScrollPayload,
+  SearchEvent,
+  SearchPayload,
+  SelectContentEvent,
+  SelectContentPayload,
+  ShareEvent,
+  SharePayload,
+  SignUpEvent,
+  SignUpPayload,
+  ViewSearchResultsEvent,
+  ViewSearchResultsPayload,
+  // Booking events
+  BookingEventName,
+  BookingPayload,
+  BookingRequestedEvent,
+  BookingConfirmedEvent,
+  BookingCancelledEvent,
+  BookingModifiedEvent,
+  ReservationCreatedEvent,
+  ReservationConfirmedEvent,
+  ReservationCancelledEvent,
+  AppointmentScheduledEvent,
+  AppointmentCancelledEvent,
+  AppointmentRescheduledEvent,
+  // Video events
+  VideoEventName,
+  VideoPayload,
+  VideoStartEvent,
+  VideoProgressEvent,
+  VideoCompleteEvent,
+  VideoPauseEvent,
+  VideoResumeEvent,
+  VideoSeekEvent,
+  VideoErrorEvent,
+  // Form events
+  FormEventName,
+  FormPayload,
+  FormStartEvent,
+  FormSubmitEvent,
+  FormSubmitSuccessEvent,
+  FormSubmitFailureEvent,
+  FormErrorEvent,
+  FormAbandonEvent,
+  FormStepCompleteEvent,
+  // SaaS events
+  SaaSEventName,
+  SaaSPayload,
+  TrialStartEvent,
+  TrialEndEvent,
+  TrialConvertEvent,
+  SubscriptionStartEvent,
+  SubscriptionCancelEvent,
+  SubscriptionRenewEvent,
+  SubscriptionUpgradeEvent,
+  SubscriptionDowngradeEvent,
+  PlanSelectEvent,
+  FeatureUsedEvent,
+  LimitReachedEvent,
+  OnboardingStartEvent,
+  OnboardingStepEvent,
+  OnboardingCompleteEvent,
+  InviteSentEvent,
+  InviteAcceptedEvent,
+  // Error events
+  ErrorEventName,
+  ErrorPayload,
+  ErrorEvent,
+  ExceptionEvent,
+  ApiErrorEvent,
+  ValidationErrorEvent,
+  PageNotFoundEvent,
+  // File events
+  FileEventName,
+  FilePayload,
+  FileDownloadEvent,
+  FileUploadEvent,
+  FileViewEvent,
+  DocumentOpenEvent,
+  // Auth events
+  AuthEventName,
+  AuthPayload,
+  PasswordResetRequestEvent,
+  PasswordResetCompleteEvent,
+  TwoFactorEnabledEvent,
+  TwoFactorSuccessEvent,
+  LogoutEvent,
+  ProfileUpdatedEvent,
+  SsoLoginEvent,
+  // Engagement events
+  EngagementEventName,
+  EngagementPayload,
+  ScrollDepthEvent,
+  TimeOnPageEvent,
+  ContentConsumedEvent,
+  ClickEvent,
+  // Communication events
+  CommunicationEventName,
+  CommunicationPayload,
+  ChatStartedEvent,
+  ChatEndedEvent,
+  ChatRatedEvent,
+  NotificationClickedEvent,
+  NotificationDismissedEvent,
+  EmailLinkClickedEvent,
+  // Social events
+  SocialEventName,
+  SocialPayload,
+  SocialShareEvent,
+  SocialFollowEvent,
+  SocialLikeEvent,
+  SocialCommentEvent,
+  ReferralSignupEvent,
+  // Search/Filter events
+  SearchFilterEventName,
+  SearchFilterPayload,
+  SearchStartedEvent,
+  FilterAppliedEvent,
+  FilterRemovedEvent,
+  SortAppliedEvent,
+  CategorySelectedEvent,
+  PaginationEvent,
+  // Gaming events
+  GamingEventName,
+  GamingPayload,
+  AchievementUnlockedEvent,
+  BadgeEarnedEvent,
+  QuestCompletedEvent,
+  RewardClaimedEvent,
+  StreakAchievedEvent
 } from './events';
 export type { AutoQueueOptions, AutoQueueState } from './auto-queue';
-export { installAutoQueue, createAutoQueueScript, attachToInlineBuffer } from './auto-queue';
+export { installAutoQueue, createAutoQueueScript, attachToInlineBuffer, cleanupInlineBuffer } from './auto-queue';
 export {
   isString,
   normalizeContainer,

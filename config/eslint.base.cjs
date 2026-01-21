@@ -43,13 +43,15 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['**/__tests__/**/*', '**/*.spec.ts', '**/*.spec.tsx'],
+      files: ['**/__tests__/**/*', '**/*.spec.ts', '**/*.spec.tsx', '**/*.test.ts', '**/*.test.tsx'],
       env: {
         jest: true,
         node: true
       },
       rules: {
-        '@typescript-eslint/no-explicit-any': 'off'
+        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/no-empty-function': 'off',
+        'no-console': 'off'
       }
     },
     {

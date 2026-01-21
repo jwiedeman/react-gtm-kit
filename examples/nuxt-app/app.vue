@@ -1,14 +1,20 @@
 <script setup lang="ts">
-import { useTrackPageViews } from '@jwiedeman/gtm-kit-nuxt';
+import { onMounted } from 'vue';
 
-// Enable automatic page view tracking
+// Enable automatic page view tracking (client-side only)
 const route = useRoute();
 
-useTrackPageViews({
-  route,
-  eventName: 'page_view',
-  includeQueryParams: true,
-  trackInitialPageView: true
+// Only use GTM composables on the client side
+// The GTM plugin is only installed client-side (.client.ts)
+onMounted(async () => {
+  const { useTrackPageViews } = await import('@jwiedeman/gtm-kit-nuxt');
+
+  useTrackPageViews({
+    route,
+    eventName: 'page_view',
+    includeQueryParams: true,
+    trackInitialPageView: true
+  });
 });
 </script>
 

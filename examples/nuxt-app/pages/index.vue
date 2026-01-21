@@ -1,14 +1,23 @@
 <script setup lang="ts">
-import { useGtmPush } from '@jwiedeman/gtm-kit-vue';
+import { onMounted } from 'vue';
 
-const push = useGtmPush();
+// Store the push function once available on the client
+let push: ((data: Record<string, unknown>) => void) | null = null;
+
+// Only initialize GTM composables on the client side
+onMounted(async () => {
+  const { useGtmPush } = await import('@jwiedeman/gtm-kit-vue');
+  push = useGtmPush();
+});
 
 const trackCTAClick = () => {
-  push({
-    event: 'cta_click',
-    cta_name: 'hero_get_started',
-    cta_location: 'homepage_hero'
-  });
+  if (push) {
+    push({
+      event: 'cta_click',
+      cta_name: 'hero_get_started',
+      cta_location: 'homepage_hero'
+    });
+  }
 };
 
 // Set page meta

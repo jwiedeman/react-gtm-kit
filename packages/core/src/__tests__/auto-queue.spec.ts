@@ -1,4 +1,4 @@
-import { installAutoQueue, createAutoQueueScript, attachToInlineBuffer } from '../auto-queue';
+import { installAutoQueue, createAutoQueueScript, attachToInlineBuffer, cleanupInlineBuffer } from '../auto-queue';
 import { createGtmClient } from '../client';
 
 describe('auto-queue', () => {
@@ -343,6 +343,50 @@ describe('auto-queue', () => {
       // All events should be in dataLayer
       expect(dataLayer).toContainEqual({ event: 'very_early_event' });
       expect(dataLayer).toContainEqual({ event: 'pre_init_event' });
+    });
+  });
+
+  describe('cleanupInlineBuffer', () => {
+    it('removes __gtmkit_buffer from global scope', () => {
+      // Set up inline buffer as the script would
+      const script = createAutoQueueScript();
+      // eslint-disable-next-line no-eval
+      eval(script);
+
+      // Verify buffer was created
+      expect((globalThis as Record<string, unknown>).__gtmkit_buffer).toBeDefined();
+
+      // Clean up
+      cleanupInlineBuffer();
+
+      // Verify buffer was removed
+      expect((globalThis as Record<string, unknown>).__gtmkit_buffer).toBeUndefined();
+    });
+
+    it('does nothing if buffer does not exist', () => {
+      // Ensure buffer doesn't exist
+      delete (globalThis as Record<string, unknown>).__gtmkit_buffer;
+
+      // Should not throw
+      expect(() => cleanupInlineBuffer()).not.toThrow();
+    });
+
+    it('is called by uninstall()', () => {
+      // Set up inline buffer
+      const script = createAutoQueueScript();
+      // eslint-disable-next-line no-eval
+      eval(script);
+
+      // Attach to the buffer
+      const state = attachToInlineBuffer();
+
+      // Recreate the buffer (simulating a scenario where it gets recreated)
+      (globalThis as Record<string, unknown>).__gtmkit_buffer = { q: [], o: () => 0, n: 'dataLayer' };
+
+      // Uninstall should clean it up
+      state?.uninstall();
+
+      expect((globalThis as Record<string, unknown>).__gtmkit_buffer).toBeUndefined();
     });
   });
 });

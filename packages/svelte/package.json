@@ -51,7 +51,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@jwiedeman/gtm-kit": "^1.0.0"
+    "@jwiedeman/gtm-kit": "workspace:*"
   },
   "peerDependencies": {
     "svelte": "^4.0.0 || ^5.0.0"

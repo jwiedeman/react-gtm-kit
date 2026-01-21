@@ -1,0 +1,54 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="About - GTM-Kit Astro Example">
+  <div class="about-page">
+    <h1>About GTM-Kit</h1>
+    <p>
+      GTM-Kit is a lightweight, framework-agnostic library for integrating Google Tag Manager
+      with modern JavaScript applications.
+    </p>
+    <p>
+      This example demonstrates the Astro integration using the @jwiedeman/gtm-kit-astro package.
+    </p>
+
+    <h2>Features Demonstrated</h2>
+    <ul>
+      <li>Automatic page view tracking with setupPageTracking</li>
+      <li>Custom event tracking (CTA clicks, e-commerce)</li>
+      <li>Consent Mode v2 with default denied state</li>
+      <li>Astro components integration</li>
+      <li>TypeScript support</li>
+    </ul>
+  </div>
+</Layout>
+
+<style>
+  .about-page {
+    padding: 2rem 0;
+  }
+
+  h1 {
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin-bottom: 1rem;
+    color: #666;
+  }
+
+  h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  ul {
+    padding-left: 1.5rem;
+    color: #666;
+  }
+
+  li {
+    margin-bottom: 0.5rem;
+  }
+</style>

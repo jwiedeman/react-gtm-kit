@@ -1,0 +1,30 @@
+{
+  "name": "@gtm-kit/example-remix-app",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "sideEffects": false,
+  "scripts": {
+    "dev": "remix vite:dev",
+    "build": "remix vite:build",
+    "preview": "vite preview",
+    "smoke": "pnpm run build"
+  },
+  "dependencies": {
+    "@jwiedeman/gtm-kit-remix": "workspace:*",
+    "@remix-run/node": "^2.15.2",
+    "@remix-run/react": "^2.15.2",
+    "@remix-run/serve": "^2.15.2",
+    "isbot": "^5.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "^2.15.2",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.4.9",
+    "vite-tsconfig-paths": "^5.1.4"
+  }
+}

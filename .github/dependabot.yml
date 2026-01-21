@@ -1,25 +1,72 @@
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  # Root package.json and pnpm-lock.yaml
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "America/Los_Angeles"
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'America/Los_Angeles'
     commit-message:
-      prefix: "chore"
-      include: "scope"
+      prefix: 'chore(deps)'
+    labels:
+      - 'dependencies'
+      - 'automated'
     open-pull-requests-limit: 10
     versioning-strategy: increase
-  - package-ecosystem: "github-actions"
-    directory: "/"
+    groups:
+      # Group TypeScript and build tools together
+      typescript-build:
+        patterns:
+          - 'typescript'
+          - 'tsup'
+          - 'tslib'
+          - '@types/*'
+        update-types:
+          - 'minor'
+          - 'patch'
+      # Group testing tools together
+      testing:
+        patterns:
+          - 'vitest'
+          - '@vitest/*'
+          - 'playwright'
+          - '@playwright/*'
+        update-types:
+          - 'minor'
+          - 'patch'
+      # Group linting tools together
+      linting:
+        patterns:
+          - 'eslint'
+          - '@eslint/*'
+          - 'eslint-*'
+          - 'prettier'
+        update-types:
+          - 'minor'
+          - 'patch'
+    ignore:
+      # Ignore major version updates for core dependencies
+      # These require manual review and testing
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'vitest'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'tsup'
+        update-types: ['version-update:semver-major']
+
+  # GitHub Actions
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "America/Los_Angeles"
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'America/Los_Angeles'
     commit-message:
-      prefix: "chore"
-      include: "scope"
+      prefix: 'chore(ci)'
+    labels:
+      - 'ci'
+      - 'automated'
     open-pull-requests-limit: 5

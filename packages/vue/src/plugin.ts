@@ -1,4 +1,4 @@
-import { inject, type App, type InjectionKey } from 'vue';
+import { inject, ref, onErrorCaptured, type App, type InjectionKey, type Ref, type Component } from 'vue';
 import {
   createGtmClient,
   type ConsentRegionOptions,
@@ -39,10 +39,14 @@ export interface GtmContext {
   setConsentDefaults: (state: ConsentState, options?: ConsentRegionOptions) => void;
   /** Update consent state */
   updateConsent: (state: ConsentState, options?: ConsentRegionOptions) => void;
+  /** Synchronously check if all GTM scripts have finished loading */
+  isReady: () => boolean;
   /** Returns a promise that resolves when all GTM scripts are loaded */
   whenReady: () => Promise<ScriptLoadState[]>;
   /** Register a callback for when GTM scripts are ready */
   onReady: (callback: (state: ScriptLoadState[]) => void) => () => void;
+  /** @internal Pre-computed consent API (memoized to avoid recreating on each useGtmConsent call) */
+  _consentApi: GtmConsentApi;
 }
 
 /**
@@ -72,21 +76,55 @@ export const GTM_INJECTION_KEY: InjectionKey<GtmContext> = Symbol('gtm-kit');
  *   .mount('#app');
  * ```
  */
+// Track installed apps to prevent duplicate installations
+const installedApps = new WeakSet<App>();
+
 export const GtmPlugin = {
   install(app: App, options: GtmPluginOptions): void {
+    // Guard against duplicate installation on the same app
+    if (installedApps.has(app)) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn(
+          '[gtm-kit/vue] GtmPlugin has already been installed on this Vue app. ' +
+            'The duplicate installation will be ignored.'
+        );
+      }
+      return;
+    }
+    installedApps.add(app);
+
     const { autoInit = true, onBeforeInit, ...clientOptions } = options;
 
     const client = createGtmClient(clientOptions);
+    const hasOnBeforeInit = typeof onBeforeInit === 'function';
+
+    // Pre-compute consent functions to avoid recreating closures on each call
+    const setConsentDefaults = (state: ConsentState, regionOptions?: ConsentRegionOptions) => {
+      // Warn if setConsentDefaults is called after init when onBeforeInit was also provided
+      if (client.isInitialized() && hasOnBeforeInit && process.env.NODE_ENV !== 'production') {
+        console.warn(
+          '[gtm-kit/vue] setConsentDefaults() was called after initialization while onBeforeInit was also provided. ' +
+            'When using onBeforeInit, set consent defaults there instead of calling setConsentDefaults() after init. ' +
+            'Consent defaults should be set before GTM initialization to ensure proper tag behavior.'
+        );
+      }
+      client.setConsentDefaults(state, regionOptions);
+    };
+    const updateConsent = (state: ConsentState, regionOptions?: ConsentRegionOptions) =>
+      client.updateConsent(state, regionOptions);
+
+    // Pre-compute the consent API object for memoization
+    const consentApi: GtmConsentApi = { setConsentDefaults, updateConsent };
 
     const context: GtmContext = {
       client,
       push: (value: DataLayerValue) => client.push(value),
-      setConsentDefaults: (state: ConsentState, regionOptions?: ConsentRegionOptions) =>
-        client.setConsentDefaults(state, regionOptions),
-      updateConsent: (state: ConsentState, regionOptions?: ConsentRegionOptions) =>
-        client.updateConsent(state, regionOptions),
+      setConsentDefaults,
+      updateConsent,
+      isReady: () => client.isReady(),
       whenReady: () => client.whenReady(),
-      onReady: (callback: (state: ScriptLoadState[]) => void) => client.onReady(callback)
+      onReady: (callback: (state: ScriptLoadState[]) => void) => client.onReady(callback),
+      _consentApi: consentApi
     };
 
     // Provide the context to all components
@@ -122,7 +160,7 @@ const useGtmContext = (): GtmContext => {
   const context = inject(GTM_INJECTION_KEY);
   if (!context) {
     throw new Error(
-      '[gtm-kit] useGtm() was called outside of a Vue app with GtmPlugin installed. ' +
+      '[gtm-kit/vue] useGtm() was called outside of a Vue app with GtmPlugin installed. ' +
         'Make sure to call app.use(GtmPlugin, { containers: "GTM-XXXXXX" }) before using GTM composables.'
     );
   }
@@ -192,8 +230,8 @@ export const useGtmPush = (): ((value: DataLayerValue) => void) => {
  * ```
  */
 export const useGtmConsent = (): GtmConsentApi => {
-  const { setConsentDefaults, updateConsent } = useGtmContext();
-  return { setConsentDefaults, updateConsent };
+  // Return the pre-computed consent API object (memoized)
+  return useGtmContext()._consentApi;
 };
 
 /**
@@ -239,6 +277,155 @@ export const useGtmClient = (): GtmClient => {
  */
 export const useGtmReady = (): (() => Promise<ScriptLoadState[]>) => {
   return useGtmContext().whenReady;
+};
+
+/**
+ * Composable to check if GTM scripts have finished loading synchronously.
+ *
+ * @example
+ * ```vue
+ * <script setup>
+ * import { useIsGtmReady } from '@jwiedeman/gtm-kit-vue';
+ *
+ * const isReady = useIsGtmReady();
+ *
+ * // Check if GTM is ready
+ * if (isReady()) {
+ *   console.log('GTM is ready');
+ * }
+ * </script>
+ * ```
+ */
+export const useIsGtmReady = (): (() => boolean) => {
+  return useGtmContext().isReady;
+};
+
+/**
+ * Options for useGtmErrorHandler composable.
+ */
+export interface GtmErrorHandlerOptions {
+  /** Callback invoked when an error is caught */
+  onError?: (error: Error, instance: Component | null, info: string) => void;
+  /** Whether to log errors to console (default: true in development) */
+  logErrors?: boolean;
+}
+
+/**
+ * Return value from useGtmErrorHandler.
+ */
+export interface GtmErrorHandlerResult {
+  /** Whether an error has been caught */
+  hasError: Ref<boolean>;
+  /** The caught error, if any */
+  error: Ref<Error | null>;
+  /** Reset the error state */
+  reset: () => void;
+}
+
+/**
+ * Composable to handle GTM-related errors in child components.
+ * Use this in a parent component to catch and handle GTM errors gracefully.
+ *
+ * @example
+ * ```vue
+ * <script setup>
+ * import { useGtmErrorHandler } from '@jwiedeman/gtm-kit-vue';
+ *
+ * const { hasError, error, reset } = useGtmErrorHandler({
+ *   onError: (err) => console.error('GTM error:', err)
+ * });
+ * </script>
+ *
+ * <template>
+ *   <div v-if="hasError">
+ *     <p>GTM failed to load: {{ error?.message }}</p>
+ *     <button @click="reset">Retry</button>
+ *   </div>
+ *   <div v-else>
+ *     <GtmContent />
+ *   </div>
+ * </template>
+ * ```
+ */
+/**
+ * Checks if an error is GTM-related.
+ *
+ * Detection methods (in order of reliability):
+ * 1. Check for `isGtmKitError` property (set by GTM Kit internal errors)
+ * 2. Check if error name is 'GtmKitError'
+ * 3. Check stack trace for installed gtm-kit package paths (node_modules)
+ * 4. Fall back to message content (less reliable)
+ */
+const isGtmRelatedError = (err: Error): boolean => {
+  // Method 1: Check for custom property (most reliable)
+  if ('isGtmKitError' in err && err.isGtmKitError === true) {
+    return true;
+  }
+
+  // Method 2: Check error name
+  if (err.name === 'GtmKitError') {
+    return true;
+  }
+
+  // Method 3: Check stack trace for INSTALLED gtm-kit packages
+  // We specifically check for node_modules paths to avoid matching:
+  // - Source files during development (packages/vue/src/...)
+  // - Test files (packages/vue/src/__tests__/...)
+  if (err.stack) {
+    const stackLower = err.stack.toLowerCase();
+    if (stackLower.includes('node_modules/@jwiedeman/gtm-kit') || stackLower.includes('node_modules/gtm-kit')) {
+      return true;
+    }
+  }
+
+  // Method 4: Check message for GTM Kit error format (falls back to string matching)
+  // GTM Kit errors follow the format: [gtm-kit/package] message
+  if (err.message.startsWith('[gtm-kit/')) {
+    return true;
+  }
+
+  return false;
+};
+
+export const useGtmErrorHandler = (options: GtmErrorHandlerOptions = {}): GtmErrorHandlerResult => {
+  const { onError, logErrors = process.env.NODE_ENV !== 'production' } = options;
+
+  const hasError = ref(false);
+  const error = ref<Error | null>(null);
+
+  const reset = () => {
+    hasError.value = false;
+    error.value = null;
+  };
+
+  onErrorCaptured((err: Error, instance: Component | null, info: string) => {
+    // Only handle GTM-related errors using robust detection
+    if (isGtmRelatedError(err)) {
+      hasError.value = true;
+      error.value = err;
+
+      if (logErrors) {
+        console.error('[gtm-kit/vue] Error caught by useGtmErrorHandler:', err);
+        console.error('[gtm-kit/vue] Component info:', info);
+      }
+
+      if (onError) {
+        try {
+          onError(err, instance, info);
+        } catch {
+          // Ignore callback errors
+        }
+      }
+
+      // Return false to stop error propagation (equivalent to React error boundary behavior)
+      return false;
+    }
+
+    // Let non-GTM errors propagate
+    return true;
+  });
+
+  return { hasError, error, reset };
 };
 
 // Extend Vue's ComponentCustomProperties for Options API users

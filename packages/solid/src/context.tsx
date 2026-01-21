@@ -1,4 +1,4 @@
-import { createContext, useContext, onCleanup, type JSX } from 'solid-js';
+import { createContext, useContext, onCleanup, ErrorBoundary, type JSX } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import {
   createGtmClient,
@@ -47,6 +47,8 @@ export interface GtmContextValue {
   setConsentDefaults: (state: ConsentState, options?: ConsentRegionOptions) => void;
   /** Update consent state */
   updateConsent: (state: ConsentState, options?: ConsentRegionOptions) => void;
+  /** Synchronously check if all GTM scripts have finished loading */
+  isReady: () => boolean;
   /** Returns a promise that resolves when all GTM scripts are loaded */
   whenReady: () => Promise<ScriptLoadState[]>;
   /** Register a callback for when GTM scripts are ready */
@@ -68,6 +70,15 @@ export interface GtmConsentApi {
  */
 export const GtmContext = createContext<GtmContextValue>();
 
+const warnOnNestedProvider = (): void => {
+  if (process.env.NODE_ENV !== 'production') {
+    console.warn(
+      '[gtm-kit/solid] Nested GtmProvider detected. You should only have one GtmProvider at the root of your app. ' +
+        'The nested provider will be ignored.'
+    );
+  }
+};
+
 /**
  * GTM Provider component for SolidJS.
  *
@@ -85,6 +96,13 @@ export const GtmContext = createContext<GtmContextValue>();
  * ```
  */
 export function GtmProvider(props: GtmProviderProps): JSX.Element {
+  // Check for nested provider
+  const existingContext = useContext(GtmContext);
+  if (existingContext) {
+    warnOnNestedProvider();
+    return <>{props.children}</>;
+  }
+
   // Note: Don't destructure children - in Solid.js, children is a getter that
   // should only be accessed inside the returned JSX to maintain proper reactivity
   const autoInit = props.autoInit ?? true;
@@ -112,6 +130,7 @@ export function GtmProvider(props: GtmProviderProps): JSX.Element {
       client.setConsentDefaults(consentState, regionOptions),
     updateConsent: (consentState: ConsentState, regionOptions?: ConsentRegionOptions) =>
       client.updateConsent(consentState, regionOptions),
+    isReady: () => client.isReady(),
     whenReady: () => client.whenReady(),
     onReady: (callback: (loadState: ScriptLoadState[]) => void) => client.onReady(callback),
     get initialized() {
@@ -150,7 +169,7 @@ const useGtmContext = (): GtmContextValue => {
   const context = useContext(GtmContext);
   if (!context) {
     throw new Error(
-      '[gtm-kit] useGtm() was called outside of a GtmProvider. ' +
+      '[gtm-kit/solid] useGtm() was called outside of a GtmProvider. ' +
         'Make sure to wrap your app with <GtmProvider containers="GTM-XXXXXX">.'
     );
   }
@@ -270,3 +289,99 @@ export const useGtmClient = (): GtmClient => {
 export const useGtmReady = (): (() => Promise<ScriptLoadState[]>) => {
   return useGtmContext().whenReady;
 };
+
+/**
+ * Hook to check if GTM scripts have finished loading synchronously.
+ *
+ * @example
+ * ```tsx
+ * import { useIsGtmReady } from '@jwiedeman/gtm-kit-solid';
+ *
+ * function MyComponent() {
+ *   const isReady = useIsGtmReady();
+ *
+ *   return <div>GTM Ready: {isReady() ? 'Yes' : 'No'}</div>;
+ * }
+ * ```
+ */
+export const useIsGtmReady = (): (() => boolean) => {
+  return useGtmContext().isReady;
+};
+
+/**
+ * Props for GtmErrorBoundary component.
+ */
+export interface GtmErrorBoundaryProps {
+  /** Child components */
+  children: JSX.Element;
+  /** Fallback UI to render when an error occurs */
+  fallback?: JSX.Element | ((err: Error, reset: () => void) => JSX.Element);
+  /** Callback invoked when an error is caught */
+  onError?: (error: Error) => void;
+  /** Whether to log errors to console (default: true in development) */
+  logErrors?: boolean;
+}
+
+/**
+ * Error boundary component for GTM provider in SolidJS apps.
+ * Catches errors during GTM initialization and renders a fallback UI.
+ *
+ * @example
+ * ```tsx
+ * import { GtmProvider, GtmErrorBoundary } from '@jwiedeman/gtm-kit-solid';
+ *
+ * function App() {
+ *   return (
+ *     <GtmErrorBoundary
+ *       fallback={(err, reset) => (
+ *         <div>
+ *           <p>GTM failed: {err.message}</p>
+ *           <button onClick={reset}>Retry</button>
+ *         </div>
+ *       )}
+ *     >
+ *       <GtmProvider containers="GTM-XXXXXX">
+ *         <MyApp />
+ *       </GtmProvider>
+ *     </GtmErrorBoundary>
+ *   );
+ * }
+ * ```
+ */
+export function GtmErrorBoundary(props: GtmErrorBoundaryProps): JSX.Element {
+  const logErrors = props.logErrors ?? process.env.NODE_ENV !== 'production';
+  const onError = props.onError;
+
+  const handleError = (err: Error) => {
+    if (logErrors) {
+      console.error('[gtm-kit/solid] Error caught by GtmErrorBoundary:', err);
+    }
+
+    if (onError) {
+      try {
+        onError(err);
+      } catch {
+        // Ignore callback errors
+      }
+    }
+  };
+
+  // Default fallback - just render children (silent degradation)
+  const defaultFallback = (_err: Error, _reset: () => void) => props.children;
+
+  const fallback = props.fallback ?? defaultFallback;
+
+  return (
+    <ErrorBoundary
+      fallback={(err: Error, reset: () => void) => {
+        handleError(err);
+        if (typeof fallback === 'function') {
+          return fallback(err, reset);
+        }
+        return fallback;
+      }}
+    >
+      {props.children}
+    </ErrorBoundary>
+  );
+}

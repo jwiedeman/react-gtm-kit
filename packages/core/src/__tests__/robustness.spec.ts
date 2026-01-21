@@ -95,9 +95,7 @@ describe('Double-Load Scenarios', () => {
       const client = createGtmClient({ containers: 'GTM-CONCURRENT-INIT' });
 
       // Simulate concurrent init calls
-      const initPromises = Array.from({ length: 5 }, () =>
-        Promise.resolve().then(() => client.init())
-      );
+      const initPromises = Array.from({ length: 5 }, () => Promise.resolve().then(() => client.init()));
 
       await Promise.all(initPromises);
 
@@ -110,9 +108,7 @@ describe('Double-Load Scenarios', () => {
   describe('Pre-existing GTM scenarios', () => {
     it('handles existing dataLayer with gtm.js event', () => {
       // Simulate GTM already loaded by another source
-      (globalThis as Record<string, unknown>).dataLayer = [
-        { event: 'gtm.js', 'gtm.start': Date.now() }
-      ];
+      (globalThis as Record<string, unknown>).dataLayer = [{ event: 'gtm.js', 'gtm.start': Date.now() }];
 
       const client = createGtmClient({ containers: 'GTM-EXISTING' });
       client.init();
@@ -275,9 +271,7 @@ describe('SSR/Hydration Scenarios', () => {
   describe('SSR pre-render scenarios', () => {
     it('handles initialization with pre-existing SSR dataLayer', () => {
       // Simulate SSR-injected dataLayer
-      (globalThis as Record<string, unknown>).dataLayer = [
-        { event: 'ssr_page_view', page: '/home' }
-      ];
+      (globalThis as Record<string, unknown>).dataLayer = [{ event: 'ssr_page_view', page: '/home' }];
 
       const client = createGtmClient({ containers: 'GTM-SSR' });
       client.init();
@@ -346,6 +340,236 @@ describe('SSR/Hydration Scenarios', () => {
       expect(dataLayer.some((e) => (e as { event?: string }).event === 'client_interaction')).toBe(true);
     });
   });
+
+  describe('SSR → CSR Transition Scenarios', () => {
+    it('preserves SSR page view during hydration', () => {
+      // Simulate SSR rendering a page_view event
+      (globalThis as Record<string, unknown>).dataLayer = [
+        { event: 'gtm.js', 'gtm.start': Date.now() - 100 },
+        { event: 'page_view', page_path: '/products', page_title: 'Products - SSR' }
+      ];
+
+      const client = createGtmClient({ containers: 'GTM-SSR-PAGE' });
+      client.init();
+
+      // CSR should not duplicate the page_view
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+      const pageViews = dataLayer.filter((e) => (e as { event?: string }).event === 'page_view');
+
+      // Should have exactly 1 page_view (the SSR one)
+      expect(pageViews.length).toBe(1);
+      expect(pageViews[0]).toMatchObject({ page_path: '/products' });
+
+      client.teardown();
+    });
+
+    it('handles SSR consent followed by CSR update', () => {
+      // SSR sets up consent defaults
+      (globalThis as Record<string, unknown>).dataLayer = [
+        ['consent', 'default', { ad_storage: 'denied', analytics_storage: 'denied' }]
+      ];
+
+      const client = createGtmClient({ containers: 'GTM-SSR-CONSENT' });
+      client.init();
+
+      // CSR updates consent after user interaction
+      client.updateConsent({ analytics_storage: 'granted' });
+
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+
+      // Should have both default (SSR) and update (CSR)
+      const consentEntries = dataLayer.filter((e) => Array.isArray(e) && e[0] === 'consent');
+      expect(consentEntries.length).toBe(2);
+      expect(consentEntries[0]).toEqual(['consent', 'default', { ad_storage: 'denied', analytics_storage: 'denied' }]);
+      expect(consentEntries[1]).toEqual(['consent', 'update', { analytics_storage: 'granted' }]);
+
+      client.teardown();
+    });
+
+    it('handles SSR e-commerce data followed by CSR interactions', () => {
+      // SSR renders product list view
+      (globalThis as Record<string, unknown>).dataLayer = [
+        {
+          event: 'view_item_list',
+          ecommerce: {
+            items: [
+              { item_id: 'SKU-001', item_name: 'Widget A', price: 29.99 },
+              { item_id: 'SKU-002', item_name: 'Widget B', price: 39.99 }
+            ]
+          }
+        }
+      ];
+
+      const client = createGtmClient({ containers: 'GTM-SSR-ECOM' });
+      client.init();
+
+      // CSR handles user selecting an item
+      client.push({
+        event: 'select_item',
+        ecommerce: {
+          items: [{ item_id: 'SKU-001', item_name: 'Widget A', price: 29.99 }]
+        }
+      });
+
+      // CSR handles add to cart
+      client.push({
+        event: 'add_to_cart',
+        ecommerce: {
+          items: [{ item_id: 'SKU-001', item_name: 'Widget A', price: 29.99, quantity: 1 }]
+        }
+      });
+
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+
+      // Verify all events in correct order
+      const events = dataLayer
+        .filter((e) => typeof e === 'object' && !Array.isArray(e) && (e as { event?: string }).event)
+        .map((e) => (e as { event: string }).event);
+
+      expect(events).toContain('view_item_list');
+      expect(events).toContain('select_item');
+      expect(events).toContain('add_to_cart');
+
+      // view_item_list should come before select_item
+      expect(events.indexOf('view_item_list')).toBeLessThan(events.indexOf('select_item'));
+
+      client.teardown();
+    });
+
+    it('handles Remix loader data → client hydration', () => {
+      // Simulate Remix loader data being pushed during SSR
+      (globalThis as Record<string, unknown>).dataLayer = [
+        { event: 'user_data_loaded', user_type: 'premium', country: 'US' },
+        { event: 'page_view', page_path: '/dashboard' }
+      ];
+
+      const client = createGtmClient({ containers: 'GTM-REMIX' });
+      client.init();
+
+      // Client-side action
+      client.push({ event: 'dashboard_interaction', action: 'widget_clicked' });
+
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+
+      expect(dataLayer.some((e) => (e as { event?: string }).event === 'user_data_loaded')).toBe(true);
+      expect(dataLayer.some((e) => (e as { event?: string }).event === 'page_view')).toBe(true);
+      expect(dataLayer.some((e) => (e as { event?: string }).event === 'dashboard_interaction')).toBe(true);
+
+      client.teardown();
+    });
+
+    it('handles Nuxt SSR with composable hydration', () => {
+      // Simulate Nuxt SSR pushing initial state
+      (globalThis as Record<string, unknown>).dataLayer = [
+        { event: 'page_view', page_path: '/shop', render_mode: 'ssr' }
+      ];
+
+      // Simulate pre-existing SSR script
+      const ssrScript = document.createElement('script');
+      ssrScript.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-NUXT';
+      ssrScript.setAttribute('data-gtm-container-id', 'GTM-NUXT');
+      document.head.appendChild(ssrScript);
+
+      const client = createGtmClient({ containers: 'GTM-NUXT' });
+      client.init();
+
+      // Nuxt client-side navigation (no full page reload)
+      client.push({ event: 'page_view', page_path: '/shop/category', render_mode: 'csr' });
+
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+      const pageViews = dataLayer.filter((e) => (e as { event?: string }).event === 'page_view');
+
+      // Should have both SSR and CSR page views
+      expect(pageViews.length).toBe(2);
+      expect(pageViews[0]).toMatchObject({ page_path: '/shop', render_mode: 'ssr' });
+      expect(pageViews[1]).toMatchObject({ page_path: '/shop/category', render_mode: 'csr' });
+
+      client.teardown();
+    });
+
+    it('handles Astro island hydration with deferred loading', () => {
+      // Simulate Astro static render with initial page data
+      (globalThis as Record<string, unknown>).dataLayer = [
+        { event: 'page_view', page_path: '/blog/article', framework: 'astro' }
+      ];
+
+      const client = createGtmClient({ containers: 'GTM-ASTRO' });
+      client.init();
+
+      // Island hydrates later (client:visible)
+      setTimeout(() => {
+        client.push({ event: 'island_hydrated', island: 'comments' });
+      }, 0);
+
+      // Another island hydrates even later
+      setTimeout(() => {
+        client.push({ event: 'island_hydrated', island: 'newsletter_signup' });
+      }, 0);
+
+      // Immediate CSR interaction
+      client.push({ event: 'scroll', percent_scrolled: 50 });
+
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+
+      expect(dataLayer.some((e) => (e as { event?: string }).event === 'page_view')).toBe(true);
+      expect(dataLayer.some((e) => (e as { event?: string }).event === 'scroll')).toBe(true);
+
+      client.teardown();
+    });
+
+    it('handles SvelteKit load function → client hydration', () => {
+      // SvelteKit load function pushes data during SSR
+      (globalThis as Record<string, unknown>).dataLayer = [
+        { event: 'product_loaded', product_id: 'SKU-SVELTE', loaded_at: 'server' }
+      ];
+
+      const client = createGtmClient({ containers: 'GTM-SVELTEKIT' });
+      client.init();
+
+      // Client-side interaction after hydration
+      client.push({
+        event: 'add_to_cart',
+        ecommerce: { items: [{ item_id: 'SKU-SVELTE' }] }
+      });
+
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+
+      expect(dataLayer.some((e) => (e as { loaded_at?: string }).loaded_at === 'server')).toBe(true);
+      expect(dataLayer.some((e) => (e as { event?: string }).event === 'add_to_cart')).toBe(true);
+
+      client.teardown();
+    });
+
+    it('preserves event order across SSR → CSR boundary', () => {
+      // SSR events with timestamps
+      const ssrTime = Date.now() - 1000;
+      (globalThis as Record<string, unknown>).dataLayer = [
+        { event: 'ssr_event_1', timestamp: ssrTime },
+        { event: 'ssr_event_2', timestamp: ssrTime + 10 },
+        { event: 'ssr_event_3', timestamp: ssrTime + 20 }
+      ];
+
+      const client = createGtmClient({ containers: 'GTM-ORDER' });
+      client.init();
+
+      // CSR events
+      const csrTime = Date.now();
+      client.push({ event: 'csr_event_1', timestamp: csrTime });
+      client.push({ event: 'csr_event_2', timestamp: csrTime + 10 });
+
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+      const events = dataLayer
+        .filter(
+          (e) => typeof e === 'object' && !Array.isArray(e) && (e as { event?: string }).event?.includes('_event_')
+        )
+        .map((e) => (e as { event: string }).event);
+
+      // Order should be preserved: SSR events first, then CSR events
+      expect(events).toEqual(['ssr_event_1', 'ssr_event_2', 'ssr_event_3', 'csr_event_1', 'csr_event_2']);
+
+      client.teardown();
+    });
+  });
 });
 
 describe('Data Layer Corruption and Recovery', () => {
@@ -406,16 +630,16 @@ describe('Data Layer Corruption and Recovery', () => {
       dataLayer.push(undefined);
       dataLayer.push('random string');
       dataLayer.push(12345);
-      dataLayer.push(() => { /* function */ });
+      dataLayer.push(() => {
+        /* function */
+      });
       dataLayer.push(Symbol('symbol'));
 
       // Client push should still work
       expect(() => client.push({ event: 'valid_event' })).not.toThrow();
       // Filter out null/undefined before checking
       expect(
-        dataLayer.some(
-          (e) => typeof e === 'object' && e !== null && (e as { event?: string }).event === 'valid_event'
-        )
+        dataLayer.some((e) => typeof e === 'object' && e !== null && (e as { event?: string }).event === 'valid_event')
       ).toBe(true);
     });
 
@@ -446,12 +670,8 @@ describe('Data Layer Corruption and Recovery', () => {
       // Simulate concurrent access
       const pushPromises = [];
       for (let i = 0; i < 100; i++) {
-        pushPromises.push(
-          Promise.resolve().then(() => client.push({ event: `client_${i}` }))
-        );
-        pushPromises.push(
-          Promise.resolve().then(() => dataLayer.push({ event: `external_${i}` }))
-        );
+        pushPromises.push(Promise.resolve().then(() => client.push({ event: `client_${i}` })));
+        pushPromises.push(Promise.resolve().then(() => dataLayer.push({ event: `external_${i}` })));
       }
 
       return Promise.all(pushPromises).then(() => {
@@ -534,7 +754,9 @@ describe('Browser-Specific Edge Cases', () => {
 
       Object.defineProperty(globalThis, 'dataLayer', {
         get: () => internalLayer,
-        set: (value) => { internalLayer = value; },
+        set: (value) => {
+          internalLayer = value;
+        },
         configurable: true
       });
 
@@ -590,9 +812,7 @@ describe('Timing and Lifecycle Edge Cases', () => {
     });
 
     it('handles interleaved operations on multiple clients', () => {
-      const clients = Array.from({ length: 5 }, (_, i) =>
-        createGtmClient({ containers: `GTM-INTERLEAVE-${i}` })
-      );
+      const clients = Array.from({ length: 5 }, (_, i) => createGtmClient({ containers: `GTM-INTERLEAVE-${i}` }));
 
       // Interleaved operations
       for (let round = 0; round < 10; round++) {
@@ -633,9 +853,7 @@ describe('Timing and Lifecycle Edge Cases', () => {
       client.updateConsent({ analytics_storage: 'granted' });
 
       const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
-      const consentEntries = dataLayer.filter(
-        (e) => Array.isArray(e) && e[0] === 'consent'
-      );
+      const consentEntries = dataLayer.filter((e) => Array.isArray(e) && e[0] === 'consent');
 
       expect(consentEntries.length).toBeGreaterThanOrEqual(2);
     });
@@ -666,10 +884,7 @@ describe('Timing and Lifecycle Edge Cases', () => {
     it('handles waitForUpdate expiry', () => {
       const client = createGtmClient({ containers: 'GTM-WAIT-EXPIRY' });
 
-      client.setConsentDefaults(
-        { ad_storage: 'denied' },
-        { waitForUpdate: 500 }
-      );
+      client.setConsentDefaults({ ad_storage: 'denied' }, { waitForUpdate: 500 });
 
       client.init();
 
@@ -696,7 +911,8 @@ describe('Timing and Lifecycle Edge Cases', () => {
 
       const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
       const waitForUpdateEntry = dataLayer.find(
-        (e) => Array.isArray(e) && e[0] === 'consent' && (e[3] as { wait_for_update?: number })?.wait_for_update === 30000
+        (e) =>
+          Array.isArray(e) && e[0] === 'consent' && (e[3] as { wait_for_update?: number })?.wait_for_update === 30000
       );
 
       expect(waitForUpdateEntry).toBeDefined();
@@ -794,10 +1010,7 @@ describe('Multi-Container Isolation', () => {
 
     it('allows different script attributes per container', () => {
       const client = createGtmClient({
-        containers: [
-          { id: 'GTM-NONCE1' },
-          { id: 'GTM-NONCE2' }
-        ],
+        containers: [{ id: 'GTM-NONCE1' }, { id: 'GTM-NONCE2' }],
         scriptAttributes: { nonce: 'shared-nonce' }
       });
 

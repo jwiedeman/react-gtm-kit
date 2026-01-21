@@ -28,13 +28,36 @@ describe('Edge Cases and Error Handling', () => {
       expect(() => createGtmClient({ containers: [] })).toThrow();
     });
 
-    it('handles empty string container ID gracefully', () => {
-      // Empty string should not cause a crash - client handles it gracefully
-      const client = createGtmClient({ containers: '' as unknown as string });
-      // Should not throw during init
-      expect(() => client.init()).not.toThrow();
-      // Client initializes but no valid scripts are injected for empty ID
-      expect(client.isInitialized()).toBe(true);
+    it('throws for empty string container ID', () => {
+      // Empty string container IDs should throw an error
+      expect(() => createGtmClient({ containers: '' as unknown as string })).toThrow(
+        /All container IDs are empty or invalid/
+      );
+    });
+
+    it('throws for whitespace-only container ID', () => {
+      // Whitespace-only container IDs should throw an error
+      expect(() => createGtmClient({ containers: '   ' as unknown as string })).toThrow(
+        /All container IDs are empty or invalid/
+      );
+    });
+
+    it('skips invalid container IDs when mixed with valid ones', () => {
+      const warnSpy = jest.fn();
+
+      const client = createGtmClient({
+        containers: [{ id: 'GTM-VALID1' }, { id: '' }, { id: 'GTM-VALID2' }, { id: '  ' }],
+        logger: { warn: warnSpy }
+      });
+
+      // Should warn about invalid containers during construction
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('2 container ID(s) are empty or invalid'));
+
+      client.init();
+
+      // Should still inject valid scripts
+      const scripts = document.querySelectorAll<HTMLScriptElement>('script[data-gtm-container-id]');
+      expect(scripts).toHaveLength(2);
     });
 
     it('handles whitespace container ID', () => {
@@ -318,6 +341,71 @@ describe('Edge Cases and Error Handling', () => {
       expect(consent[3]).toMatchObject({ wait_for_update: 500 });
     });
 
+    it('warns when waitForUpdate exceeds 30 minutes', () => {
+      const warnSpy = jest.fn();
+      const client = createGtmClient({
+        containers: 'GTM-LONG-WAIT',
+        logger: { warn: warnSpy }
+      });
+
+      // 31 minutes in milliseconds
+      const thirtyOneMinutes = 31 * 60 * 1000;
+      client.setConsentDefaults({ ad_storage: 'denied' }, { waitForUpdate: thirtyOneMinutes });
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('exceeds 30 minutes'),
+        expect.objectContaining({ waitForUpdate: thirtyOneMinutes })
+      );
+    });
+
+    it('does not warn when waitForUpdate is within 30 minutes', () => {
+      const warnSpy = jest.fn();
+      const client = createGtmClient({
+        containers: 'GTM-OK-WAIT',
+        logger: { warn: warnSpy }
+      });
+
+      // 29 minutes in milliseconds
+      const twentyNineMinutes = 29 * 60 * 1000;
+      client.setConsentDefaults({ ad_storage: 'denied' }, { waitForUpdate: twentyNineMinutes });
+
+      // Should not warn about excessive wait time
+      expect(warnSpy).not.toHaveBeenCalledWith(expect.stringContaining('exceeds 30 minutes'), expect.anything());
+    });
+
+    it('throws error for negative waitForUpdate value', () => {
+      const client = createGtmClient({ containers: 'GTM-NEGATIVE-WAIT' });
+
+      expect(() => {
+        client.setConsentDefaults({ ad_storage: 'denied' }, { waitForUpdate: -1000 });
+      }).toThrow(/Invalid waitForUpdate value/);
+    });
+
+    it('throws error for NaN waitForUpdate value', () => {
+      const client = createGtmClient({ containers: 'GTM-NAN-WAIT' });
+
+      expect(() => {
+        client.setConsentDefaults({ ad_storage: 'denied' }, { waitForUpdate: NaN });
+      }).toThrow(/Invalid waitForUpdate value/);
+    });
+
+    it('throws error for Infinity waitForUpdate value', () => {
+      const client = createGtmClient({ containers: 'GTM-INFINITY-WAIT' });
+
+      expect(() => {
+        client.setConsentDefaults({ ad_storage: 'denied' }, { waitForUpdate: Infinity });
+      }).toThrow(/Invalid waitForUpdate value/);
+    });
+
+    it('accepts zero waitForUpdate value', () => {
+      const client = createGtmClient({ containers: 'GTM-ZERO-WAIT' });
+
+      // Zero is valid (no wait)
+      expect(() => {
+        client.setConsentDefaults({ ad_storage: 'denied' }, { waitForUpdate: 0 });
+      }).not.toThrow();
+    });
+
     it('rejects invalid consent values', () => {
       const client = createGtmClient({ containers: 'GTM-INVALID-CONSENT' });
       client.init();
@@ -328,6 +416,180 @@ describe('Edge Cases and Error Handling', () => {
           ad_storage: 'maybe'
         });
       }).toThrow(/Invalid consent value/);
+    });
+  });
+
+  describe('Defensive error handling', () => {
+    it('catches and logs errors during dataLayer push without crashing', () => {
+      const errorSpy = jest.fn();
+      const client = createGtmClient({
+        containers: 'GTM-DEFENSIVE',
+        logger: { error: errorSpy }
+      });
+      client.init();
+
+      // Corrupt the dataLayer to cause push errors
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as { push?: unknown };
+      const originalPush = dataLayer.push;
+      dataLayer.push = () => {
+        throw new Error('Simulated dataLayer corruption');
+      };
+
+      // Push should not throw, even with corrupted dataLayer
+      expect(() => {
+        client.push({ event: 'test_event' });
+      }).not.toThrow();
+
+      // Error should be logged
+      expect(errorSpy).toHaveBeenCalledWith(
+        'Failed to push value to dataLayer.',
+        expect.objectContaining({
+          error: 'Simulated dataLayer corruption'
+        })
+      );
+
+      // Restore original push
+      dataLayer.push = originalPush;
+      client.teardown();
+    });
+
+    it('continues functioning after push error', () => {
+      const errorSpy = jest.fn();
+      const client = createGtmClient({
+        containers: 'GTM-CONTINUE',
+        logger: { error: errorSpy }
+      });
+      client.init();
+
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as { push?: unknown };
+      const originalPush = dataLayer.push;
+
+      // Cause one error
+      dataLayer.push = () => {
+        throw new Error('First error');
+      };
+      client.push({ event: 'will_fail' });
+
+      // Restore and push again
+      dataLayer.push = originalPush;
+      client.push({ event: 'will_succeed' });
+
+      // Should have logged one error
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+
+      // Successful push should have worked
+      const events = (dataLayer as unknown[]).filter(
+        (e) => typeof e === 'object' && !Array.isArray(e) && (e as { event?: string }).event === 'will_succeed'
+      );
+      expect(events).toHaveLength(1);
+
+      client.teardown();
+    });
+  });
+
+  describe('Multiple client instances', () => {
+    it('warns when multiple clients share the same dataLayer', () => {
+      const warnSpy1 = jest.fn();
+      const warnSpy2 = jest.fn();
+
+      // Use unique dataLayer name to isolate from other tests
+      const uniqueDataLayerName = `testLayer_${Date.now()}_1`;
+
+      const client1 = createGtmClient({
+        containers: 'GTM-MULTI-1',
+        dataLayerName: uniqueDataLayerName,
+        logger: { warn: warnSpy1 }
+      });
+      const client2 = createGtmClient({
+        containers: 'GTM-MULTI-2',
+        dataLayerName: uniqueDataLayerName,
+        logger: { warn: warnSpy2 }
+      });
+
+      client1.init();
+      // First client should not warn
+      expect(warnSpy1).not.toHaveBeenCalledWith(
+        expect.stringContaining('Multiple GTM client instances'),
+        expect.anything()
+      );
+
+      client2.init();
+      // Second client should warn about sharing dataLayer
+      expect(warnSpy2).toHaveBeenCalledWith(
+        expect.stringContaining('Multiple GTM client instances'),
+        expect.objectContaining({ activeInstances: 2 })
+      );
+
+      client1.teardown();
+      client2.teardown();
+    });
+
+    it('warns when tearing down while other clients are active', () => {
+      const warnSpy1 = jest.fn();
+      const warnSpy2 = jest.fn();
+
+      // Use unique dataLayer name to isolate from other tests
+      const uniqueDataLayerName = `testLayer_${Date.now()}_2`;
+
+      const client1 = createGtmClient({
+        containers: 'GTM-TEARDOWN-1',
+        dataLayerName: uniqueDataLayerName,
+        logger: { warn: warnSpy1 }
+      });
+      const client2 = createGtmClient({
+        containers: 'GTM-TEARDOWN-2',
+        dataLayerName: uniqueDataLayerName,
+        logger: { warn: warnSpy2 }
+      });
+
+      client1.init();
+      client2.init();
+
+      // Clear warnings from init
+      warnSpy1.mockClear();
+
+      // Teardown first client while second is still active
+      client1.teardown();
+
+      // Should warn about affecting other clients
+      expect(warnSpy1).toHaveBeenCalledWith(
+        expect.stringContaining('other instance(s) are still using'),
+        expect.objectContaining({ remainingInstances: 1 })
+      );
+
+      client2.teardown();
+    });
+
+    it('does not warn when clients use different dataLayer names', () => {
+      const warnSpy1 = jest.fn();
+      const warnSpy2 = jest.fn();
+
+      const client1 = createGtmClient({
+        containers: 'GTM-DIFF-DL-1',
+        dataLayerName: `uniqueLayer_${Date.now()}_a`,
+        logger: { warn: warnSpy1 }
+      });
+      const client2 = createGtmClient({
+        containers: 'GTM-DIFF-DL-2',
+        dataLayerName: `uniqueLayer_${Date.now()}_b`,
+        logger: { warn: warnSpy2 }
+      });
+
+      client1.init();
+      client2.init();
+
+      // Neither should warn about multiple instances
+      expect(warnSpy1).not.toHaveBeenCalledWith(
+        expect.stringContaining('Multiple GTM client instances'),
+        expect.anything()
+      );
+      expect(warnSpy2).not.toHaveBeenCalledWith(
+        expect.stringContaining('Multiple GTM client instances'),
+        expect.anything()
+      );
+
+      client1.teardown();
+      client2.teardown();
     });
   });
 
@@ -407,7 +669,9 @@ describe('Edge Cases and Error Handling', () => {
       client.init();
 
       const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
-      const events = dataLayer.filter((e) => typeof e === 'object' && !Array.isArray(e) && (e as { event?: string }).event?.startsWith('event_'));
+      const events = dataLayer.filter(
+        (e) => typeof e === 'object' && !Array.isArray(e) && (e as { event?: string }).event?.startsWith('event_')
+      );
 
       expect(events).toHaveLength(3);
     });
@@ -480,7 +744,9 @@ describe('Edge Cases and Error Handling', () => {
       client.init();
 
       const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
-      const queuedEvents = dataLayer.filter((e) => typeof e === 'object' && (e as { event?: string }).event?.startsWith('queued_'));
+      const queuedEvents = dataLayer.filter(
+        (e) => typeof e === 'object' && (e as { event?: string }).event?.startsWith('queued_')
+      );
 
       expect(queuedEvents).toHaveLength(0);
     });
@@ -521,6 +787,446 @@ describe('Edge Cases and Error Handling', () => {
       const states = await client.whenReady();
       expect(states).toBeDefined();
       expect(Array.isArray(states)).toBe(true);
+    });
+  });
+
+  describe('Circular reference handling', () => {
+    it('handles direct circular reference in object', () => {
+      const client = createGtmClient({ containers: 'GTM-CIRCULAR-DIRECT' });
+      client.init();
+
+      // Create an object with a circular reference
+      const obj: Record<string, unknown> = { event: 'circular_test', data: {} };
+      (obj.data as Record<string, unknown>).self = obj;
+
+      // Should not throw when pushing circular reference
+      expect(() => client.push(obj)).not.toThrow();
+
+      // Event should still be pushed to dataLayer
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+      expect(dataLayer.some((e) => (e as { event?: string }).event === 'circular_test')).toBe(true);
+    });
+
+    it('handles indirect circular reference in nested objects', () => {
+      const client = createGtmClient({ containers: 'GTM-CIRCULAR-INDIRECT' });
+      client.init();
+
+      // Create objects with indirect circular references
+      const a: Record<string, unknown> = { name: 'a' };
+      const b: Record<string, unknown> = { name: 'b', parent: a };
+      a.child = b;
+
+      const obj = { event: 'nested_circular', data: a };
+
+      // Should not throw
+      expect(() => client.push(obj)).not.toThrow();
+
+      // Event should still be pushed
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+      expect(dataLayer.some((e) => (e as { event?: string }).event === 'nested_circular')).toBe(true);
+    });
+
+    it('handles circular reference in array', () => {
+      const client = createGtmClient({ containers: 'GTM-CIRCULAR-ARRAY' });
+      client.init();
+
+      // Create an array that contains itself
+      const arr: unknown[] = [1, 2, 3];
+      arr.push(arr);
+
+      const obj = { event: 'array_circular', items: arr };
+
+      // Should not throw
+      expect(() => client.push(obj)).not.toThrow();
+
+      // Event should still be pushed
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+      expect(dataLayer.some((e) => (e as { event?: string }).event === 'array_circular')).toBe(true);
+    });
+
+    it('handles deeply nested circular references', () => {
+      const client = createGtmClient({ containers: 'GTM-CIRCULAR-DEEP' });
+      client.init();
+
+      // Create deeply nested structure with circular reference
+      const root: Record<string, unknown> = {
+        level1: {
+          level2: {
+            level3: {
+              level4: {}
+            }
+          }
+        }
+      };
+      // Add circular reference at deep level
+      ((root.level1 as Record<string, unknown>).level2 as Record<string, unknown>).level3 = root;
+
+      const obj = { event: 'deep_circular', tree: root };
+
+      // Should not throw
+      expect(() => client.push(obj)).not.toThrow();
+
+      // Event should still be pushed
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+      expect(dataLayer.some((e) => (e as { event?: string }).event === 'deep_circular')).toBe(true);
+    });
+
+    it('handles multiple circular references in same object', () => {
+      const client = createGtmClient({ containers: 'GTM-CIRCULAR-MULTI' });
+      client.init();
+
+      // Create object with multiple circular references
+      const shared: Record<string, unknown> = { name: 'shared' };
+      const obj: Record<string, unknown> = {
+        event: 'multi_circular',
+        ref1: shared,
+        ref2: shared,
+        nested: { ref3: shared }
+      };
+      shared.back = obj; // Add circular reference
+
+      // Should not throw
+      expect(() => client.push(obj)).not.toThrow();
+
+      // Event should still be pushed
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+      expect(dataLayer.some((e) => (e as { event?: string }).event === 'multi_circular')).toBe(true);
+    });
+  });
+
+  describe('Diagnostics', () => {
+    it('returns complete diagnostics before initialization', () => {
+      const client = createGtmClient({ containers: 'GTM-DIAG-PRE' });
+
+      const diag = client.getDiagnostics();
+
+      expect(diag.initialized).toBe(false);
+      expect(diag.ready).toBe(false);
+      expect(diag.dataLayerName).toBe('dataLayer');
+      expect(diag.dataLayerSize).toBe(0);
+      expect(diag.queueSize).toBe(0);
+      expect(diag.consentCommandsDelivered).toBe(0);
+      expect(diag.containers).toEqual(['GTM-DIAG-PRE']);
+      expect(diag.scriptStates).toEqual([]);
+      expect(diag.uptimeMs).toBeGreaterThanOrEqual(0);
+      expect(diag.debugMode).toBe(false);
+    });
+
+    it('returns complete diagnostics after initialization', () => {
+      const client = createGtmClient({ containers: 'GTM-DIAG-POST' });
+      client.init();
+      client.push({ event: 'test_event' });
+
+      const diag = client.getDiagnostics();
+
+      expect(diag.initialized).toBe(true);
+      expect(diag.dataLayerSize).toBeGreaterThan(0);
+      expect(diag.containers).toEqual(['GTM-DIAG-POST']);
+
+      client.teardown();
+    });
+
+    it('tracks consent commands delivered', () => {
+      const client = createGtmClient({ containers: 'GTM-DIAG-CONSENT' });
+      client.setConsentDefaults({ ad_storage: 'denied' });
+      client.init();
+      client.updateConsent({ ad_storage: 'granted' });
+
+      const diag = client.getDiagnostics();
+
+      // Should have at least 2 consent commands (default + update)
+      expect(diag.consentCommandsDelivered).toBeGreaterThanOrEqual(2);
+
+      client.teardown();
+    });
+
+    it('reflects debug mode setting', () => {
+      const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => undefined);
+      const consoleInfoSpy = jest.spyOn(console, 'info').mockImplementation(() => undefined);
+
+      const client = createGtmClient({
+        containers: 'GTM-DIAG-DEBUG',
+        debug: true
+      });
+
+      const diag = client.getDiagnostics();
+      expect(diag.debugMode).toBe(true);
+
+      consoleLogSpy.mockRestore();
+      consoleInfoSpy.mockRestore();
+    });
+
+    it('tracks multiple containers', () => {
+      const client = createGtmClient({
+        containers: ['GTM-DIAG-A', 'GTM-DIAG-B', 'GTM-DIAG-C']
+      });
+
+      const diag = client.getDiagnostics();
+
+      expect(diag.containers).toEqual(['GTM-DIAG-A', 'GTM-DIAG-B', 'GTM-DIAG-C']);
+    });
+  });
+
+  describe('Debug mode', () => {
+    it('logs to console when debug mode is enabled', () => {
+      const consoleInfoSpy = jest.spyOn(console, 'info').mockImplementation(() => undefined);
+      const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => undefined);
+
+      const client = createGtmClient({
+        containers: 'GTM-DEBUG-MODE',
+        debug: true
+      });
+
+      client.init();
+
+      // Debug mode should have logged the initialization
+      const allCalls = [...consoleInfoSpy.mock.calls, ...consoleLogSpy.mock.calls];
+      const hasGtmKitLog = allCalls.some((call) => typeof call[0] === 'string' && call[0].includes('[GTM-Kit'));
+      expect(hasGtmKitLog).toBe(true);
+
+      client.teardown();
+      consoleInfoSpy.mockRestore();
+      consoleLogSpy.mockRestore();
+    });
+
+    it('does not log when debug mode is disabled', () => {
+      const consoleInfoSpy = jest.spyOn(console, 'info').mockImplementation(() => undefined);
+      const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => undefined);
+
+      const client = createGtmClient({
+        containers: 'GTM-NO-DEBUG',
+        debug: false
+      });
+
+      client.init();
+
+      // Should not have GTM-Kit logs
+      const allCalls = [...consoleInfoSpy.mock.calls, ...consoleLogSpy.mock.calls];
+      const hasGtmKitLog = allCalls.some((call) => typeof call[0] === 'string' && call[0].includes('[GTM-Kit'));
+      expect(hasGtmKitLog).toBe(false);
+
+      client.teardown();
+      consoleInfoSpy.mockRestore();
+      consoleLogSpy.mockRestore();
+    });
+
+    it('debug mode overrides custom logger', () => {
+      const customLogSpy = jest.fn();
+      const consoleInfoSpy = jest.spyOn(console, 'info').mockImplementation(() => undefined);
+      const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => undefined);
+
+      const client = createGtmClient({
+        containers: 'GTM-DEBUG-OVERRIDE',
+        debug: true,
+        logger: { info: customLogSpy }
+      });
+
+      client.init();
+
+      // Custom logger should NOT be called when debug mode is on
+      expect(customLogSpy).not.toHaveBeenCalled();
+
+      // Console should have been used
+      const allCalls = [...consoleInfoSpy.mock.calls, ...consoleLogSpy.mock.calls];
+      const hasGtmKitLog = allCalls.some((call) => typeof call[0] === 'string' && call[0].includes('[GTM-Kit'));
+      expect(hasGtmKitLog).toBe(true);
+
+      client.teardown();
+      consoleInfoSpy.mockRestore();
+      consoleLogSpy.mockRestore();
+    });
+  });
+
+  describe('dataLayer mutation tracing', () => {
+    it('logs push operations when debug mode is enabled', () => {
+      const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+      const client = createGtmClient({ containers: 'GTM-TRACE1', debug: true });
+      client.init();
+
+      // Get all log calls that contain push info
+      const pushCalls = consoleLogSpy.mock.calls.filter(
+        (call) => typeof call[0] === 'string' && call[0].includes('push()')
+      );
+
+      // Should have logged the start event push
+      expect(pushCalls.length).toBeGreaterThanOrEqual(1);
+
+      client.teardown();
+      consoleLogSpy.mockRestore();
+    });
+
+    it('logs dataLayer trace enablement message', () => {
+      const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+      const client = createGtmClient({ containers: 'GTM-TRACE2', debug: true });
+      client.init();
+
+      const tracingEnabledCalls = consoleLogSpy.mock.calls.filter(
+        (call) => typeof call[0] === 'string' && call[0].includes('mutation tracing enabled')
+      );
+
+      expect(tracingEnabledCalls.length).toBe(1);
+
+      client.teardown();
+      consoleLogSpy.mockRestore();
+    });
+
+    it('traces custom push events with debug mode', () => {
+      const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+      const client = createGtmClient({ containers: 'GTM-TRACE3', debug: true });
+      client.init();
+
+      // Clear previous calls to focus on the custom push
+      consoleLogSpy.mockClear();
+
+      // Push a custom event
+      client.push({ event: 'custom_event', data: 'test' });
+
+      const pushCalls = consoleLogSpy.mock.calls.filter(
+        (call) => typeof call[0] === 'string' && call[0].includes('push()')
+      );
+
+      expect(pushCalls.length).toBe(1);
+
+      client.teardown();
+      consoleLogSpy.mockRestore();
+    });
+
+    it('does not trace when debug mode is disabled', () => {
+      const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+      const client = createGtmClient({ containers: 'GTM-NOTRACE' });
+      client.init();
+
+      // Should not have any trace-related logs
+      const tracingCalls = consoleLogSpy.mock.calls.filter(
+        (call) => typeof call[0] === 'string' && call[0].includes('mutation tracing')
+      );
+
+      expect(tracingCalls.length).toBe(0);
+
+      client.teardown();
+      consoleLogSpy.mockRestore();
+    });
+  });
+
+  describe('Event queue visualization', () => {
+    beforeEach(() => {
+      document.head.innerHTML = '';
+      delete (globalThis as Record<string, unknown>).dataLayer;
+    });
+
+    it('logs queue visualization when events are queued in debug mode', () => {
+      const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+      const client = createGtmClient({ containers: 'GTM-QUEUE-VIS', debug: true });
+
+      // Queue events before init (should show visualization)
+      client.push({ event: 'page_view', page_path: '/home' });
+      client.push({ event: 'user_data', user_id: '123' });
+
+      // Look for queue visualization logs
+      const queueCalls = consoleLogSpy.mock.calls.filter(
+        (call) => typeof call[0] === 'string' && call[0].includes('Queue Visualization')
+      );
+
+      expect(queueCalls.length).toBeGreaterThanOrEqual(1);
+
+      client.teardown();
+      consoleLogSpy.mockRestore();
+    });
+
+    it('logs queue visualization when flushing queue', () => {
+      const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+      const client = createGtmClient({ containers: 'GTM-QUEUE-FLUSH', debug: true });
+
+      // Queue events before init
+      client.push({ event: 'queued_event_1' });
+      client.push({ event: 'queued_event_2' });
+
+      consoleLogSpy.mockClear(); // Clear previous logs
+
+      // Init will flush the queue
+      client.init();
+
+      // Look for flush-related queue visualization
+      const flushCalls = consoleLogSpy.mock.calls.filter(
+        (call) => typeof call[0] === 'string' && call[0].includes('Flushing queue')
+      );
+
+      expect(flushCalls.length).toBe(1);
+
+      client.teardown();
+      consoleLogSpy.mockRestore();
+    });
+
+    it('shows event types in queue visualization', () => {
+      const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+      const client = createGtmClient({ containers: 'GTM-QUEUE-TYPES', debug: true });
+
+      // Queue various event types
+      client.push({ event: 'page_view', page_path: '/products' });
+      client.push({ event: 'add_to_cart', ecommerce: { items: [] } });
+      client.push({ user_id: '12345', membership: 'premium' }); // Data without event
+
+      // Get the visualization log content
+      const allLogContent = consoleLogSpy.mock.calls.map((call) => JSON.stringify(call)).join('\n');
+
+      // Should contain event names in the output
+      expect(allLogContent).toContain('page_view');
+      expect(allLogContent).toContain('add_to_cart');
+      expect(allLogContent).toContain('ecommerce');
+      expect(allLogContent).toContain('data'); // Data type for objects without event
+
+      client.teardown();
+      consoleLogSpy.mockRestore();
+    });
+
+    it('does not show queue visualization when debug mode is disabled', () => {
+      const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+      const client = createGtmClient({ containers: 'GTM-NO-QUEUE-VIS', debug: false });
+
+      // Queue events
+      client.push({ event: 'test_event' });
+
+      // Look for queue visualization logs
+      const queueCalls = consoleLogSpy.mock.calls.filter(
+        (call) => typeof call[0] === 'string' && call[0].includes('Queue Visualization')
+      );
+
+      expect(queueCalls.length).toBe(0);
+
+      client.teardown();
+      consoleLogSpy.mockRestore();
+    });
+
+    it('logs queue flushed message after successful flush', () => {
+      const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+      const client = createGtmClient({ containers: 'GTM-QUEUE-FLUSHED', debug: true });
+
+      // Queue some events
+      client.push({ event: 'pre_init_event' });
+
+      consoleLogSpy.mockClear();
+
+      // Init will flush the queue
+      client.init();
+
+      // Look for "flushed successfully" log
+      const flushedCalls = consoleLogSpy.mock.calls.filter(
+        (call) => typeof call[0] === 'string' && call[0].includes('flushed successfully')
+      );
+
+      expect(flushedCalls.length).toBe(1);
+
+      client.teardown();
+      consoleLogSpy.mockRestore();
     });
   });
 });

@@ -117,7 +117,7 @@ export const useTrackPageViews = ({
 
     const details = failed.map((state) => state.containerId).join(', ');
     // eslint-disable-next-line no-console
-    console.error(`[react-gtm-kit] Failed to load GTM container script(s): ${details}`, failed);
+    console.error(`[gtm-kit/next] Failed to load GTM container script(s): ${details}`, failed);
   }, []);
 
   const handleRouteChange = useCallback(
@@ -200,7 +200,7 @@ export const useTrackPageViews = ({
               return;
             }
             // eslint-disable-next-line no-console
-            console.error('[react-gtm-kit] Error while waiting for GTM readiness.', error);
+            console.error('[gtm-kit/next] Error while waiting for GTM readiness.', error);
             pushPayload();
           });
 

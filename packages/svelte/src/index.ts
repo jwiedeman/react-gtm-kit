@@ -1,11 +1,13 @@
 export type { GtmStoreOptions, GtmStoreValue, GtmConsentApi } from './store';
 export {
   createGtmStore,
+  destroyGtmStore,
   gtmContext,
   getGtmContext,
   setGtmContext,
   gtmPush,
   gtmConsent,
   gtmClient,
-  gtmReady
+  gtmReady,
+  gtmIsReady
 } from './store';

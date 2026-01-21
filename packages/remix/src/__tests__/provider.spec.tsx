@@ -13,6 +13,7 @@ jest.mock('@jwiedeman/gtm-kit', () => ({
     push: jest.fn(),
     setConsentDefaults: jest.fn(),
     updateConsent: jest.fn(),
+    isReady: jest.fn().mockReturnValue(true),
     whenReady: jest.fn().mockResolvedValue([{ status: 'loaded' }]),
     onReady: jest.fn((cb) => {
       cb([{ status: 'loaded' }]);
@@ -41,7 +42,7 @@ describe('@jwiedeman/gtm-kit-remix Provider', () => {
         </GtmProvider>
       );
 
-      expect(screen.getByTestId('child')).toBeInTheDocument();
+      expect(screen.getByTestId('child')).toBeTruthy();
     });
 
     it('provides GTM context to children', () => {
@@ -205,7 +206,7 @@ describe('@jwiedeman/gtm-kit-remix Provider', () => {
 
       expect(() => {
         render(<TestComponent />);
-      }).toThrow('[gtm-kit] useGtm() was called outside of a GtmProvider');
+      }).toThrow('[gtm-kit/remix] useGtm() was called outside of a GtmProvider');
 
       consoleSpy.mockRestore();
     });

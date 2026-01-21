@@ -78,6 +78,17 @@ button[data-variant='ghost']:hover {
   background: rgba(255, 255, 255, 0.06);
 }
 
+button[data-variant='danger'] {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  box-shadow: 0 12px 30px rgba(231, 76, 60, 0.4);
+}
+
+button[data-variant='danger']:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 40px rgba(231, 76, 60, 0.45);
+}
+
 pre {
   background: rgba(0, 0, 0, 0.6);
   border-radius: 0.75rem;
@@ -85,6 +96,8 @@ pre {
   overflow-x: auto;
   font-size: 0.85rem;
   line-height: 1.4;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 header {
@@ -114,9 +127,188 @@ dl dd {
   word-break: break-all;
 }
 
+/* Button row */
+.button-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.button-row button + button {
+  margin-left: 0;
+}
+
+/* Products Grid */
+.products-card {
+  padding: 1rem;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+}
+
+.product-card {
+  background: rgba(30, 30, 40, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.product-image {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #4c6ef5 0%, #7950f2 100%);
+  color: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+}
+
+.product-card h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+  color: #f5f5f7;
+}
+
+.product-card .brand {
+  color: rgba(245, 245, 247, 0.6);
+  font-size: 0.8rem;
+  margin: 0 0 0.25rem;
+}
+
+.product-card .price {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #27ae60;
+  margin: 0 0 0.25rem;
+}
+
+.product-card .category {
+  color: rgba(245, 245, 247, 0.5);
+  font-size: 0.75rem;
+  margin: 0 0 0.75rem;
+}
+
+.product-card button {
+  width: 100%;
+  margin: 0;
+}
+
+/* Checkout Panel */
+.checkout-panel {
+  max-width: 500px;
+}
+
+.checkout-panel h2 {
+  margin: 0 0 1rem;
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(30, 30, 40, 0.9);
+  border-radius: 0.5rem;
+}
+
+.cart-item .item-info h4 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+}
+
+.cart-item .item-info p {
+  margin: 0;
+  color: rgba(245, 245, 247, 0.6);
+  font-size: 0.875rem;
+}
+
+.cart-item button {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+}
+
+.cart-summary {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.total {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem !important;
+  color: #f5f5f7 !important;
+}
+
+.form-mock {
+  background: rgba(30, 30, 40, 0.9);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.form-mock p {
+  margin: 0.25rem 0;
+  color: rgba(245, 245, 247, 0.7);
+}
+
+.grand-total {
+  font-weight: 600;
+  color: #f5f5f7 !important;
+  margin-top: 0.5rem !important;
+}
+
+.checkout-panel.complete {
+  text-align: center;
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  margin: 0 auto 1rem;
+}
+
+.order-id {
+  color: rgba(245, 245, 247, 0.6) !important;
+  font-family: monospace;
+  margin-bottom: 1rem !important;
+}
+
+.cart-btn {
+  margin-bottom: 0;
+}
+
 @media (max-width: 768px) {
   body {
     padding: 1.5rem;
+    align-items: flex-start;
   }
 
   section.card {
@@ -134,5 +326,17 @@ dl dd {
 
   dl {
     grid-template-columns: 1fr;
+  }
+
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .button-row {
+    flex-direction: column;
+  }
+
+  .button-row button {
+    width: 100%;
   }
 }

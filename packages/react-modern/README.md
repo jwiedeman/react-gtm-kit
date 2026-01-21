@@ -124,16 +124,65 @@ const client = useGtmClient();
 
 ### `useGtmReady()`
 
-Get a function that resolves when GTM is fully loaded.
+Get a function that resolves when GTM is fully loaded. Best for awaiting in event handlers.
 
 ```tsx
 const whenReady = useGtmReady();
 
-useEffect(() => {
-  whenReady().then(() => {
-    console.log('GTM is ready!');
-  });
-}, [whenReady]);
+const handleClick = async () => {
+  await whenReady();
+  console.log('GTM is ready!');
+};
+```
+
+### `useIsGtmReady()`
+
+Get a function for synchronous ready checks. Best for conditionals in callbacks.
+
+```tsx
+const isReady = useIsGtmReady();
+
+const handleClick = () => {
+  if (isReady()) {
+    // GTM is loaded, safe to use advanced features
+  }
+};
+```
+
+### `useGtmInitialized()`
+
+Get a reactive boolean that updates when GTM initializes. Best for conditional rendering.
+
+```tsx
+const isInitialized = useGtmInitialized();
+
+return isInitialized ? <Analytics /> : <Skeleton />;
+```
+
+### `useGtmError()`
+
+Get error state from the GTM provider.
+
+```tsx
+const { hasError, errorMessage } = useGtmError();
+
+if (hasError) {
+  console.error('GTM failed:', errorMessage);
+}
+```
+
+### `useIsGtmProviderPresent()`
+
+Check if GtmProvider exists without throwing. Useful for optional GTM integration.
+
+```tsx
+const hasProvider = useIsGtmProviderPresent();
+
+// Safe to call - won't throw if provider is missing
+if (hasProvider) {
+  const push = useGtmPush();
+  push({ event: 'optional_tracking' });
+}
 ```
 
 ---

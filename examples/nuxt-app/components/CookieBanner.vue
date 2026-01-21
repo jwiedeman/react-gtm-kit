@@ -1,27 +1,42 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useGtmConsent } from '@jwiedeman/gtm-kit-vue';
+import { ref, onMounted } from 'vue';
 
-const { updateConsent } = useGtmConsent();
 const isVisible = ref(true);
+const isClient = ref(false);
+
+// Store the updateConsent function once available on the client
+let updateConsent: ((state: Record<string, string>) => void) | null = null;
+
+// Only initialize GTM composables on the client side
+// The GTM plugin is only installed client-side (.client.ts)
+onMounted(async () => {
+  isClient.value = true;
+  const { useGtmConsent } = await import('@jwiedeman/gtm-kit-vue');
+  const consent = useGtmConsent();
+  updateConsent = consent.updateConsent;
+});
 
 const acceptAll = () => {
-  updateConsent({
-    ad_storage: 'granted',
-    analytics_storage: 'granted',
-    ad_user_data: 'granted',
-    ad_personalization: 'granted'
-  });
+  if (updateConsent) {
+    updateConsent({
+      ad_storage: 'granted',
+      analytics_storage: 'granted',
+      ad_user_data: 'granted',
+      ad_personalization: 'granted'
+    });
+  }
   isVisible.value = false;
 };
 
 const rejectAll = () => {
-  updateConsent({
-    ad_storage: 'denied',
-    analytics_storage: 'denied',
-    ad_user_data: 'denied',
-    ad_personalization: 'denied'
-  });
+  if (updateConsent) {
+    updateConsent({
+      ad_storage: 'denied',
+      analytics_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied'
+    });
+  }
   isVisible.value = false;
 };
 </script>

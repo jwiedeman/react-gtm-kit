@@ -90,9 +90,7 @@ describe('createGtmClient', () => {
     const states = await readiness;
 
     expect(states).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ containerId: 'GTM-READY-CLIENT', status: 'loaded' })
-      ])
+      expect.arrayContaining([expect.objectContaining({ containerId: 'GTM-READY-CLIENT', status: 'loaded' })])
     );
     expect(callback).toHaveBeenCalledWith(states);
 
@@ -200,11 +198,7 @@ describe('createGtmClient', () => {
       { ad_storage: 'denied' },
       { region: ['EEA'], wait_for_update: 2000 }
     ]);
-    expect(dataLayer[2]).toEqual([
-      'consent',
-      'update',
-      { ad_storage: 'granted', analytics_storage: 'granted' }
-    ]);
+    expect(dataLayer[2]).toEqual(['consent', 'update', { ad_storage: 'granted', analytics_storage: 'granted' }]);
     expect(dataLayer[3]).toMatchObject({ event: 'pre-init-event' });
   });
 
@@ -325,5 +319,202 @@ describe('createGtmClient', () => {
     );
 
     expect(runtimeEvents).toHaveLength(2);
+  });
+
+  it('deduplicates consent updates regardless of property order', () => {
+    const client = createGtmClient({ containers: 'GTM-CONSENT-ORDER' });
+
+    client.init();
+
+    // Same consent state with different property order
+    client.updateConsent({ ad_storage: 'granted', analytics_storage: 'denied' });
+    client.updateConsent({ analytics_storage: 'denied', ad_storage: 'granted' });
+
+    const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+    const updates = dataLayer.filter(
+      (entry) => Array.isArray(entry) && entry[0] === 'consent' && entry[1] === 'update'
+    );
+
+    // Should deduplicate despite different property order (signature sorts keys)
+    expect(updates).toHaveLength(1);
+  });
+
+  it('handles rapid consent updates correctly without data loss', () => {
+    const client = createGtmClient({ containers: 'GTM-CONSENT-RAPID' });
+
+    client.init();
+
+    // Simulate rapid toggling of consent UI
+    const states = [
+      { ad_storage: 'denied' as const, analytics_storage: 'denied' as const },
+      { ad_storage: 'granted' as const, analytics_storage: 'denied' as const },
+      { ad_storage: 'granted' as const, analytics_storage: 'granted' as const },
+      { ad_storage: 'denied' as const, analytics_storage: 'granted' as const },
+      { ad_storage: 'denied' as const, analytics_storage: 'denied' as const } // Back to initial
+    ];
+
+    for (const state of states) {
+      client.updateConsent(state);
+    }
+
+    const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+    const updates = dataLayer.filter(
+      (entry) => Array.isArray(entry) && entry[0] === 'consent' && entry[1] === 'update'
+    );
+
+    // First and last are identical, so should be deduplicated (4 unique states)
+    expect(updates).toHaveLength(4);
+  });
+
+  it('does not deduplicate consent commands with different options', () => {
+    const client = createGtmClient({ containers: 'GTM-CONSENT-OPTIONS' });
+
+    client.init();
+
+    // Same consent state but different region options
+    client.updateConsent({ ad_storage: 'granted' });
+    client.updateConsent({ ad_storage: 'granted' }, { region: ['US'] });
+    client.updateConsent({ ad_storage: 'granted' }, { region: ['EU'] });
+
+    const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+    const updates = dataLayer.filter(
+      (entry) => Array.isArray(entry) && entry[0] === 'consent' && entry[1] === 'update'
+    );
+
+    // Different options mean different signatures, so all should be pushed
+    expect(updates).toHaveLength(3);
+  });
+
+  describe('dataLayer size limit', () => {
+    it('uses default max size of 500 when not specified', () => {
+      const client = createGtmClient({ containers: 'GTM-DEFAULT-SIZE' });
+      client.init();
+
+      // Push 500 events (at limit, no trimming yet)
+      for (let i = 0; i < 499; i++) {
+        client.push({ event: 'event', index: i });
+      }
+
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+      // 1 gtm.js start + 499 events = 500
+      expect(dataLayer.length).toBe(500);
+    });
+
+    it('trims oldest non-critical entries when size limit is reached', () => {
+      const client = createGtmClient({ containers: 'GTM-SIZE-LIMIT', maxDataLayerSize: 10 });
+      client.init();
+
+      // gtm.js is entry 0, push 11 more events to trigger trimming
+      for (let i = 0; i < 12; i++) {
+        client.push({ event: 'event', index: i });
+      }
+
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+      expect(dataLayer.length).toBeLessThanOrEqual(10);
+
+      // gtm.js should still be present
+      const startEvent = dataLayer.find(
+        (entry) => typeof entry === 'object' && entry !== null && (entry as { event?: string }).event === 'gtm.js'
+      );
+      expect(startEvent).toBeDefined();
+    });
+
+    it('preserves gtm.js start event when trimming', () => {
+      const client = createGtmClient({ containers: 'GTM-PRESERVE-START', maxDataLayerSize: 5 });
+      client.init();
+
+      // Push many events to trigger trimming
+      for (let i = 0; i < 20; i++) {
+        client.push({ event: 'event', index: i });
+      }
+
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+      const startEvent = dataLayer.find(
+        (entry) => typeof entry === 'object' && entry !== null && (entry as { event?: string }).event === 'gtm.js'
+      );
+      expect(startEvent).toBeDefined();
+    });
+
+    it('preserves consent commands when trimming', () => {
+      const client = createGtmClient({ containers: 'GTM-PRESERVE-CONSENT', maxDataLayerSize: 5 });
+      client.setConsentDefaults({ ad_storage: 'denied', analytics_storage: 'denied' });
+      client.init();
+
+      // Push many events to trigger trimming
+      for (let i = 0; i < 20; i++) {
+        client.push({ event: 'event', index: i });
+      }
+
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+      const consentCommand = dataLayer.find(
+        (entry) => Array.isArray(entry) && entry[0] === 'consent' && entry[1] === 'default'
+      );
+      expect(consentCommand).toBeDefined();
+    });
+
+    it('calls onDataLayerTrim callback when trimming occurs', () => {
+      const onDataLayerTrim = jest.fn();
+      const client = createGtmClient({
+        containers: 'GTM-TRIM-CALLBACK',
+        maxDataLayerSize: 5,
+        onDataLayerTrim
+      });
+      client.init();
+
+      // Push events to trigger trimming
+      for (let i = 0; i < 10; i++) {
+        client.push({ event: 'event', index: i });
+      }
+
+      expect(onDataLayerTrim).toHaveBeenCalled();
+      expect(onDataLayerTrim.mock.calls[0][0]).toBeGreaterThan(0); // trimmedCount
+      expect(typeof onDataLayerTrim.mock.calls[0][1]).toBe('number'); // currentSize
+    });
+
+    it('does not trim when maxDataLayerSize is 0 (unlimited)', () => {
+      const client = createGtmClient({ containers: 'GTM-UNLIMITED', maxDataLayerSize: 0 });
+      client.init();
+
+      // Push many events
+      for (let i = 0; i < 600; i++) {
+        client.push({ event: 'event', index: i });
+      }
+
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+      expect(dataLayer.length).toBe(601); // 1 gtm.js + 600 events
+    });
+
+    it('handles edge case where all entries are critical', () => {
+      const client = createGtmClient({ containers: 'GTM-ALL-CRITICAL', maxDataLayerSize: 3 });
+      client.setConsentDefaults({ ad_storage: 'denied' });
+      client.updateConsent({ ad_storage: 'granted' });
+      client.init();
+
+      // Push one more event - should still work even if over limit due to critical entries
+      client.push({ event: 'normal-event' });
+
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+      // Should have gtm.js, consent default, consent update, and the normal event
+      expect(dataLayer.length).toBeGreaterThanOrEqual(3);
+    });
+
+    it('keeps most recent events when trimming', () => {
+      const client = createGtmClient({ containers: 'GTM-RECENT', maxDataLayerSize: 5 });
+      client.init();
+
+      for (let i = 0; i < 10; i++) {
+        client.push({ event: 'event', index: i });
+      }
+
+      const dataLayer = (globalThis as Record<string, unknown>).dataLayer as unknown[];
+      const events = dataLayer.filter(
+        (entry) => typeof entry === 'object' && entry !== null && (entry as { event?: string }).event === 'event'
+      ) as { event: string; index: number }[];
+
+      // Most recent events should be preserved (higher indices)
+      const indices = events.map((e) => e.index);
+      const maxIndex = Math.max(...indices);
+      expect(maxIndex).toBe(9); // The last pushed event should be there
+    });
   });
 });

@@ -84,6 +84,18 @@ export const requireGtmClient = (): GtmClient => {
  * }
  * ```
  */
+/**
+ * Type-safe access to window properties for dataLayer.
+ */
+const getWindowDataLayer = (name: string): DataLayerValue[] | undefined => {
+  if (typeof window === 'undefined') {
+    return undefined;
+  }
+  const win = window as typeof window & Record<string, unknown>;
+  const layer = win[name];
+  return Array.isArray(layer) ? (layer as DataLayerValue[]) : undefined;
+};
+
 export const push = (value: DataLayerValue): boolean => {
   const client = getGtmClient();
   if (client) {
@@ -92,9 +104,8 @@ export const push = (value: DataLayerValue): boolean => {
   } else if (typeof window !== 'undefined') {
     // Fallback: push directly to dataLayer if it exists
     const dataLayerName = clientConfig?.dataLayerName ?? 'dataLayer';
-    const win = window as unknown as Record<string, unknown>;
-    const dataLayer = win[dataLayerName] as DataLayerValue[] | undefined;
-    if (Array.isArray(dataLayer)) {
+    const dataLayer = getWindowDataLayer(dataLayerName);
+    if (dataLayer) {
       dataLayer.push(value);
       return true;
     } else {

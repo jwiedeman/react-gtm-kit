@@ -13,7 +13,10 @@ export const sharedConfig = defineConfig({
   sourcemap: true,
   clean: true,
   target: 'es2018',
-  minify: true,
+  // Disable minification - library packages should not minify as it can cause
+  // variable name collisions (e.g., 'h' conflicts with Vue's createElement).
+  // The consuming bundler will handle minification of the final bundle.
+  minify: false,
   treeshake: true
 });
 

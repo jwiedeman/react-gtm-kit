@@ -10,7 +10,7 @@
  */
 import { mount, flushPromises } from '@vue/test-utils';
 import { defineComponent, h, ref, nextTick, onMounted, onUnmounted, Suspense, defineAsyncComponent } from 'vue';
-import { GtmPlugin, useGtmPush, useGtmConsent, useGtmClient } from '../plugin';
+import { GtmPlugin, useGtmPush, useGtmConsent, useGtmClient, useGtmErrorHandler } from '../plugin';
 
 // Mock client type
 interface MockClient {
@@ -20,6 +20,7 @@ interface MockClient {
   setConsentDefaults: jest.Mock;
   updateConsent: jest.Mock;
   isInitialized: jest.Mock;
+  isReady: jest.Mock;
   whenReady: jest.Mock;
   onReady: jest.Mock;
   dataLayerName: string;
@@ -37,6 +38,7 @@ jest.mock('@jwiedeman/gtm-kit', () => {
       updateConsent: jest.fn(),
       teardown: jest.fn(),
       isInitialized: jest.fn().mockReturnValue(true),
+      isReady: jest.fn().mockReturnValue(true),
       whenReady: jest.fn().mockResolvedValue([{ containerId: 'GTM-TEST', status: 'loaded' }]),
       onReady: jest.fn().mockImplementation((cb) => {
         cb([{ containerId: 'GTM-TEST', status: 'loaded' }]);
@@ -371,10 +373,11 @@ describe('Vue GTM Plugin Edge Cases', () => {
 
       const Parent = defineComponent({
         setup() {
-          return () => h(Suspense, null, {
-            default: () => h(AsyncChild),
-            fallback: () => h('div', 'loading...')
-          });
+          return () =>
+            h(Suspense, null, {
+              default: () => h(AsyncChild),
+              fallback: () => h('div', 'loading...')
+            });
         }
       });
 
@@ -609,6 +612,385 @@ describe('Vue GTM Plugin Edge Cases', () => {
       // Should have called push for app2
       const lastClient = mockClients[mockClients.length - 1];
       expect(lastClient.push).toHaveBeenCalledWith({ event: 'app2_event' });
+    });
+  });
+
+  describe('useGtmErrorHandler - Error Detection', () => {
+    /**
+     * These tests verify that useGtmErrorHandler correctly identifies GTM-related errors
+     * using the isGtmRelatedError function's 4 detection methods:
+     * 1. isGtmKitError property
+     * 2. Error name 'GtmKitError'
+     * 3. Stack trace containing gtm-kit paths
+     * 4. Message starting with '[gtm-kit/'
+     */
+
+    beforeEach(() => {
+      // Suppress console.error for cleaner test output
+      jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    });
+
+    afterEach(() => {
+      (console.error as jest.Mock).mockRestore();
+    });
+
+    it('should catch errors with isGtmKitError property (detection method 1)', async () => {
+      let errorHandlerResult: ReturnType<typeof useGtmErrorHandler>;
+
+      const ThrowingChild = defineComponent({
+        setup() {
+          throw Object.assign(new Error('Custom GTM error'), { isGtmKitError: true });
+        },
+        render: () => null
+      });
+
+      const Parent = defineComponent({
+        setup() {
+          errorHandlerResult = useGtmErrorHandler({ logErrors: false });
+          return () => h(ThrowingChild);
+        }
+      });
+
+      mount(Parent, {
+        global: {
+          plugins: [[GtmPlugin, { containers: 'GTM-TEST' }]]
+        }
+      });
+
+      await nextTick();
+
+      expect(errorHandlerResult!.hasError.value).toBe(true);
+      expect(errorHandlerResult!.error.value?.message).toBe('Custom GTM error');
+    });
+
+    it('should catch errors with GtmKitError name (detection method 2)', async () => {
+      let errorHandlerResult: ReturnType<typeof useGtmErrorHandler>;
+
+      const ThrowingChild = defineComponent({
+        setup() {
+          const err = new Error('Named GTM error');
+          err.name = 'GtmKitError';
+          throw err;
+        },
+        render: () => null
+      });
+
+      const Parent = defineComponent({
+        setup() {
+          errorHandlerResult = useGtmErrorHandler({ logErrors: false });
+          return () => h(ThrowingChild);
+        }
+      });
+
+      mount(Parent, {
+        global: {
+          plugins: [[GtmPlugin, { containers: 'GTM-TEST' }]]
+        }
+      });
+
+      await nextTick();
+
+      expect(errorHandlerResult!.hasError.value).toBe(true);
+      expect(errorHandlerResult!.error.value?.name).toBe('GtmKitError');
+    });
+
+    it('should catch errors with gtm-kit in stack trace (detection method 3)', async () => {
+      let errorHandlerResult: ReturnType<typeof useGtmErrorHandler>;
+
+      const ThrowingChild = defineComponent({
+        setup() {
+          const err = new Error('Stack trace error');
+          // Simulate a stack trace from installed gtm-kit package (requires node_modules path)
+          err.stack =
+            'Error: Stack trace error\n    at Module.someFunction (/app/node_modules/@jwiedeman/gtm-kit/dist/index.js:123:45)';
+          throw err;
+        },
+        render: () => null
+      });
+
+      const Parent = defineComponent({
+        setup() {
+          errorHandlerResult = useGtmErrorHandler({ logErrors: false });
+          return () => h(ThrowingChild);
+        }
+      });
+
+      mount(Parent, {
+        global: {
+          plugins: [[GtmPlugin, { containers: 'GTM-TEST' }]]
+        }
+      });
+
+      await nextTick();
+
+      expect(errorHandlerResult!.hasError.value).toBe(true);
+    });
+
+    it('should catch errors with gtm-kit package in stack trace (scoped)', async () => {
+      let errorHandlerResult: ReturnType<typeof useGtmErrorHandler>;
+
+      const ThrowingChild = defineComponent({
+        setup() {
+          const err = new Error('Scoped package error');
+          // Test with scoped package path in node_modules
+          err.stack =
+            'Error: Scoped package error\n    at someFunc (node_modules/@jwiedeman/gtm-kit/dist/client.js:50:10)';
+          throw err;
+        },
+        render: () => null
+      });
+
+      const Parent = defineComponent({
+        setup() {
+          errorHandlerResult = useGtmErrorHandler({ logErrors: false });
+          return () => h(ThrowingChild);
+        }
+      });
+
+      mount(Parent, {
+        global: {
+          plugins: [[GtmPlugin, { containers: 'GTM-TEST' }]]
+        }
+      });
+
+      await nextTick();
+
+      expect(errorHandlerResult!.hasError.value).toBe(true);
+    });
+
+    it('should catch errors with unscoped gtm-kit package in stack trace', async () => {
+      let errorHandlerResult: ReturnType<typeof useGtmErrorHandler>;
+
+      const ThrowingChild = defineComponent({
+        setup() {
+          const err = new Error('Unscoped package error');
+          // Test with unscoped package path in node_modules
+          err.stack = 'Error: Unscoped package error\n    at someFunc (node_modules/gtm-kit/dist/client.js:50:10)';
+          throw err;
+        },
+        render: () => null
+      });
+
+      const Parent = defineComponent({
+        setup() {
+          errorHandlerResult = useGtmErrorHandler({ logErrors: false });
+          return () => h(ThrowingChild);
+        }
+      });
+
+      mount(Parent, {
+        global: {
+          plugins: [[GtmPlugin, { containers: 'GTM-TEST' }]]
+        }
+      });
+
+      await nextTick();
+
+      expect(errorHandlerResult!.hasError.value).toBe(true);
+    });
+
+    it('should catch errors with [gtm-kit/ message prefix (detection method 4)', async () => {
+      let errorHandlerResult: ReturnType<typeof useGtmErrorHandler>;
+
+      const ThrowingChild = defineComponent({
+        setup() {
+          throw new Error('[gtm-kit/vue] useGtm() was called outside of a Vue app');
+        },
+        render: () => null
+      });
+
+      const Parent = defineComponent({
+        setup() {
+          errorHandlerResult = useGtmErrorHandler({ logErrors: false });
+          return () => h(ThrowingChild);
+        }
+      });
+
+      mount(Parent, {
+        global: {
+          plugins: [[GtmPlugin, { containers: 'GTM-TEST' }]]
+        }
+      });
+
+      await nextTick();
+
+      expect(errorHandlerResult!.hasError.value).toBe(true);
+      expect(errorHandlerResult!.error.value?.message).toContain('[gtm-kit/vue]');
+    });
+
+    it('should NOT catch non-GTM errors (let them propagate)', async () => {
+      let errorHandlerResult: ReturnType<typeof useGtmErrorHandler>;
+      let _propagatedError: Error | null = null;
+
+      const ThrowingChild = defineComponent({
+        setup() {
+          throw new Error('Regular application error');
+        },
+        render: () => null
+      });
+
+      const Parent = defineComponent({
+        setup() {
+          errorHandlerResult = useGtmErrorHandler({ logErrors: false });
+          return () => h(ThrowingChild);
+        }
+      });
+
+      // Non-GTM errors should NOT be caught by useGtmErrorHandler
+      // The error WILL propagate (that's the expected behavior)
+      // We capture it with Vue's errorHandler to verify propagation happened
+      try {
+        mount(Parent, {
+          global: {
+            plugins: [[GtmPlugin, { containers: 'GTM-TEST' }]],
+            config: {
+              errorHandler: (err) => {
+                // Capture the propagated error
+                _propagatedError = err as Error;
+              }
+            }
+          }
+        });
+      } catch {
+        // Error may also throw directly in test environment
+      }
+
+      // The key assertion: hasError should be false because we didn't catch it
+      expect(errorHandlerResult!.hasError.value).toBe(false);
+      // And the error should have propagated (either caught by errorHandler or thrown)
+      // (propagatedError may or may not be set depending on Vue version/test setup)
+    });
+
+    it('should call onError callback for GTM errors', async () => {
+      const onErrorCallback = jest.fn();
+      let _errorHandlerResult: ReturnType<typeof useGtmErrorHandler>;
+
+      const ThrowingChild = defineComponent({
+        setup() {
+          throw Object.assign(new Error('GTM callback test'), { isGtmKitError: true });
+        },
+        render: () => null
+      });
+
+      const Parent = defineComponent({
+        setup() {
+          _errorHandlerResult = useGtmErrorHandler({
+            logErrors: false,
+            onError: onErrorCallback
+          });
+          return () => h(ThrowingChild);
+        }
+      });
+
+      mount(Parent, {
+        global: {
+          plugins: [[GtmPlugin, { containers: 'GTM-TEST' }]]
+        }
+      });
+
+      await nextTick();
+
+      expect(onErrorCallback).toHaveBeenCalledWith(
+        expect.objectContaining({ message: 'GTM callback test' }),
+        expect.anything(), // instance (component proxy, may be {} or null depending on Vue version)
+        expect.any(String) // info
+      );
+    });
+
+    it('should reset error state when reset() is called', async () => {
+      let errorHandlerResult: ReturnType<typeof useGtmErrorHandler>;
+
+      const ThrowingChild = defineComponent({
+        setup() {
+          throw Object.assign(new Error('Reset test'), { isGtmKitError: true });
+        },
+        render: () => null
+      });
+
+      const Parent = defineComponent({
+        setup() {
+          errorHandlerResult = useGtmErrorHandler({ logErrors: false });
+          return () => h(ThrowingChild);
+        }
+      });
+
+      mount(Parent, {
+        global: {
+          plugins: [[GtmPlugin, { containers: 'GTM-TEST' }]]
+        }
+      });
+
+      await nextTick();
+
+      expect(errorHandlerResult!.hasError.value).toBe(true);
+      expect(errorHandlerResult!.error.value).not.toBeNull();
+
+      // Reset the error state
+      errorHandlerResult!.reset();
+
+      expect(errorHandlerResult!.hasError.value).toBe(false);
+      expect(errorHandlerResult!.error.value).toBeNull();
+    });
+
+    it('should handle errors with no stack trace gracefully', async () => {
+      let errorHandlerResult: ReturnType<typeof useGtmErrorHandler>;
+
+      const ThrowingChild = defineComponent({
+        setup() {
+          const err = new Error('[gtm-kit/core] No stack error');
+          delete err.stack; // Remove stack trace
+          throw err;
+        },
+        render: () => null
+      });
+
+      const Parent = defineComponent({
+        setup() {
+          errorHandlerResult = useGtmErrorHandler({ logErrors: false });
+          return () => h(ThrowingChild);
+        }
+      });
+
+      mount(Parent, {
+        global: {
+          plugins: [[GtmPlugin, { containers: 'GTM-TEST' }]]
+        }
+      });
+
+      await nextTick();
+
+      // Should still catch via message prefix
+      expect(errorHandlerResult!.hasError.value).toBe(true);
+    });
+
+    it('should not crash when onError callback throws', async () => {
+      const ThrowingChild = defineComponent({
+        setup() {
+          throw Object.assign(new Error('Callback crash test'), { isGtmKitError: true });
+        },
+        render: () => null
+      });
+
+      const Parent = defineComponent({
+        setup() {
+          useGtmErrorHandler({
+            logErrors: false,
+            onError: () => {
+              throw new Error('Callback threw!');
+            }
+          });
+          return () => h(ThrowingChild);
+        }
+      });
+
+      // Should not throw even if callback throws
+      expect(() => {
+        mount(Parent, {
+          global: {
+            plugins: [[GtmPlugin, { containers: 'GTM-TEST' }]]
+          }
+        });
+      }).not.toThrow();
     });
   });
 });

@@ -1,9 +1,20 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useGtmClient } from '@jwiedeman/gtm-kit-vue';
-import { pushEcommerce } from '@jwiedeman/gtm-kit';
+import { ref, onMounted } from 'vue';
+import type { GtmClient } from '@jwiedeman/gtm-kit';
 
-const client = useGtmClient();
+// Store the client and pushEcommerce function once available on the client
+let client: GtmClient | null = null;
+let pushEcommerce: ((client: GtmClient, eventName: string, data: Record<string, unknown>) => void) | null = null;
+
+// Only initialize GTM composables on the client side
+onMounted(async () => {
+  const [{ useGtmClient }, { pushEcommerce: pushEcommerceFn }] = await Promise.all([
+    import('@jwiedeman/gtm-kit-vue'),
+    import('@jwiedeman/gtm-kit')
+  ]);
+  client = useGtmClient();
+  pushEcommerce = pushEcommerceFn;
+});
 
 interface Product {
   id: string;
@@ -20,19 +31,21 @@ const products = ref<Product[]>([
 ]);
 
 const addToCart = (product: Product) => {
-  pushEcommerce(client, 'add_to_cart', {
-    value: product.price,
-    currency: 'USD',
-    items: [
-      {
-        item_id: product.id,
-        item_name: product.name,
-        price: product.price,
-        quantity: 1,
-        item_category: product.category
-      }
-    ]
-  });
+  if (client && pushEcommerce) {
+    pushEcommerce(client, 'add_to_cart', {
+      value: product.price,
+      currency: 'USD',
+      items: [
+        {
+          item_id: product.id,
+          item_name: product.name,
+          price: product.price,
+          quantity: 1,
+          item_category: product.category
+        }
+      ]
+    });
+  }
 
   alert(`Added ${product.name} to cart! Check dataLayer in console.`);
 };

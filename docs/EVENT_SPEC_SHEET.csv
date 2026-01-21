@@ -1,0 +1,580 @@
+Event Category,Event Name,DataLayer Variable,Data Type,Required,Description,Example Value,GTM Variable Name,GA4 Parameter Mapping
+# ===========================================
+# GA4 RECOMMENDED EVENTS - CORE
+# ===========================================
+Core,page_view,event,string,Yes,Page view tracking event,page_view,{{Event}},event
+Core,page_view,page_title,string,No,Title of the page,Home Page,{{DLV - page_title}},page_title
+Core,page_view,page_location,string,No,Full URL of the page,https://example.com/page,{{DLV - page_location}},page_location
+Core,page_view,page_path,string,No,Path portion of the URL,/page,{{Page Path}},page_path
+Core,page_view,send_to,string,No,GA4 measurement ID for routing,G-XXXXXXXX,{{DLV - send_to}},send_to
+Core,screen_view,event,string,Yes,Screen view for mobile/SPA apps,screen_view,{{Event}},event
+Core,screen_view,screen_name,string,Yes,Name of the screen,Dashboard,{{DLV - screen_name}},screen_name
+Core,screen_view,screen_class,string,No,Screen class/component name,DashboardScreen,{{DLV - screen_class}},screen_class
+Core,scroll,event,string,Yes,Scroll tracking event,scroll,{{Event}},event
+Core,scroll,percent_scrolled,number,No,Percentage of page scrolled (0-100),75,{{DLV - percent_scrolled}},percent_scrolled
+Core,login,event,string,Yes,User login tracking,login,{{Event}},event
+Core,login,method,string,No,Login method used,google,{{DLV - method}},method
+Core,sign_up,event,string,Yes,User registration tracking,sign_up,{{Event}},event
+Core,sign_up,method,string,No,Registration method used,email,{{DLV - method}},method
+Core,search,event,string,Yes,Site search tracking,search,{{Event}},event
+Core,search,search_term,string,Yes,Search query entered,wireless headphones,{{DLV - search_term}},search_term
+Core,select_content,event,string,Yes,Content selection tracking,select_content,{{Event}},event
+Core,select_content,content_type,string,No,Type of content selected,article,{{DLV - content_type}},content_type
+Core,select_content,item_id,string,No,ID of the content item,article_123,{{DLV - item_id}},item_id
+Core,share,event,string,Yes,Content sharing tracking,share,{{Event}},event
+Core,share,method,string,No,Share method/platform,twitter,{{DLV - method}},method
+Core,share,content_type,string,No,Type of content shared,product,{{DLV - content_type}},content_type
+Core,share,item_id,string,No,ID of shared item,SKU-001,{{DLV - item_id}},item_id
+Core,generate_lead,event,string,Yes,Lead generation event,generate_lead,{{Event}},event
+Core,generate_lead,currency,string,No,Currency code (ISO 4217),USD,{{DLV - currency}},currency
+Core,generate_lead,value,number,No,Estimated lead value,100,{{DLV - value}},value
+Core,view_search_results,event,string,Yes,Search results view,view_search_results,{{Event}},event
+Core,view_search_results,search_term,string,Yes,Search query that produced results,wireless headphones,{{DLV - search_term}},search_term
+Core,conversion,event,string,Yes,Google Ads conversion,conversion,{{Event}},event
+Core,conversion,send_to,string,Yes,Ads conversion ID,AW-123456789/AbC123,{{DLV - send_to}},send_to
+Core,conversion,value,number,No,Conversion value,99.99,{{DLV - value}},value
+Core,conversion,currency,string,No,Currency code,USD,{{DLV - currency}},currency
+Core,conversion,transaction_id,string,No,Transaction identifier,TXN-12345,{{DLV - transaction_id}},transaction_id
+# ===========================================
+# ECOMMERCE EVENTS
+# ===========================================
+Ecommerce,view_item,event,string,Yes,Product page view,view_item,{{Event}},event
+Ecommerce,view_item,ecommerce.currency,string,Yes,Currency code,USD,{{DLV - ecommerce.currency}},currency
+Ecommerce,view_item,ecommerce.value,number,Yes,Total value of items,29.99,{{DLV - ecommerce.value}},value
+Ecommerce,view_item,ecommerce.items,array,Yes,Array of item objects,[{item_id: 'SKU-001'}],{{DLV - ecommerce.items}},items
+Ecommerce,view_item_list,event,string,Yes,Product list/category view,view_item_list,{{Event}},event
+Ecommerce,view_item_list,ecommerce.item_list_id,string,No,List identifier,featured_products,{{DLV - ecommerce.item_list_id}},item_list_id
+Ecommerce,view_item_list,ecommerce.item_list_name,string,No,List display name,Featured Products,{{DLV - ecommerce.item_list_name}},item_list_name
+Ecommerce,view_item_list,ecommerce.items,array,Yes,Array of item objects,[{item_id: 'SKU-001'}],{{DLV - ecommerce.items}},items
+Ecommerce,select_item,event,string,Yes,Product click in list,select_item,{{Event}},event
+Ecommerce,select_item,ecommerce.item_list_id,string,No,List where item was clicked,search_results,{{DLV - ecommerce.item_list_id}},item_list_id
+Ecommerce,select_item,ecommerce.items,array,Yes,Array with clicked item,[{item_id: 'SKU-001'}],{{DLV - ecommerce.items}},items
+Ecommerce,add_to_cart,event,string,Yes,Add item to cart,add_to_cart,{{Event}},event
+Ecommerce,add_to_cart,ecommerce.currency,string,Yes,Currency code,USD,{{DLV - ecommerce.currency}},currency
+Ecommerce,add_to_cart,ecommerce.value,number,Yes,Value of items added,59.98,{{DLV - ecommerce.value}},value
+Ecommerce,add_to_cart,ecommerce.items,array,Yes,Items added to cart,[{item_id: 'SKU-001'}],{{DLV - ecommerce.items}},items
+Ecommerce,remove_from_cart,event,string,Yes,Remove item from cart,remove_from_cart,{{Event}},event
+Ecommerce,remove_from_cart,ecommerce.currency,string,Yes,Currency code,USD,{{DLV - ecommerce.currency}},currency
+Ecommerce,remove_from_cart,ecommerce.value,number,Yes,Value of items removed,29.99,{{DLV - ecommerce.value}},value
+Ecommerce,remove_from_cart,ecommerce.items,array,Yes,Items removed from cart,[{item_id: 'SKU-001'}],{{DLV - ecommerce.items}},items
+Ecommerce,view_cart,event,string,Yes,Cart page view,view_cart,{{Event}},event
+Ecommerce,view_cart,ecommerce.currency,string,Yes,Currency code,USD,{{DLV - ecommerce.currency}},currency
+Ecommerce,view_cart,ecommerce.value,number,Yes,Total cart value,89.97,{{DLV - ecommerce.value}},value
+Ecommerce,view_cart,ecommerce.items,array,Yes,All items in cart,[{item_id: 'SKU-001'}],{{DLV - ecommerce.items}},items
+Ecommerce,begin_checkout,event,string,Yes,Checkout initiated,begin_checkout,{{Event}},event
+Ecommerce,begin_checkout,ecommerce.currency,string,Yes,Currency code,USD,{{DLV - ecommerce.currency}},currency
+Ecommerce,begin_checkout,ecommerce.value,number,Yes,Total checkout value,89.97,{{DLV - ecommerce.value}},value
+Ecommerce,begin_checkout,ecommerce.coupon,string,No,Coupon applied,SAVE10,{{DLV - ecommerce.coupon}},coupon
+Ecommerce,begin_checkout,ecommerce.items,array,Yes,Items in checkout,[{item_id: 'SKU-001'}],{{DLV - ecommerce.items}},items
+Ecommerce,add_shipping_info,event,string,Yes,Shipping info added,add_shipping_info,{{Event}},event
+Ecommerce,add_shipping_info,ecommerce.currency,string,Yes,Currency code,USD,{{DLV - ecommerce.currency}},currency
+Ecommerce,add_shipping_info,ecommerce.value,number,Yes,Order value,89.97,{{DLV - ecommerce.value}},value
+Ecommerce,add_shipping_info,ecommerce.shipping_tier,string,No,Shipping method selected,express,{{DLV - ecommerce.shipping_tier}},shipping_tier
+Ecommerce,add_shipping_info,ecommerce.items,array,Yes,Items being shipped,[{item_id: 'SKU-001'}],{{DLV - ecommerce.items}},items
+Ecommerce,add_payment_info,event,string,Yes,Payment info added,add_payment_info,{{Event}},event
+Ecommerce,add_payment_info,ecommerce.currency,string,Yes,Currency code,USD,{{DLV - ecommerce.currency}},currency
+Ecommerce,add_payment_info,ecommerce.value,number,Yes,Order value,89.97,{{DLV - ecommerce.value}},value
+Ecommerce,add_payment_info,ecommerce.payment_type,string,No,Payment method selected,credit_card,{{DLV - ecommerce.payment_type}},payment_type
+Ecommerce,add_payment_info,ecommerce.items,array,Yes,Items being purchased,[{item_id: 'SKU-001'}],{{DLV - ecommerce.items}},items
+Ecommerce,purchase,event,string,Yes,Purchase completed,purchase,{{Event}},event
+Ecommerce,purchase,ecommerce.transaction_id,string,Yes,Unique transaction ID,TXN-12345,{{DLV - ecommerce.transaction_id}},transaction_id
+Ecommerce,purchase,ecommerce.currency,string,Yes,Currency code,USD,{{DLV - ecommerce.currency}},currency
+Ecommerce,purchase,ecommerce.value,number,Yes,Total purchase value,99.97,{{DLV - ecommerce.value}},value
+Ecommerce,purchase,ecommerce.tax,number,No,Tax amount,8.00,{{DLV - ecommerce.tax}},tax
+Ecommerce,purchase,ecommerce.shipping,number,No,Shipping cost,5.99,{{DLV - ecommerce.shipping}},shipping
+Ecommerce,purchase,ecommerce.coupon,string,No,Coupon code used,SAVE10,{{DLV - ecommerce.coupon}},coupon
+Ecommerce,purchase,ecommerce.affiliation,string,No,Store/affiliate name,Main Store,{{DLV - ecommerce.affiliation}},affiliation
+Ecommerce,purchase,ecommerce.items,array,Yes,Items purchased,[{item_id: 'SKU-001'}],{{DLV - ecommerce.items}},items
+Ecommerce,refund,event,string,Yes,Refund processed,refund,{{Event}},event
+Ecommerce,refund,ecommerce.transaction_id,string,Yes,Original transaction ID,TXN-12345,{{DLV - ecommerce.transaction_id}},transaction_id
+Ecommerce,refund,ecommerce.currency,string,Yes,Currency code,USD,{{DLV - ecommerce.currency}},currency
+Ecommerce,refund,ecommerce.value,number,Yes,Refund amount,29.99,{{DLV - ecommerce.value}},value
+Ecommerce,refund,ecommerce.items,array,No,Items refunded (partial refund),[{item_id: 'SKU-001'}],{{DLV - ecommerce.items}},items
+Ecommerce,view_promotion,event,string,Yes,Promotion impression,view_promotion,{{Event}},event
+Ecommerce,view_promotion,ecommerce.items,array,Yes,Promotion items with creative info,[{promotion_id: 'summer_sale'}],{{DLV - ecommerce.items}},items
+Ecommerce,select_promotion,event,string,Yes,Promotion clicked,select_promotion,{{Event}},event
+Ecommerce,select_promotion,ecommerce.items,array,Yes,Clicked promotion item,[{promotion_id: 'summer_sale'}],{{DLV - ecommerce.items}},items
+Ecommerce,add_to_wishlist,event,string,Yes,Item added to wishlist,add_to_wishlist,{{Event}},event
+Ecommerce,add_to_wishlist,ecommerce.currency,string,No,Currency code,USD,{{DLV - ecommerce.currency}},currency
+Ecommerce,add_to_wishlist,ecommerce.value,number,No,Value of items,29.99,{{DLV - ecommerce.value}},value
+Ecommerce,add_to_wishlist,ecommerce.items,array,Yes,Items added to wishlist,[{item_id: 'SKU-001'}],{{DLV - ecommerce.items}},items
+# ===========================================
+# ECOMMERCE ITEM OBJECT PROPERTIES
+# ===========================================
+Ecommerce Item,items[n],item_id,string,Yes*,SKU or product ID,SKU-001,{{DLV - ecommerce.items}}.item_id,item_id
+Ecommerce Item,items[n],item_name,string,Yes*,Product name,Wireless Headphones,{{DLV - ecommerce.items}}.item_name,item_name
+Ecommerce Item,items[n],item_brand,string,No,Brand name,Sony,{{DLV - ecommerce.items}}.item_brand,item_brand
+Ecommerce Item,items[n],item_category,string,No,Primary category,Electronics,{{DLV - ecommerce.items}}.item_category,item_category
+Ecommerce Item,items[n],item_category2,string,No,Second-level category,Audio,{{DLV - ecommerce.items}}.item_category2,item_category2
+Ecommerce Item,items[n],item_category3,string,No,Third-level category,Headphones,{{DLV - ecommerce.items}}.item_category3,item_category3
+Ecommerce Item,items[n],item_category4,string,No,Fourth-level category,Wireless,{{DLV - ecommerce.items}}.item_category4,item_category4
+Ecommerce Item,items[n],item_category5,string,No,Fifth-level category,Over-ear,{{DLV - ecommerce.items}}.item_category5,item_category5
+Ecommerce Item,items[n],item_variant,string,No,Product variant,Black,{{DLV - ecommerce.items}}.item_variant,item_variant
+Ecommerce Item,items[n],price,number,No,Unit price,29.99,{{DLV - ecommerce.items}}.price,price
+Ecommerce Item,items[n],quantity,number,No,Quantity,2,{{DLV - ecommerce.items}}.quantity,quantity
+Ecommerce Item,items[n],coupon,string,No,Item-level coupon,ITEM10OFF,{{DLV - ecommerce.items}}.coupon,coupon
+Ecommerce Item,items[n],discount,number,No,Discount amount,5.00,{{DLV - ecommerce.items}}.discount,discount
+Ecommerce Item,items[n],index,number,No,Position in list (0-based),0,{{DLV - ecommerce.items}}.index,index
+Ecommerce Item,items[n],item_list_id,string,No,List ID where item appeared,search_results,{{DLV - ecommerce.items}}.item_list_id,item_list_id
+Ecommerce Item,items[n],item_list_name,string,No,List name,Search Results,{{DLV - ecommerce.items}}.item_list_name,item_list_name
+Ecommerce Item,items[n],promotion_id,string,No,Promotion ID,summer_sale,{{DLV - ecommerce.items}}.promotion_id,promotion_id
+Ecommerce Item,items[n],promotion_name,string,No,Promotion name,Summer Sale 2024,{{DLV - ecommerce.items}}.promotion_name,promotion_name
+Ecommerce Item,items[n],creative_name,string,No,Creative/banner name,hero_banner,{{DLV - ecommerce.items}}.creative_name,creative_name
+Ecommerce Item,items[n],creative_slot,string,No,Creative slot position,banner_1,{{DLV - ecommerce.items}}.creative_slot,creative_slot
+# ===========================================
+# BOOKING / RESERVATION EVENTS
+# ===========================================
+Booking,booking_requested,event,string,Yes,Booking request initiated,booking_requested,{{Event}},event
+Booking,booking_requested,booking_id,string,No,Booking reference number,BK-12345,{{DLV - booking_id}},booking_id
+Booking,booking_requested,booking_type,string,No,Type: hotel/flight/restaurant/appointment,hotel,{{DLV - booking_type}},booking_type
+Booking,booking_requested,value,number,No,Booking value,450.00,{{DLV - value}},value
+Booking,booking_requested,currency,string,No,Currency code,USD,{{DLV - currency}},currency
+Booking,booking_confirmed,event,string,Yes,Booking confirmed,booking_confirmed,{{Event}},event
+Booking,booking_confirmed,booking_id,string,Yes,Booking reference number,BK-12345,{{DLV - booking_id}},booking_id
+Booking,booking_confirmed,booking_type,string,No,Type of booking,hotel,{{DLV - booking_type}},booking_type
+Booking,booking_confirmed,check_in_date,string,No,Check-in/start date (ISO 8601),2024-03-15,{{DLV - check_in_date}},check_in_date
+Booking,booking_confirmed,check_out_date,string,No,Check-out/end date (ISO 8601),2024-03-18,{{DLV - check_out_date}},check_out_date
+Booking,booking_confirmed,guests,number,No,Number of guests,2,{{DLV - guests}},guests
+Booking,booking_confirmed,nights,number,No,Number of nights (hotels),3,{{DLV - nights}},nights
+Booking,booking_confirmed,room_type,string,No,Room/service type,deluxe_suite,{{DLV - room_type}},room_type
+Booking,booking_confirmed,value,number,No,Total booking value,450.00,{{DLV - value}},value
+Booking,booking_confirmed,currency,string,No,Currency code,USD,{{DLV - currency}},currency
+Booking,booking_confirmed,location,string,No,Location/destination,New York,{{DLV - location}},location
+Booking,booking_confirmed,provider,string,No,Service provider name,Marriott,{{DLV - provider}},provider
+Booking,booking_confirmed,lead_time_days,number,No,Days in advance,14,{{DLV - lead_time_days}},lead_time_days
+Booking,booking_cancelled,event,string,Yes,Booking cancelled,booking_cancelled,{{Event}},event
+Booking,booking_cancelled,booking_id,string,Yes,Booking reference number,BK-12345,{{DLV - booking_id}},booking_id
+Booking,booking_cancelled,cancellation_reason,string,No,Reason for cancellation,change_of_plans,{{DLV - cancellation_reason}},cancellation_reason
+Booking,booking_cancelled,value,number,No,Cancelled booking value,450.00,{{DLV - value}},value
+Booking,booking_modified,event,string,Yes,Booking modified,booking_modified,{{Event}},event
+Booking,booking_modified,booking_id,string,Yes,Booking reference number,BK-12345,{{DLV - booking_id}},booking_id
+Booking,reservation_created,event,string,Yes,Reservation created (restaurants/services),reservation_created,{{Event}},event
+Booking,reservation_created,booking_id,string,No,Reservation ID,RES-12345,{{DLV - booking_id}},booking_id
+Booking,reservation_created,party_size,number,No,Party size,4,{{DLV - party_size}},party_size
+Booking,reservation_created,start_time,string,No,Reservation time,19:00,{{DLV - start_time}},start_time
+Booking,reservation_confirmed,event,string,Yes,Reservation confirmed,reservation_confirmed,{{Event}},event
+Booking,reservation_cancelled,event,string,Yes,Reservation cancelled,reservation_cancelled,{{Event}},event
+Booking,appointment_scheduled,event,string,Yes,Appointment scheduled,appointment_scheduled,{{Event}},event
+Booking,appointment_scheduled,booking_id,string,No,Appointment ID,APT-12345,{{DLV - booking_id}},booking_id
+Booking,appointment_scheduled,service_type,string,No,Type of appointment,consultation,{{DLV - service_type}},service_type
+Booking,appointment_scheduled,start_date,string,No,Appointment date,2024-03-15,{{DLV - start_date}},start_date
+Booking,appointment_scheduled,start_time,string,No,Appointment time,14:00,{{DLV - start_time}},start_time
+Booking,appointment_cancelled,event,string,Yes,Appointment cancelled,appointment_cancelled,{{Event}},event
+Booking,appointment_rescheduled,event,string,Yes,Appointment rescheduled,appointment_rescheduled,{{Event}},event
+# ===========================================
+# VIDEO TRACKING EVENTS
+# ===========================================
+Video,video_start,event,string,Yes,Video playback started,video_start,{{Event}},event
+Video,video_start,video_id,string,Yes,Unique video identifier,abc123,{{DLV - video_id}},video_id
+Video,video_start,video_title,string,No,Video title,Product Demo,{{DLV - video_title}},video_title
+Video,video_start,video_provider,string,No,Provider: youtube/vimeo/html5,youtube,{{DLV - video_provider}},video_provider
+Video,video_start,video_duration,number,No,Total duration in seconds,240,{{DLV - video_duration}},video_duration
+Video,video_start,video_url,string,No,Video URL,https://youtube.com/watch?v=abc123,{{DLV - video_url}},video_url
+Video,video_progress,event,string,Yes,Video progress milestone,video_progress,{{Event}},event
+Video,video_progress,video_id,string,Yes,Video identifier,abc123,{{DLV - video_id}},video_id
+Video,video_progress,video_percent,number,Yes,Percentage watched (0-100),25,{{DLV - video_percent}},video_percent
+Video,video_progress,video_current_time,number,No,Current position in seconds,60,{{DLV - video_current_time}},video_current_time
+Video,video_progress,video_duration,number,No,Total duration in seconds,240,{{DLV - video_duration}},video_duration
+Video,video_complete,event,string,Yes,Video playback completed,video_complete,{{Event}},event
+Video,video_complete,video_id,string,Yes,Video identifier,abc123,{{DLV - video_id}},video_id
+Video,video_complete,video_duration,number,No,Total duration in seconds,240,{{DLV - video_duration}},video_duration
+Video,video_pause,event,string,Yes,Video paused,video_pause,{{Event}},event
+Video,video_pause,video_id,string,Yes,Video identifier,abc123,{{DLV - video_id}},video_id
+Video,video_pause,video_current_time,number,No,Position where paused,120,{{DLV - video_current_time}},video_current_time
+Video,video_resume,event,string,Yes,Video resumed from pause,video_resume,{{Event}},event
+Video,video_seek,event,string,Yes,User seeked in video,video_seek,{{Event}},event
+Video,video_seek,video_id,string,Yes,Video identifier,abc123,{{DLV - video_id}},video_id
+Video,video_seek,video_current_time,number,No,Position seeked to,180,{{DLV - video_current_time}},video_current_time
+Video,video_error,event,string,Yes,Video playback error,video_error,{{Event}},event
+Video,video_error,video_id,string,Yes,Video identifier,abc123,{{DLV - video_id}},video_id
+Video,video_error,video_error_message,string,No,Error message,Failed to load video,{{DLV - video_error_message}},video_error_message
+Video,video_quality_change,event,string,Yes,Video quality changed,video_quality_change,{{Event}},event
+Video,video_quality_change,video_quality,string,No,New quality: 1080p/720p/480p/auto,720p,{{DLV - video_quality}},video_quality
+Video,video_fullscreen,event,string,Yes,Fullscreen toggled,video_fullscreen,{{Event}},event
+Video,video_fullscreen,video_fullscreen,boolean,No,Whether now fullscreen,true,{{DLV - video_fullscreen}},video_fullscreen
+# ===========================================
+# FORM TRACKING EVENTS
+# ===========================================
+Form,form_start,event,string,Yes,User started filling form,form_start,{{Event}},event
+Form,form_start,form_id,string,Yes,Form HTML ID or identifier,contact-form,{{DLV - form_id}},form_id
+Form,form_start,form_name,string,No,Human-readable form name,Contact Us,{{DLV - form_name}},form_name
+Form,form_start,form_type,string,No,Type: contact/signup/checkout/survey,contact,{{DLV - form_type}},form_type
+Form,form_start,form_destination,string,No,Form action URL,/api/contact,{{DLV - form_destination}},form_destination
+Form,form_start,form_fields_count,number,No,Number of form fields,5,{{DLV - form_fields_count}},form_fields_count
+Form,form_field_focus,event,string,Yes,User focused on a field,form_field_focus,{{Event}},event
+Form,form_field_focus,form_id,string,Yes,Form identifier,contact-form,{{DLV - form_id}},form_id
+Form,form_field_focus,field_name,string,Yes,Field name attribute,email,{{DLV - field_name}},field_name
+Form,form_field_focus,field_type,string,No,Field type: text/email/tel/select,email,{{DLV - field_type}},field_type
+Form,form_field_focus,field_label,string,No,Field label text,Email Address,{{DLV - field_label}},field_label
+Form,form_field_focus,field_position,number,No,Field position in form (1-indexed),3,{{DLV - field_position}},field_position
+Form,form_field_blur,event,string,Yes,User left a field,form_field_blur,{{Event}},event
+Form,form_field_change,event,string,Yes,Field value changed,form_field_change,{{Event}},event
+Form,form_error,event,string,Yes,Form validation error occurred,form_error,{{Event}},event
+Form,form_error,form_id,string,Yes,Form identifier,contact-form,{{DLV - form_id}},form_id
+Form,form_error,field_name,string,No,Field with error,email,{{DLV - field_name}},field_name
+Form,form_error,error_type,string,No,Error type: validation/server/network,validation,{{DLV - error_type}},error_type
+Form,form_error,error_message,string,No,Error message displayed,Invalid email format,{{DLV - error_message}},error_message
+Form,form_error,error_count,number,No,Number of errors on form,3,{{DLV - error_count}},error_count
+Form,form_submit,event,string,Yes,Form submission attempted,form_submit,{{Event}},event
+Form,form_submit,form_id,string,Yes,Form identifier,contact-form,{{DLV - form_id}},form_id
+Form,form_submit,form_name,string,No,Form name,Contact Us,{{DLV - form_name}},form_name
+Form,form_submit,submission_attempt,number,No,Attempt number,1,{{DLV - submission_attempt}},submission_attempt
+Form,form_submit_success,event,string,Yes,Form submitted successfully,form_submit_success,{{Event}},event
+Form,form_submit_success,form_id,string,Yes,Form identifier,contact-form,{{DLV - form_id}},form_id
+Form,form_submit_success,time_to_complete_ms,number,No,Time to fill form in ms,45000,{{DLV - time_to_complete_ms}},time_to_complete_ms
+Form,form_submit_success,value,number,No,Lead value (if applicable),500,{{DLV - value}},value
+Form,form_submit_success,currency,string,No,Currency for lead value,USD,{{DLV - currency}},currency
+Form,form_submit_failure,event,string,Yes,Form submission failed,form_submit_failure,{{Event}},event
+Form,form_submit_failure,form_id,string,Yes,Form identifier,contact-form,{{DLV - form_id}},form_id
+Form,form_submit_failure,error_type,string,No,Failure reason: server/network/validation,server,{{DLV - error_type}},error_type
+Form,form_submit_failure,error_message,string,No,Error message,Server error,{{DLV - error_message}},error_message
+Form,form_abandon,event,string,Yes,User abandoned form,form_abandon,{{Event}},event
+Form,form_abandon,form_id,string,Yes,Form identifier,contact-form,{{DLV - form_id}},form_id
+Form,form_abandon,form_fields_filled,number,No,Fields filled before abandoning,2,{{DLV - form_fields_filled}},form_fields_filled
+Form,form_abandon,time_to_complete_ms,number,No,Time spent on form,15000,{{DLV - time_to_complete_ms}},time_to_complete_ms
+Form,form_step_complete,event,string,Yes,Multi-step form step completed,form_step_complete,{{Event}},event
+Form,form_step_complete,form_id,string,Yes,Form identifier,checkout-form,{{DLV - form_id}},form_id
+Form,form_step_complete,form_step,number,Yes,Completed step number,2,{{DLV - form_step}},form_step
+Form,form_step_complete,form_total_steps,number,No,Total steps in form,4,{{DLV - form_total_steps}},form_total_steps
+Form,form_step_complete,form_step_name,string,No,Step name,Shipping Information,{{DLV - form_step_name}},form_step_name
+# ===========================================
+# SAAS / SUBSCRIPTION EVENTS
+# ===========================================
+SaaS,trial_start,event,string,Yes,Trial period started,trial_start,{{Event}},event
+SaaS,trial_start,plan_id,string,No,Plan identifier,pro_trial,{{DLV - plan_id}},plan_id
+SaaS,trial_start,plan_name,string,No,Plan display name,Pro Trial,{{DLV - plan_name}},plan_name
+SaaS,trial_start,trial_days,number,No,Trial duration in days,14,{{DLV - trial_days}},trial_days
+SaaS,trial_end,event,string,Yes,Trial period ended,trial_end,{{Event}},event
+SaaS,trial_end,plan_id,string,No,Plan identifier,pro_trial,{{DLV - plan_id}},plan_id
+SaaS,trial_end,trial_converted,boolean,No,Whether user converted,true,{{DLV - trial_converted}},trial_converted
+SaaS,trial_convert,event,string,Yes,Trial converted to paid,trial_convert,{{Event}},event
+SaaS,trial_convert,plan_id,string,Yes,Converted plan ID,pro_monthly,{{DLV - plan_id}},plan_id
+SaaS,trial_convert,plan_name,string,No,Plan name,Pro Monthly,{{DLV - plan_name}},plan_name
+SaaS,trial_convert,value,number,No,Subscription value,29.99,{{DLV - value}},value
+SaaS,trial_convert,currency,string,No,Currency code,USD,{{DLV - currency}},currency
+SaaS,subscription_start,event,string,Yes,New subscription started,subscription_start,{{Event}},event
+SaaS,subscription_start,subscription_id,string,No,Subscription identifier,sub_abc123,{{DLV - subscription_id}},subscription_id
+SaaS,subscription_start,plan_id,string,Yes,Plan identifier,pro_monthly,{{DLV - plan_id}},plan_id
+SaaS,subscription_start,plan_name,string,No,Plan display name,Pro Monthly,{{DLV - plan_name}},plan_name
+SaaS,subscription_start,plan_tier,string,No,Tier: free/starter/pro/enterprise,pro,{{DLV - plan_tier}},plan_tier
+SaaS,subscription_start,billing_period,string,No,Billing: monthly/yearly/lifetime,monthly,{{DLV - billing_period}},billing_period
+SaaS,subscription_start,value,number,No,Subscription price,29.99,{{DLV - value}},value
+SaaS,subscription_start,mrr,number,No,Monthly recurring revenue,29.99,{{DLV - mrr}},mrr
+SaaS,subscription_start,currency,string,No,Currency code,USD,{{DLV - currency}},currency
+SaaS,subscription_start,trial_converted,boolean,No,Was this a trial conversion,true,{{DLV - trial_converted}},trial_converted
+SaaS,subscription_start,coupon,string,No,Discount code applied,SAVE20,{{DLV - coupon}},coupon
+SaaS,subscription_start,payment_method,string,No,Payment method used,credit_card,{{DLV - payment_method}},payment_method
+SaaS,subscription_cancel,event,string,Yes,Subscription cancelled,subscription_cancel,{{Event}},event
+SaaS,subscription_cancel,subscription_id,string,No,Subscription identifier,sub_abc123,{{DLV - subscription_id}},subscription_id
+SaaS,subscription_cancel,plan_id,string,No,Cancelled plan ID,pro_monthly,{{DLV - plan_id}},plan_id
+SaaS,subscription_cancel,cancellation_reason,string,No,Reason for cancellation,too_expensive,{{DLV - cancellation_reason}},cancellation_reason
+SaaS,subscription_cancel,mrr,number,No,Lost MRR,29.99,{{DLV - mrr}},mrr
+SaaS,subscription_renew,event,string,Yes,Subscription renewed,subscription_renew,{{Event}},event
+SaaS,subscription_renew,subscription_id,string,No,Subscription identifier,sub_abc123,{{DLV - subscription_id}},subscription_id
+SaaS,subscription_renew,value,number,No,Renewal value,29.99,{{DLV - value}},value
+SaaS,subscription_upgrade,event,string,Yes,Subscription upgraded,subscription_upgrade,{{Event}},event
+SaaS,subscription_upgrade,subscription_id,string,No,Subscription identifier,sub_abc123,{{DLV - subscription_id}},subscription_id
+SaaS,subscription_upgrade,previous_plan_id,string,No,Previous plan ID,starter_monthly,{{DLV - previous_plan_id}},previous_plan_id
+SaaS,subscription_upgrade,plan_id,string,Yes,New plan ID,pro_monthly,{{DLV - plan_id}},plan_id
+SaaS,subscription_upgrade,is_upgrade,boolean,No,Upgrade indicator,true,{{DLV - is_upgrade}},is_upgrade
+SaaS,subscription_upgrade,value,number,No,New subscription value,29.99,{{DLV - value}},value
+SaaS,subscription_downgrade,event,string,Yes,Subscription downgraded,subscription_downgrade,{{Event}},event
+SaaS,subscription_downgrade,previous_plan_id,string,No,Previous plan ID,pro_monthly,{{DLV - previous_plan_id}},previous_plan_id
+SaaS,subscription_downgrade,plan_id,string,Yes,New plan ID,starter_monthly,{{DLV - plan_id}},plan_id
+SaaS,subscription_downgrade,is_downgrade,boolean,No,Downgrade indicator,true,{{DLV - is_downgrade}},is_downgrade
+SaaS,subscription_pause,event,string,Yes,Subscription paused,subscription_pause,{{Event}},event
+SaaS,subscription_resume,event,string,Yes,Subscription resumed,subscription_resume,{{Event}},event
+SaaS,plan_select,event,string,Yes,User selected a plan,plan_select,{{Event}},event
+SaaS,plan_select,plan_id,string,Yes,Selected plan ID,pro_monthly,{{DLV - plan_id}},plan_id
+SaaS,plan_select,plan_name,string,No,Plan name,Pro Monthly,{{DLV - plan_name}},plan_name
+SaaS,plan_select,billing_period,string,No,Billing period selected,monthly,{{DLV - billing_period}},billing_period
+SaaS,feature_used,event,string,Yes,Feature usage tracked,feature_used,{{Event}},event
+SaaS,feature_used,feature_id,string,Yes,Feature identifier,export_csv,{{DLV - feature_id}},feature_id
+SaaS,feature_used,feature_name,string,No,Feature display name,CSV Export,{{DLV - feature_name}},feature_name
+SaaS,feature_used,feature_category,string,No,Feature category,data_export,{{DLV - feature_category}},feature_category
+SaaS,feature_used,usage_count,number,No,Number of times used,5,{{DLV - usage_count}},usage_count
+SaaS,limit_reached,event,string,Yes,Usage limit reached,limit_reached,{{Event}},event
+SaaS,limit_reached,limit_type,string,Yes,Type of limit,api_calls,{{DLV - limit_type}},limit_type
+SaaS,limit_reached,current_usage,number,No,Current usage amount,1000,{{DLV - current_usage}},current_usage
+SaaS,limit_reached,max_usage,number,No,Maximum allowed,1000,{{DLV - max_usage}},max_usage
+SaaS,onboarding_start,event,string,Yes,Onboarding started,onboarding_start,{{Event}},event
+SaaS,onboarding_step,event,string,Yes,Onboarding step completed,onboarding_step,{{Event}},event
+SaaS,onboarding_step,onboarding_step,number,Yes,Step number,2,{{DLV - onboarding_step}},onboarding_step
+SaaS,onboarding_step,onboarding_total_steps,number,No,Total steps,5,{{DLV - onboarding_total_steps}},onboarding_total_steps
+SaaS,onboarding_step,onboarding_step_name,string,No,Step name,Connect Data Source,{{DLV - onboarding_step_name}},onboarding_step_name
+SaaS,onboarding_complete,event,string,Yes,Onboarding completed,onboarding_complete,{{Event}},event
+SaaS,invite_sent,event,string,Yes,Team invite sent,invite_sent,{{Event}},event
+SaaS,invite_sent,invite_domain,string,No,Invitee email domain,company.com,{{DLV - invite_domain}},invite_domain
+SaaS,invite_sent,invites_sent,number,No,Number of invites,3,{{DLV - invites_sent}},invites_sent
+SaaS,invite_accepted,event,string,Yes,Team invite accepted,invite_accepted,{{Event}},event
+SaaS,invite_accepted,team_size,number,No,New team size,5,{{DLV - team_size}},team_size
+# ===========================================
+# ERROR / EXCEPTION EVENTS
+# ===========================================
+Error,error,event,string,Yes,General error event,error,{{Event}},event
+Error,error,error_message,string,Yes,Error description,Failed to load resource,{{DLV - error_message}},error_message
+Error,error,error_type,string,No,Error classification,network,{{DLV - error_type}},error_type
+Error,error,error_code,string,No,Error code,404,{{DLV - error_code}},error_code
+Error,error,fatal,boolean,No,Whether error is blocking,false,{{DLV - fatal}},fatal
+Error,exception,event,string,Yes,JavaScript exception,exception,{{Event}},event
+Error,exception,error_message,string,Yes,Exception message,Cannot read property of undefined,{{DLV - error_message}},error_message
+Error,exception,error_stack,string,No,Stack trace (truncated),Error: Cannot read...,{{DLV - error_stack}},error_stack
+Error,exception,error_file,string,No,File where error occurred,app.js,{{DLV - error_file}},error_file
+Error,exception,error_line,number,No,Line number,42,{{DLV - error_line}},error_line
+Error,exception,error_column,number,No,Column number,15,{{DLV - error_column}},error_column
+Error,exception,fatal,boolean,No,Whether error crashed app,true,{{DLV - fatal}},fatal
+Error,api_error,event,string,Yes,API request error,api_error,{{Event}},event
+Error,api_error,api_endpoint,string,Yes,API endpoint called,/api/users,{{DLV - api_endpoint}},api_endpoint
+Error,api_error,http_method,string,No,HTTP method used,POST,{{DLV - http_method}},http_method
+Error,api_error,error_code,string,No,HTTP status code,500,{{DLV - error_code}},error_code
+Error,api_error,error_message,string,No,Error response message,Internal server error,{{DLV - error_message}},error_message
+Error,api_error,request_id,string,No,Request ID for tracing,req_abc123,{{DLV - request_id}},request_id
+Error,validation_error,event,string,Yes,Validation error occurred,validation_error,{{Event}},event
+Error,validation_error,error_message,string,Yes,Validation message,Email is required,{{DLV - error_message}},error_message
+Error,validation_error,field_name,string,No,Field that failed validation,email,{{DLV - field_name}},field_name
+Error,page_not_found,event,string,Yes,404 page displayed,page_not_found,{{Event}},event
+Error,page_not_found,error_url,string,Yes,URL that was not found,/nonexistent-page,{{DLV - error_url}},error_url
+Error,permission_denied,event,string,Yes,Permission/access denied,permission_denied,{{Event}},event
+Error,timeout,event,string,Yes,Request/operation timeout,timeout,{{Event}},event
+Error,network_error,event,string,Yes,Network connectivity error,network_error,{{Event}},event
+# ===========================================
+# FILE / DOWNLOAD EVENTS
+# ===========================================
+File,file_download,event,string,Yes,File download initiated,file_download,{{Event}},event
+File,file_download,file_name,string,Yes,Name of downloaded file,annual-report-2024.pdf,{{DLV - file_name}},file_name
+File,file_download,file_extension,string,No,File extension,pdf,{{DLV - file_extension}},file_extension
+File,file_download,file_type,string,No,File type category,document,{{DLV - file_type}},file_type
+File,file_download,file_size_bytes,number,No,File size in bytes,2500000,{{DLV - file_size_bytes}},file_size_bytes
+File,file_download,link_url,string,No,Download URL,/downloads/report.pdf,{{DLV - link_url}},link_url
+File,file_download,link_text,string,No,Link text clicked,Download Report,{{DLV - link_text}},link_text
+File,file_download,content_category,string,No,Content category,financial_reports,{{DLV - content_category}},content_category
+File,file_download,is_gated,boolean,No,Whether download required form,false,{{DLV - is_gated}},is_gated
+File,file_upload,event,string,Yes,File upload completed,file_upload,{{Event}},event
+File,file_upload,file_name,string,Yes,Uploaded file name,profile-photo.jpg,{{DLV - file_name}},file_name
+File,file_upload,file_extension,string,No,File extension,jpg,{{DLV - file_extension}},file_extension
+File,file_upload,file_size_bytes,number,No,File size in bytes,500000,{{DLV - file_size_bytes}},file_size_bytes
+File,file_upload,upload_source,string,No,Source: local/cloud/url,local,{{DLV - upload_source}},upload_source
+File,file_upload,storage_destination,string,No,Destination storage,s3,{{DLV - storage_destination}},storage_destination
+File,file_view,event,string,Yes,File/document viewed inline,file_view,{{Event}},event
+File,file_view,file_name,string,Yes,Viewed file name,product-spec.pdf,{{DLV - file_name}},file_name
+File,file_share,event,string,Yes,File shared,file_share,{{Event}},event
+File,file_print,event,string,Yes,File/document printed,file_print,{{Event}},event
+File,document_open,event,string,Yes,Document opened in app,document_open,{{Event}},event
+File,document_save,event,string,Yes,Document saved,document_save,{{Event}},event
+# ===========================================
+# AUTHENTICATION EVENTS (Extended)
+# ===========================================
+Auth,logout,event,string,Yes,User logged out,logout,{{Event}},event
+Auth,logout,method,string,No,Logout method,manual,{{DLV - method}},method
+Auth,logout,session_duration_seconds,number,No,Session length in seconds,3600,{{DLV - session_duration_seconds}},session_duration_seconds
+Auth,password_reset_request,event,string,Yes,Password reset requested,password_reset_request,{{Event}},event
+Auth,password_reset_request,method,string,No,Reset method requested,email,{{DLV - method}},method
+Auth,password_reset_complete,event,string,Yes,Password reset completed,password_reset_complete,{{Event}},event
+Auth,password_change,event,string,Yes,Password changed,password_change,{{Event}},event
+Auth,email_verification_sent,event,string,Yes,Verification email sent,email_verification_sent,{{Event}},event
+Auth,email_verification_complete,event,string,Yes,Email verified,email_verification_complete,{{Event}},event
+Auth,phone_verification_sent,event,string,Yes,Phone verification sent,phone_verification_sent,{{Event}},event
+Auth,phone_verification_complete,event,string,Yes,Phone verified,phone_verification_complete,{{Event}},event
+Auth,two_factor_enabled,event,string,Yes,2FA enabled,two_factor_enabled,{{Event}},event
+Auth,two_factor_enabled,two_factor_method,string,No,2FA method: sms/email/authenticator_app/hardware_key,authenticator_app,{{DLV - two_factor_method}},two_factor_method
+Auth,two_factor_disabled,event,string,Yes,2FA disabled,two_factor_disabled,{{Event}},event
+Auth,two_factor_challenge,event,string,Yes,2FA challenge presented,two_factor_challenge,{{Event}},event
+Auth,two_factor_success,event,string,Yes,2FA challenge succeeded,two_factor_success,{{Event}},event
+Auth,two_factor_success,two_factor_method,string,No,Method used,authenticator_app,{{DLV - two_factor_method}},two_factor_method
+Auth,two_factor_success,is_new_device,boolean,No,New device detected,true,{{DLV - is_new_device}},is_new_device
+Auth,two_factor_failure,event,string,Yes,2FA challenge failed,two_factor_failure,{{Event}},event
+Auth,two_factor_failure,attempt_count,number,No,Number of failed attempts,3,{{DLV - attempt_count}},attempt_count
+Auth,session_start,event,string,Yes,User session started,session_start,{{Event}},event
+Auth,session_start,remember_me,boolean,No,Remember me selected,true,{{DLV - remember_me}},remember_me
+Auth,session_end,event,string,Yes,User session ended,session_end,{{Event}},event
+Auth,session_end,session_duration_seconds,number,No,Session length,7200,{{DLV - session_duration_seconds}},session_duration_seconds
+Auth,account_created,event,string,Yes,New account created,account_created,{{Event}},event
+Auth,account_deleted,event,string,Yes,Account deleted,account_deleted,{{Event}},event
+Auth,account_locked,event,string,Yes,Account locked,account_locked,{{Event}},event
+Auth,account_locked,failure_reason,string,No,Reason for lock,too_many_attempts,{{DLV - failure_reason}},failure_reason
+Auth,account_unlocked,event,string,Yes,Account unlocked,account_unlocked,{{Event}},event
+Auth,profile_updated,event,string,Yes,Profile information updated,profile_updated,{{Event}},event
+Auth,email_changed,event,string,Yes,Email address changed,email_changed,{{Event}},event
+Auth,sso_login,event,string,Yes,SSO/SAML login,sso_login,{{Event}},event
+Auth,sso_login,sso_provider,string,No,SSO provider name,okta,{{DLV - sso_provider}},sso_provider
+# ===========================================
+# ENGAGEMENT / INTERACTION EVENTS
+# ===========================================
+Engagement,scroll_depth,event,string,Yes,Scroll depth milestone,scroll_depth,{{Event}},event
+Engagement,scroll_depth,percent_scrolled,number,Yes,Scroll percentage reached,50,{{DLV - percent_scrolled}},percent_scrolled
+Engagement,scroll_depth,pixel_depth,number,No,Scroll depth in pixels,2400,{{DLV - pixel_depth}},pixel_depth
+Engagement,scroll_depth,content_length,number,No,Total content length in pixels,4800,{{DLV - content_length}},content_length
+Engagement,scroll_depth,time_to_reach_ms,number,No,Time to reach depth in ms,30000,{{DLV - time_to_reach_ms}},time_to_reach_ms
+Engagement,time_on_page,event,string,Yes,Time on page milestone,time_on_page,{{Event}},event
+Engagement,time_on_page,time_on_page_ms,number,Yes,Time spent in milliseconds,60000,{{DLV - time_on_page_ms}},time_on_page_ms
+Engagement,engagement_time,event,string,Yes,Active engagement time,engagement_time,{{Event}},event
+Engagement,engagement_time,engagement_time_ms,number,Yes,Active time in milliseconds,45000,{{DLV - engagement_time_ms}},engagement_time_ms
+Engagement,content_consumed,event,string,Yes,Content consumption complete,content_consumed,{{Event}},event
+Engagement,content_consumed,content_section,string,No,Section name completed,introduction,{{DLV - content_section}},content_section
+Engagement,content_consumed,words_visible,number,No,Words read/viewed,500,{{DLV - words_visible}},words_visible
+Engagement,click,event,string,Yes,Element clicked,click,{{Event}},event
+Engagement,click,element_id,string,No,Element ID clicked,cta-button,{{DLV - element_id}},element_id
+Engagement,click,element_classes,string,No,Element CSS classes,btn btn-primary,{{DLV - element_classes}},element_classes
+Engagement,click,element_text,string,No,Element text content,Sign Up Now,{{DLV - element_text}},element_text
+Engagement,hover,event,string,Yes,Element hovered,hover,{{Event}},event
+Engagement,copy_text,event,string,Yes,Text copied to clipboard,copy_text,{{Event}},event
+Engagement,print_page,event,string,Yes,Page printed,print_page,{{Event}},event
+Engagement,tab_visible,event,string,Yes,Tab became visible,tab_visible,{{Event}},event
+Engagement,tab_hidden,event,string,Yes,Tab became hidden,tab_hidden,{{Event}},event
+Engagement,page_unload,event,string,Yes,Page about to unload,page_unload,{{Event}},event
+Engagement,idle_timeout,event,string,Yes,User went idle,idle_timeout,{{Event}},event
+Engagement,idle_timeout,idle_duration_seconds,number,No,Idle duration before trigger,300,{{DLV - idle_duration_seconds}},idle_duration_seconds
+Engagement,return_from_idle,event,string,Yes,User returned from idle,return_from_idle,{{Event}},event
+Engagement,return_from_idle,idle_duration_seconds,number,No,How long user was idle,600,{{DLV - idle_duration_seconds}},idle_duration_seconds
+# ===========================================
+# COMMUNICATION EVENTS
+# ===========================================
+Communication,chat_started,event,string,Yes,Chat conversation started,chat_started,{{Event}},event
+Communication,chat_started,chat_id,string,No,Chat session identifier,chat_abc123,{{DLV - chat_id}},chat_id
+Communication,chat_started,chat_type,string,No,Type: support/sales/general,support,{{DLV - chat_type}},chat_type
+Communication,chat_started,is_chatbot,boolean,No,Whether chatbot initiated,false,{{DLV - is_chatbot}},is_chatbot
+Communication,chat_started,department,string,No,Department/team,sales,{{DLV - department}},department
+Communication,chat_message_sent,event,string,Yes,User sent message,chat_message_sent,{{Event}},event
+Communication,chat_message_sent,chat_id,string,No,Chat session ID,chat_abc123,{{DLV - chat_id}},chat_id
+Communication,chat_message_received,event,string,Yes,User received message,chat_message_received,{{Event}},event
+Communication,chat_ended,event,string,Yes,Chat conversation ended,chat_ended,{{Event}},event
+Communication,chat_ended,chat_id,string,No,Chat session ID,chat_abc123,{{DLV - chat_id}},chat_id
+Communication,chat_ended,chat_duration_seconds,number,No,Chat duration in seconds,300,{{DLV - chat_duration_seconds}},chat_duration_seconds
+Communication,chat_ended,message_count,number,No,Total messages exchanged,12,{{DLV - message_count}},message_count
+Communication,chat_ended,issue_resolved,boolean,No,Whether issue was resolved,true,{{DLV - issue_resolved}},issue_resolved
+Communication,chat_rated,event,string,Yes,Chat was rated,chat_rated,{{Event}},event
+Communication,chat_rated,rating,number,No,Rating value (1-5),5,{{DLV - rating}},rating
+Communication,chat_rated,rating_feedback,string,No,Optional feedback text,Very helpful!,{{DLV - rating_feedback}},rating_feedback
+Communication,chatbot_interaction,event,string,Yes,Chatbot interaction,chatbot_interaction,{{Event}},event
+Communication,notification_displayed,event,string,Yes,Notification shown,notification_displayed,{{Event}},event
+Communication,notification_displayed,notification_id,string,No,Notification identifier,notif_123,{{DLV - notification_id}},notification_id
+Communication,notification_displayed,notification_type,string,No,Type: promo/transactional/alert,promo,{{DLV - notification_type}},notification_type
+Communication,notification_displayed,notification_title,string,No,Notification title,New Feature Available,{{DLV - notification_title}},notification_title
+Communication,notification_displayed,notification_channel,string,No,Channel: push/in_app/email,in_app,{{DLV - notification_channel}},notification_channel
+Communication,notification_clicked,event,string,Yes,Notification clicked,notification_clicked,{{Event}},event
+Communication,notification_dismissed,event,string,Yes,Notification dismissed,notification_dismissed,{{Event}},event
+Communication,notification_permission_granted,event,string,Yes,Push permission granted,notification_permission_granted,{{Event}},event
+Communication,notification_permission_denied,event,string,Yes,Push permission denied,notification_permission_denied,{{Event}},event
+Communication,email_link_clicked,event,string,Yes,Link in email clicked,email_link_clicked,{{Event}},event
+Communication,email_link_clicked,email_id,string,No,Email campaign ID,email_abc123,{{DLV - email_id}},email_id
+Communication,email_link_clicked,email_subject,string,No,Email subject line,Welcome to our newsletter,{{DLV - email_subject}},email_subject
+Communication,email_link_clicked,campaign_id,string,No,Marketing campaign ID,camp_summer_2024,{{DLV - campaign_id}},campaign_id
+Communication,sms_link_clicked,event,string,Yes,Link in SMS clicked,sms_link_clicked,{{Event}},event
+Communication,push_notification_opened,event,string,Yes,Push notification opened app,push_notification_opened,{{Event}},event
+Communication,in_app_message_displayed,event,string,Yes,In-app message shown,in_app_message_displayed,{{Event}},event
+Communication,in_app_message_clicked,event,string,Yes,In-app message clicked,in_app_message_clicked,{{Event}},event
+# ===========================================
+# SOCIAL ENGAGEMENT EVENTS
+# ===========================================
+Social,social_share,event,string,Yes,Content shared socially,social_share,{{Event}},event
+Social,social_share,share_method,string,No,Platform: twitter/facebook/linkedin/email/copy_link,twitter,{{DLV - share_method}},share_method
+Social,social_share,content_type,string,No,Type of content shared,article,{{DLV - content_type}},content_type
+Social,social_share,content_id,string,No,Content identifier,post_123,{{DLV - content_id}},content_id
+Social,social_share,content_title,string,No,Content title,How to Use Our Product,{{DLV - content_title}},content_title
+Social,social_share,share_url,string,No,Shared URL,https://example.com/article,{{DLV - share_url}},share_url
+Social,social_follow,event,string,Yes,User followed account,social_follow,{{Event}},event
+Social,social_follow,target_user_id,string,No,Followed user ID,user_123,{{DLV - target_user_id}},target_user_id
+Social,social_follow,target_username,string,No,Followed username,@company,{{DLV - target_username}},target_username
+Social,social_unfollow,event,string,Yes,User unfollowed,social_unfollow,{{Event}},event
+Social,social_like,event,string,Yes,Content liked,social_like,{{Event}},event
+Social,social_like,content_id,string,No,Liked content ID,post_123,{{DLV - content_id}},content_id
+Social,social_unlike,event,string,Yes,Content unliked,social_unlike,{{Event}},event
+Social,social_comment,event,string,Yes,Comment posted,social_comment,{{Event}},event
+Social,social_comment,content_id,string,No,Content being commented on,post_123,{{DLV - content_id}},content_id
+Social,social_comment,comment_id,string,No,New comment ID,comment_456,{{DLV - comment_id}},comment_id
+Social,social_comment_reply,event,string,Yes,Reply to comment,social_comment_reply,{{Event}},event
+Social,social_comment_reply,parent_comment_id,string,No,Parent comment ID,comment_123,{{DLV - parent_comment_id}},parent_comment_id
+Social,social_mention,event,string,Yes,User mentioned,social_mention,{{Event}},event
+Social,social_tag,event,string,Yes,User tagged,social_tag,{{Event}},event
+Social,social_save,event,string,Yes,Content saved/bookmarked,social_save,{{Event}},event
+Social,social_unsave,event,string,Yes,Content unsaved,social_unsave,{{Event}},event
+Social,social_report,event,string,Yes,Content reported,social_report,{{Event}},event
+Social,social_block,event,string,Yes,User blocked,social_block,{{Event}},event
+Social,social_connect,event,string,Yes,Users connected,social_connect,{{Event}},event
+Social,referral_link_created,event,string,Yes,Referral link generated,referral_link_created,{{Event}},event
+Social,referral_link_created,referral_code,string,No,Unique referral code,REF123ABC,{{DLV - referral_code}},referral_code
+Social,referral_link_shared,event,string,Yes,Referral link shared,referral_link_shared,{{Event}},event
+Social,referral_link_shared,share_method,string,No,How link was shared,email,{{DLV - share_method}},share_method
+Social,referral_signup,event,string,Yes,Referral signup completed,referral_signup,{{Event}},event
+Social,referral_signup,referral_code,string,No,Referral code used,REF123ABC,{{DLV - referral_code}},referral_code
+Social,referral_signup,referral_source,string,No,Source of referral,friend,{{DLV - referral_source}},referral_source
+# ===========================================
+# SEARCH / FILTER EVENTS
+# ===========================================
+Search/Filter,search_started,event,string,Yes,User started typing search,search_started,{{Event}},event
+Search/Filter,search_started,search_term,string,No,Initial search text,wire,{{DLV - search_term}},search_term
+Search/Filter,search_autocomplete,event,string,Yes,Autocomplete shown,search_autocomplete,{{Event}},event
+Search/Filter,search_suggestion_clicked,event,string,Yes,Search suggestion clicked,search_suggestion_clicked,{{Event}},event
+Search/Filter,search_suggestion_clicked,suggestion_selected,string,No,Selected suggestion,wireless headphones,{{DLV - suggestion_selected}},suggestion_selected
+Search/Filter,search_suggestion_clicked,suggestion_position,number,No,Position in suggestion list,2,{{DLV - suggestion_position}},suggestion_position
+Search/Filter,search_results_filtered,event,string,Yes,Search results filtered,search_results_filtered,{{Event}},event
+Search/Filter,filter_applied,event,string,Yes,Filter applied to results,filter_applied,{{Event}},event
+Search/Filter,filter_applied,filter_type,string,Yes,Type of filter,price_range,{{DLV - filter_type}},filter_type
+Search/Filter,filter_applied,filter_value,string,Yes,Filter value selected,100-500,{{DLV - filter_value}},filter_value
+Search/Filter,filter_applied,search_term,string,No,Active search query,wireless headphones,{{DLV - search_term}},search_term
+Search/Filter,filter_applied,results_count,number,No,Results after filtering,42,{{DLV - results_count}},results_count
+Search/Filter,filter_removed,event,string,Yes,Filter removed,filter_removed,{{Event}},event
+Search/Filter,filter_removed,filter_type,string,Yes,Removed filter type,price_range,{{DLV - filter_type}},filter_type
+Search/Filter,filter_cleared,event,string,Yes,All filters cleared,filter_cleared,{{Event}},event
+Search/Filter,sort_applied,event,string,Yes,Sort order changed,sort_applied,{{Event}},event
+Search/Filter,sort_applied,sort_field,string,Yes,Sort field,price,{{DLV - sort_field}},sort_field
+Search/Filter,sort_applied,sort_direction,string,No,Direction: asc/desc,asc,{{DLV - sort_direction}},sort_direction
+Search/Filter,facet_clicked,event,string,Yes,Search facet clicked,facet_clicked,{{Event}},event
+Search/Filter,category_selected,event,string,Yes,Category selected,category_selected,{{Event}},event
+Search/Filter,category_selected,category_id,string,No,Category identifier,cat_electronics,{{DLV - category_id}},category_id
+Search/Filter,category_selected,category_name,string,No,Category name,Electronics,{{DLV - category_name}},category_name
+Search/Filter,pagination,event,string,Yes,Page number changed,pagination,{{Event}},event
+Search/Filter,pagination,page_number,number,Yes,Current page number,3,{{DLV - page_number}},page_number
+Search/Filter,pagination,results_per_page,number,No,Results per page,24,{{DLV - results_per_page}},results_per_page
+Search/Filter,load_more,event,string,Yes,Load more clicked,load_more,{{Event}},event
+Search/Filter,load_more,results_count,number,No,Total results loaded,48,{{DLV - results_count}},results_count
+Search/Filter,infinite_scroll_load,event,string,Yes,Infinite scroll loaded more,infinite_scroll_load,{{Event}},event
+# ===========================================
+# GAMING / GAMIFICATION EVENTS
+# ===========================================
+Gaming,achievement_unlocked,event,string,Yes,Achievement earned,achievement_unlocked,{{Event}},event
+Gaming,achievement_unlocked,achievement_id,string,Yes,Achievement identifier,ach_first_purchase,{{DLV - achievement_id}},achievement_id
+Gaming,achievement_unlocked,achievement_name,string,No,Achievement name,First Purchase,{{DLV - achievement_name}},achievement_name
+Gaming,achievement_unlocked,achievement_category,string,No,Achievement category,purchases,{{DLV - achievement_category}},achievement_category
+Gaming,achievement_unlocked,points_earned,number,No,Points awarded,100,{{DLV - points_earned}},points_earned
+Gaming,badge_earned,event,string,Yes,Badge earned,badge_earned,{{Event}},event
+Gaming,badge_earned,achievement_id,string,Yes,Badge identifier,badge_power_user,{{DLV - achievement_id}},achievement_id
+Gaming,badge_earned,achievement_name,string,No,Badge name,Power User,{{DLV - achievement_name}},achievement_name
+Gaming,quest_started,event,string,Yes,Quest/challenge started,quest_started,{{Event}},event
+Gaming,quest_started,quest_id,string,Yes,Quest identifier,quest_onboarding,{{DLV - quest_id}},quest_id
+Gaming,quest_started,quest_name,string,No,Quest name,Getting Started,{{DLV - quest_name}},quest_name
+Gaming,quest_started,difficulty,string,No,Quest difficulty,easy,{{DLV - difficulty}},difficulty
+Gaming,quest_completed,event,string,Yes,Quest completed,quest_completed,{{Event}},event
+Gaming,quest_completed,quest_id,string,Yes,Quest identifier,quest_onboarding,{{DLV - quest_id}},quest_id
+Gaming,quest_completed,time_to_complete_seconds,number,No,Completion time in seconds,3600,{{DLV - time_to_complete_seconds}},time_to_complete_seconds
+Gaming,quest_completed,reward_type,string,No,Reward type,points,{{DLV - reward_type}},reward_type
+Gaming,quest_completed,reward_value,number,No,Reward amount,500,{{DLV - reward_value}},reward_value
+Gaming,quest_abandoned,event,string,Yes,Quest abandoned,quest_abandoned,{{Event}},event
+Gaming,quest_abandoned,quest_id,string,Yes,Quest identifier,quest_advanced,{{DLV - quest_id}},quest_id
+Gaming,quest_abandoned,completion_percent,number,No,Progress before abandoning,45,{{DLV - completion_percent}},completion_percent
+Gaming,reward_claimed,event,string,Yes,Reward claimed,reward_claimed,{{Event}},event
+Gaming,reward_claimed,reward_type,string,No,Type of reward,discount_code,{{DLV - reward_type}},reward_type
+Gaming,reward_claimed,reward_value,number,No,Reward value,20,{{DLV - reward_value}},reward_value
+Gaming,daily_login,event,string,Yes,Daily login bonus claimed,daily_login,{{Event}},event
+Gaming,daily_login,streak_count,number,No,Current login streak,7,{{DLV - streak_count}},streak_count
+Gaming,streak_achieved,event,string,Yes,Streak milestone reached,streak_achieved,{{Event}},event
+Gaming,streak_achieved,streak_count,number,Yes,Streak count reached,30,{{DLV - streak_count}},streak_count
+Gaming,streak_broken,event,string,Yes,Streak was broken,streak_broken,{{Event}},event
+Gaming,streak_broken,streak_count,number,No,Streak count before break,15,{{DLV - streak_count}},streak_count
+Gaming,leaderboard_view,event,string,Yes,Leaderboard viewed,leaderboard_view,{{Event}},event
+Gaming,leaderboard_view,leaderboard_position,number,No,User's position,42,{{DLV - leaderboard_position}},leaderboard_position
+Gaming,challenge_started,event,string,Yes,Challenge started,challenge_started,{{Event}},event
+Gaming,challenge_completed,event,string,Yes,Challenge completed,challenge_completed,{{Event}},event
+Gaming,pvp_match_started,event,string,Yes,PvP match started,pvp_match_started,{{Event}},event
+Gaming,pvp_match_started,opponent_id,string,No,Opponent identifier,user_456,{{DLV - opponent_id}},opponent_id
+Gaming,pvp_match_ended,event,string,Yes,PvP match ended,pvp_match_ended,{{Event}},event
+Gaming,pvp_match_ended,match_result,string,No,Result: win/loss/draw,win,{{DLV - match_result}},match_result
+Gaming,item_crafted,event,string,Yes,In-game item crafted,item_crafted,{{Event}},event
+Gaming,item_traded,event,string,Yes,In-game item traded,item_traded,{{Event}},event
+Gaming,level_up,event,string,Yes,User leveled up (GA4),level_up,{{Event}},event
+Gaming,level_up,level,number,Yes,New level reached,5,{{DLV - level}},level
+Gaming,level_up,total_points,number,No,Total accumulated points,5000,{{DLV - total_points}},total_points
+Gaming,level_start,event,string,Yes,Game level started (GA4),level_start,{{Event}},event
+Gaming,level_end,event,string,Yes,Game level ended (GA4),level_end,{{Event}},event
+Gaming,post_score,event,string,Yes,Score posted (GA4),post_score,{{Event}},event
+Gaming,post_score,score,number,Yes,Score value,10000,{{DLV - score}},score

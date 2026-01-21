@@ -87,7 +87,7 @@ describe('consent helpers', () => {
         state: { ad_storage: 'granted' },
         options: { region: [''] }
       })
-    ).toThrow(/Consent region codes must be non-empty strings/);
+    ).toThrow(/Consent region codes must be non-empty ISO 3166-2 strings/);
 
     expect(() =>
       buildConsentCommand({

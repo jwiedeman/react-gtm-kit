@@ -3,7 +3,7 @@
  */
 
 import { get } from 'svelte/store';
-import { createGtmStore } from '../store';
+import { createGtmStore, destroyGtmStore } from '../store';
 
 // Mock the core package
 jest.mock('@jwiedeman/gtm-kit', () => ({
@@ -216,4 +216,34 @@ expect.extend({
       };
     }
   }
+});
+
+describe('destroyGtmStore', () => {
+  it('calls teardown on the client and marks as not initialized', () => {
+    const store = createGtmStore({ containers: 'GTM-DESTROY' });
+
+    // Store should be initialized
+    let storeValue = get(store);
+    expect(storeValue.initialized).toBe(true);
+
+    // Destroy the store
+    destroyGtmStore(store);
+
+    // Should call teardown
+    expect(storeValue.client.teardown).toHaveBeenCalled();
+
+    // Store should be marked as not initialized
+    storeValue = get(store);
+    expect(storeValue.initialized).toBe(false);
+  });
+
+  it('handles multiple destroy calls gracefully', () => {
+    const store = createGtmStore({ containers: 'GTM-MULTI-DESTROY' });
+
+    destroyGtmStore(store);
+    destroyGtmStore(store); // Second call should not throw
+
+    const storeValue = get(store);
+    expect(storeValue.initialized).toBe(false);
+  });
 });

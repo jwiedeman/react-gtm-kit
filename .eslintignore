@@ -4,3 +4,11 @@ node_modules
 pnpm-lock.yaml
 !docs/.vitepress
 !docs/.vitepress/**
+
+# Build outputs from example apps
+examples/remix-app/build
+examples/svelte-app/build
+examples/astro-app/.astro
+
+# E2E tests use Playwright patterns that differ from standard lint rules
+e2e/

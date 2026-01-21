@@ -50,13 +50,14 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@jwiedeman/gtm-kit": "^1.0.0"
+    "@jwiedeman/gtm-kit": "workspace:*"
   },
   "peerDependencies": {
     "solid-js": "^1.0.0"
   },
   "devDependencies": {
     "@solidjs/testing-library": "^0.8.7",
+    "esbuild-plugin-solid": "^0.6.0",
     "solid-js": "^1.8.17",
     "solid-testing-library": "^0.5.1",
     "tslib": "^2.6.2"

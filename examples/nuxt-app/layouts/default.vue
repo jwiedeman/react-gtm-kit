@@ -1,21 +1,39 @@
 <script setup lang="ts">
-import { watch } from 'vue';
-import { useGtmPush } from '@jwiedeman/gtm-kit-vue';
+import { watch, onMounted, ref } from 'vue';
 
 const route = useRoute();
-const push = useGtmPush();
+const isClient = ref(false);
 
-// Track page views on route changes
+// Only import and use GTM composables on the client side
+// The plugin is only installed client-side (.client.ts)
+let push: ((data: Record<string, unknown>) => void) | null = null;
+
+onMounted(async () => {
+  isClient.value = true;
+  // Dynamically import to avoid SSR issues
+  const { useGtmPush } = await import('@jwiedeman/gtm-kit-vue');
+  push = useGtmPush();
+
+  // Track initial page view
+  push({
+    event: 'page_view',
+    page_path: route.fullPath,
+    page_title: document.title
+  });
+});
+
+// Track page views on route changes (only on client)
 watch(
   () => route.fullPath,
   (path) => {
-    push({
-      event: 'page_view',
-      page_path: path,
-      page_title: typeof document !== 'undefined' ? document.title : ''
-    });
-  },
-  { immediate: true }
+    if (push && isClient.value) {
+      push({
+        event: 'page_view',
+        page_path: path,
+        page_title: document.title
+      });
+    }
+  }
 );
 </script>
 

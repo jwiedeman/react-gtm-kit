@@ -76,15 +76,15 @@ test.describe('Vue 3 App example', () => {
     await expect(page).toHaveURL(/\/$/);
 
     // Navigate to Products
-    await page.click('text=Products');
+    await page.getByRole('link', { name: 'Products' }).click();
     await expect(page).toHaveURL(/\/products/);
 
     // Navigate to About
-    await page.click('text=About');
+    await page.getByRole('link', { name: 'About' }).click();
     await expect(page).toHaveURL(/\/about/);
 
     // Navigate back to Home
-    await page.click('text=Home');
+    await page.getByRole('link', { name: 'Home', exact: true }).click();
     await expect(page).toHaveURL(/\/$/);
   });
 
@@ -129,10 +129,10 @@ test.describe('Vue 3 App example', () => {
     });
 
     // Navigate to multiple pages
-    await page.click('text=Products');
+    await page.getByRole('link', { name: 'Products' }).click();
     await page.waitForURL(/\/products/);
 
-    await page.click('text=About');
+    await page.getByRole('link', { name: 'About' }).click();
     await page.waitForURL(/\/about/);
 
     // Data layer should still exist and potentially have more entries

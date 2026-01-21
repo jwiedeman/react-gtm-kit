@@ -78,37 +78,60 @@ const isConsentDecision = (value: unknown): value is ConsentDecision => value ==
 
 const assertValidRegions = (regions: readonly string[]) => {
   if (!Array.isArray(regions)) {
-    throw new Error('Consent region list must be an array of ISO region codes.');
+    throw new Error(
+      'Consent region list must be an array of ISO 3166-2 region codes. ' +
+        `Received: ${typeof regions}. ` +
+        'Example: { region: ["US-CA", "EEA"] }'
+    );
   }
 
   for (const region of regions) {
     if (typeof region !== 'string' || region.trim().length === 0) {
-      throw new Error('Consent region codes must be non-empty strings.');
+      throw new Error(
+        'Consent region codes must be non-empty ISO 3166-2 strings. ' +
+          `Received: ${region === null ? 'null' : typeof region}. ` +
+          'Example: "US-CA", "EEA", "US"'
+      );
     }
   }
 };
 
 const assertValidWaitForUpdate = (waitForUpdate: number) => {
   if (!Number.isFinite(waitForUpdate) || waitForUpdate < 0) {
-    throw new Error('waitForUpdate must be a non-negative finite number.');
+    throw new Error(
+      `Invalid waitForUpdate value: ${waitForUpdate}. ` +
+        'waitForUpdate must be a non-negative finite number representing milliseconds to wait for consent update. ' +
+        'Example: { waitForUpdate: 500 }'
+    );
   }
 };
 
 export const normalizeConsentState = (state: ConsentState): ConsentState => {
   const normalizedEntries = Object.entries(state ?? {}).map(([key, value]) => {
     if (!isConsentKey(key)) {
-      throw new Error(`Invalid consent key: ${key}`);
+      throw new Error(
+        `Invalid consent key: "${key}". ` +
+          'Valid keys are: ad_storage, analytics_storage, ad_user_data, ad_personalization. ' +
+          'Example: { ad_storage: "granted", analytics_storage: "denied" }'
+      );
     }
 
     if (!isConsentDecision(value)) {
-      throw new Error(`Invalid consent value for key "${key}". Expected "granted" or "denied".`);
+      throw new Error(
+        `Invalid consent value for key "${key}": ${value === null ? 'null' : typeof value === 'string' ? `"${value}"` : value}. ` +
+          'Consent values must be "granted" or "denied". ' +
+          'Example: { ad_storage: "granted" }'
+      );
     }
 
     return [key, value] as const;
   });
 
   if (!normalizedEntries.length) {
-    throw new Error('At least one consent key/value pair is required.');
+    throw new Error(
+      'At least one consent key/value pair is required. ' +
+        'Example: { ad_storage: "granted", analytics_storage: "granted" }'
+    );
   }
 
   const normalizedState = {} as ConsentState;
@@ -143,7 +166,11 @@ const normalizeOptions = (options?: ConsentRegionOptions): Record<string, unknow
 
 export const buildConsentCommand = ({ command, state, options }: ConsentCommandInput): ConsentCommandValue => {
   if (command !== CONSENT_DEFAULT && command !== CONSENT_UPDATE) {
-    throw new Error(`Unsupported consent command: ${command}`);
+    throw new Error(
+      `Unsupported consent command: "${command}". ` +
+        'Valid commands are "default" (for initial consent state) or "update" (for user consent changes). ' +
+        'Example: buildConsentCommand({ command: "default", state: { analytics_storage: "denied" } })'
+    );
   }
 
   const normalizedState = normalizeConsentState(state);
