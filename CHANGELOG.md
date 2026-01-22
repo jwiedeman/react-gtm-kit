@@ -1,3 +1,9 @@
+# [1.2.0](https://github.com/jwiedeman/GTM-Kit/compare/v1.1.6...v1.2.0) (2026-01-22)
+
+### Features
+
+- add retry mechanism, partial load detection, and comprehensive docs ([0fa92d8](https://github.com/jwiedeman/GTM-Kit/commit/0fa92d8e0e3926428b67a5fc68e7068e1e7064db))
+
 ## [1.1.6](https://github.com/jwiedeman/GTM-Kit/compare/v1.1.5...v1.1.6) (2026-01-09)
 
 ### Bug Fixes
