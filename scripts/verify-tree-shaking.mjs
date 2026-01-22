@@ -20,8 +20,8 @@ const CORE_TEST_CASES = [
     name: 'Minimal import (createGtmClient only)',
     code: `import { createGtmClient } from './packages/core/src/index';
 console.log(createGtmClient);`,
-    // Client pulls in ScriptManager, dataLayer, consent, logging - expected to be larger
-    maxSizeKb: 18
+    // Client pulls in ScriptManager, dataLayer, consent, logging, retry mechanism - expected to be larger
+    maxSizeKb: 26
   },
   {
     name: 'Events only',
@@ -54,8 +54,8 @@ console.log(buildGtmScriptUrl, normalizeContainer);`,
   {
     name: 'Full import (baseline)',
     code: `export * from './packages/core/src/index';`,
-    // Full library with all features
-    maxSizeKb: 25
+    // Full library with all features including retry, partial load detection
+    maxSizeKb: 32
   }
 ];
 
@@ -70,7 +70,7 @@ console.log(useGtm);`,
     name: 'React: GtmProvider only',
     code: `import { GtmProvider } from './packages/react-modern/src/index';
 console.log(GtmProvider);`,
-    maxSizeKb: 20
+    maxSizeKb: 27
   },
   {
     name: 'Vue: useGtm composable only',
@@ -82,7 +82,7 @@ console.log(useGtm);`,
     name: 'Svelte: createGtmStore only',
     code: `import { createGtmStore } from './packages/svelte/src/index';
 console.log(createGtmStore);`,
-    maxSizeKb: 20
+    maxSizeKb: 27
   }
 ];
 
